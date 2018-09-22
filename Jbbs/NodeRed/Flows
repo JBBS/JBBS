@@ -1,0 +1,1122 @@
+[
+    {
+        "id": "c4433a4e.8ba2b8",
+        "type": "tab",
+        "label": "Dashboard"
+    },
+    {
+        "id": "f4141af0.d89288",
+        "type": "tab",
+        "label": "Indicatori"
+    },
+    {
+        "id": "f5ba47c9.4b72b8",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-dark",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "Helvetica Neue",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "Helvetica Neue",
+                "reset": false
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#097479",
+                    "value": "#097479",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#097479",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#000000",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#0eb8c0",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#555555",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#eeeeee",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#097479",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "true",
+            "allowSwipe": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "1f79b609.15d25a",
+        "type": "ui_group",
+        "z": "",
+        "name": "Mash",
+        "tab": "c3ed2d11.076da",
+        "order": 3,
+        "disp": false,
+        "width": "6"
+    },
+    {
+        "id": "c3ed2d11.076da",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Jbbs",
+        "icon": "dashboard",
+        "order": 2
+    },
+    {
+        "id": "fe2dcf7a.8b271",
+        "type": "mqtt-broker",
+        "z": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "Jbbs-NodeRed",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": ""
+    },
+    {
+        "id": "5b7e929d.9fa20c",
+        "type": "sqlitedb",
+        "z": "",
+        "db": "/home/pi/db/jbbs.sqlite"
+    },
+    {
+        "id": "b46b75cb.cfdf28",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Recipe",
+        "icon": "dashboard",
+        "order": 1
+    },
+    {
+        "id": "b759a2a3.a6d76",
+        "type": "ui_group",
+        "z": "",
+        "name": "Elenco Ricette",
+        "tab": "b46b75cb.cfdf28",
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "11f912be.b76ccd",
+        "type": "ui_group",
+        "z": "",
+        "name": "Sparge",
+        "tab": "c3ed2d11.076da",
+        "order": 2,
+        "disp": false,
+        "width": "6"
+    },
+    {
+        "id": "faee2d.c36841d",
+        "type": "ui_group",
+        "z": "",
+        "name": "Boil",
+        "tab": "c3ed2d11.076da",
+        "order": 4,
+        "disp": false,
+        "width": "6"
+    },
+    {
+        "id": "f1c651fd.c9f3b",
+        "type": "ui_template",
+        "z": "c4433a4e.8ba2b8",
+        "group": "1f79b609.15d25a",
+        "name": "stepMashTable",
+        "order": 4,
+        "width": "6",
+        "height": "4",
+        "format": "<table style=\"width : 100%;\">\n\t<tr>\n\t\t<td>Ricetta: {{msg.payload[0].ricetta}}\n\t\t</td>\n\t\t<td style=\"text-align : right;\">\n\t\t         <md-button class=\"md-button\" ng-click=\"send({topic: 'select * from Recipe'})\">\n              <ng-md-icon icon=\"list\"></ng-md-icon>\n          </md-button>\n\t\t</td>\n\t</tr>\n</table>\n\n<table style=\"width : 100%;\">\n    <tr>\n      <th align=\"left\" >Step</th>\n      <th>°C</th>\n      <th>Durata</th>\n      <th style=\"text-align : right;\">\n         <md-button class=\"md-button\" ng-click=\"send({payload: -1})\">\n              <ng-md-icon icon=\"stop\"></ng-md-icon>\n          </md-button>\n      </th>\n    </tr>\n    <tr ng-repeat=\"step in msg.payload\">\n        <td>{{step.desc}}</td>\n        <td>{{step.temp}}</td>\n        <td style=\"text-align : right;\">{{step.time}}</td>\n        <td style=\"text-align : right;\">\n           <md-button class=\"md-button\" ng-click=\"send({payload: $index})\">\n                <ng-md-icon icon=\"play_arrow\"></ng-md-icon>\n            </md-button>\n        </td>\n    </tr>\n  </table>\n",
+        "storeOutMessages": false,
+        "fwdInMessages": false,
+        "templateScope": "local",
+        "x": 370.32269287109375,
+        "y": 456.88909912109375,
+        "wires": [
+            [
+                "1d2e89bb.199086"
+            ]
+        ]
+    },
+    {
+        "id": "80e6ff1c.8694c",
+        "type": "sqlite",
+        "z": "c4433a4e.8ba2b8",
+        "mydb": "5b7e929d.9fa20c",
+        "name": "jbbs",
+        "x": 197.56663513183594,
+        "y": 372.1333312988281,
+        "wires": [
+            [
+                "f1c651fd.c9f3b",
+                "bac83694.dc4108"
+            ]
+        ]
+    },
+    {
+        "id": "a2ae33de.5c76",
+        "type": "ui_ui_control",
+        "z": "c4433a4e.8ba2b8",
+        "name": "openTab",
+        "x": 755.6778564453125,
+        "y": 173.42225551605225,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "256daff7.200ae",
+        "type": "ui_template",
+        "z": "c4433a4e.8ba2b8",
+        "group": "b759a2a3.a6d76",
+        "name": "RecipeTable",
+        "order": 4,
+        "width": "0",
+        "height": "0",
+        "format": "<div layout=\"row\" layout-align=\"start center\">\n<span flex>Descrizione</span>\n<span flex></span>\n</div>\n\n<div layout=\"row\" layout-align=\"start center\" ng-repeat=\"recipe in msg.payload\">\n<span flex >{{recipe.id}}</span>\n<span flex >{{recipe.desc}}</span>\n<span flex >\n   <md-button class=\"md-button\" ng-click=\"send({payload: recipe})\">\n        <ng-md-icon icon=\"play_arrow\"></ng-md-icon>\n    </md-button>\n</span>\n</div>\n",
+        "storeOutMessages": false,
+        "fwdInMessages": false,
+        "x": 458.5332908630371,
+        "y": 219.75558757781982,
+        "wires": [
+            [
+                "357c875c.4f8728",
+                "f6472657.54a6e8"
+            ]
+        ]
+    },
+    {
+        "id": "5a4961b3.b056b",
+        "type": "function",
+        "z": "c4433a4e.8ba2b8",
+        "name": "Splitter",
+        "func": "var msgTab = { \"payload\" : \"Recipe\" }\nreturn [msg, msgTab];",
+        "outputs": "2",
+        "noerr": 0,
+        "x": 464.90009689331055,
+        "y": 166.2000560760498,
+        "wires": [
+            [
+                "256daff7.200ae"
+            ],
+            [
+                "a2ae33de.5c76"
+            ]
+        ]
+    },
+    {
+        "id": "c01dd8e8.4bbd68",
+        "type": "sqlite",
+        "z": "c4433a4e.8ba2b8",
+        "mydb": "5b7e929d.9fa20c",
+        "name": "jbbs",
+        "x": 193.86666870117188,
+        "y": 222.42222595214844,
+        "wires": [
+            [
+                "5a4961b3.b056b",
+                "b5f74e84.85fce"
+            ]
+        ]
+    },
+    {
+        "id": "357c875c.4f8728",
+        "type": "function",
+        "z": "c4433a4e.8ba2b8",
+        "name": "SelectMashSteps",
+        "func": "var msgTab = { \"payload\" : \"Jbbs\" };\n\n\nvar id = msg.payload.id;\n\nmsg.topic = \"select s.*, r.desc as 'ricetta' \";\nmsg.topic += \" from step as s \";\nmsg.topic += \" inner join recipe as r \";\nmsg.topic += \" on s.idRicetta =r.id \";\nmsg.topic += \" where s.idRicetta=\" + id;\nmsg.topic += \" order by prog;\";\nreturn [msgTab, msg];",
+        "outputs": "2",
+        "noerr": 0,
+        "x": 477.5333595275879,
+        "y": 265.75561809539795,
+        "wires": [
+            [
+                "a2ae33de.5c76"
+            ],
+            [
+                "80e6ff1c.8694c"
+            ]
+        ]
+    },
+    {
+        "id": "827b7b23.909878",
+        "type": "mqtt out",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "topic": "dashboard/mash/start",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 780,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "7400d7b1.0ff298",
+        "type": "mqtt out",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "topic": "dashboard/mash/load",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 787.5666542053223,
+        "y": 369.2666606903076,
+        "wires": []
+    },
+    {
+        "id": "bac83694.dc4108",
+        "type": "function",
+        "z": "c4433a4e.8ba2b8",
+        "name": "0=>False, 1=>True",
+        "func": "for (var ind in msg.payload) {\n    if (msg.payload[ind].pump === 0) {\n        msg.payload[ind].pump = false;\n    } else {\n        msg.payload[ind].pump = true;\n    }\n}\nreturn msg",
+        "outputs": "1",
+        "noerr": 0,
+        "x": 448.8666343688965,
+        "y": 368.8666887283325,
+        "wires": [
+            [
+                "7400d7b1.0ff298"
+            ]
+        ]
+    },
+    {
+        "id": "f798a3a3.755ff",
+        "type": "mqtt out",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "topic": "dashboard/mash/stop",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 781.3333129882812,
+        "y": 504.9999694824219,
+        "wires": []
+    },
+    {
+        "id": "df50dad2.914f58",
+        "type": "json",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "pretty": false,
+        "x": 301.4445343017578,
+        "y": 385.7777404785156,
+        "wires": [
+            [
+                "60b48703.21d318",
+                "ed9e5a9f.4ad9d8",
+                "ae585e41.42f7e"
+            ]
+        ]
+    },
+    {
+        "id": "bfec0bd8.99c578",
+        "type": "mqtt in",
+        "z": "f4141af0.d89288",
+        "name": "mash/status",
+        "topic": "mash/status",
+        "qos": "0",
+        "broker": "fe2dcf7a.8b271",
+        "x": 105.66665649414062,
+        "y": 385.7777404785156,
+        "wires": [
+            [
+                "df50dad2.914f58"
+            ]
+        ]
+    },
+    {
+        "id": "60b48703.21d318",
+        "type": "ui_template",
+        "z": "f4141af0.d89288",
+        "group": "1f79b609.15d25a",
+        "name": "Mash Temp Gauge",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "format": "<script src=\"/myjs/myGauge-min.js\"></script>\n<script>\nvar radial4;\n    (function(scope){\n        scope.$watch('msg', function(msg) {\n           if (typeof(msg.payload.desc) != \"undefined\") radial4.setUnitString(msg.payload.desc);\n           if (typeof(msg.payload.tempActual) != \"undefined\") radial4.setValue(msg.payload.tempActual);\n//           if (typeof(msg.payload.max) != \"undefined\") radial4.setMaxValue(msg.payload.max);\n//           if (typeof(msg.payload.tempStart) != \"undefined\") radial4.setMinValue(msg.payload.tempStart);\n           if (typeof(msg.payload.tempTarget) != \"undefined\") radial4.setThreshold(msg.payload.tempTarget);\n           if (typeof(msg.payload.pump) != \"undefined\") {\n\t\t\t\tradial4.blinkUserLed(msg.payload.pump); \n\t\t\t\tradial4.setUserLedOnOff(msg.payload.pump); \n\t\t\t}\n           if (typeof(msg.payload.fire) != \"undefined\") {\n\t\t\t\tradial4.blinkLed(msg.payload.fire); \n\t\t\t\tradial4.setLedOnOff(msg.payload.fire); \n\t\t\t}\n           if (typeof(msg.payload.trend) != \"undefined\")\n            {\n                if (msg.payload.trend==1)     radial4.setTrend(steelseries.TrendState.UP);\n                if (msg.payload.trend==0)     radial4.setTrend(steelseries.TrendState.STEADY);\n                if (msg.payload.trend==-1)    radial4.setTrend(steelseries.TrendState.DOWN);\n                if (msg.payload.trend==-2)    radial4.setTrend(steelseries.TrendState.OFF);\n            }\n        });\n    })(scope);\n\n    var sections = [steelseries.Section(20, 50, 'rgba(0, 0, 220, 0.3)'),\n                        steelseries.Section(50, 70, 'rgba(0, 220, 0, 0.3)'),\n                        steelseries.Section(70, 80, 'rgba(220, 0, 0, 0.3)') ],\n\n            // Define one area\n    areas = [steelseries.Section(70, 80, 'rgba(220, 0, 0, 0.3)')],\n\n    radial4 = new steelseries.Radial('canvasRadial4', {\n            gaugeType: steelseries.GaugeType.TYPE4,\n            size: 292,\n            section: sections,\n            area: areas,\n            titleString: \"Mash\",\n            unitString: \"\",\n            threshold: 0,\n            thresholdRising: false,\n            userLedVisible: true,\n            useOdometer: false,\n            lcdVisible: false,\n            trendVisible: true,\n\t\t\tuserLedColor: steelseries.LedColor.BLUE_LED,\n\t\t\tPointerType: steelseries.PointerType.TYPE11,\n\t\t\tFrameDesign: steelseries.FrameDesign.BLACK_METAL,\n\t\t\tframeVisible: false,\n\t\t\tminValue : 20,\n\t\t\tmaxValue : 80\n        });\n                       \n//    radial4.setFrameDesign(steelseries.FrameDesign.BLACK_METAL);\n    radial4.setValue(0);\n    radial4.setThreshold(0);\n    radial4.blinkUserLed(0);\n//\tradial4.setPointerType(steelseries.PointerType.TYPE11)\n\n\n</script>\n\n<canvas id=\"canvasRadial4\" width=\"401\" height=\"401\"></canvas>\n",
+        "storeOutMessages": false,
+        "fwdInMessages": false,
+        "templateScope": "local",
+        "x": 590,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "daae22a2.58d82",
+        "type": "ui_template",
+        "z": "f4141af0.d89288",
+        "group": "1f79b609.15d25a",
+        "name": "Mash Time Bar",
+        "order": 3,
+        "width": "6",
+        "height": "1",
+        "format": "<div layout=\"row\" layout-align=\"space-between center\">\n{{msg.payload.timeStart}}<progress value={{msg.progress}} max=\"100\"></progress>{{msg.payload.timeFinish}}\n</div>",
+        "storeOutMessages": false,
+        "fwdInMessages": false,
+        "x": 596.6000366210938,
+        "y": 438.6000518798828,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ed9e5a9f.4ad9d8",
+        "type": "function",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "func": "if (msg.payload.timeFinish) {\n    msg.progress = 100 * (Date.now() - msg.payload.timeStart*1000) / (1000 * (msg.payload.timeFinish -msg.payload.timeStart));\n    data = new Date(msg.payload.timeStart * 1000);\n    msg.payload.timeStart = data.getHours() + \":\" + ((data.getMinutes() < 10) ? \"0\" :\"\") + data.getMinutes();\n    data = new Date(msg.payload.timeFinish * 1000);\n    msg.payload.timeFinish = data.getHours() + \":\" + ((data.getMinutes() < 10) ? \"0\" :\"\") + data.getMinutes();\n} else {\n    msg.progress = 0\n    msg.payload.timeStart = \"--:--\";\n    msg.payload.timeFinish = \"--:--\";\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 437.1999969482422,
+        "y": 438.20005798339844,
+        "wires": [
+            [
+                "daae22a2.58d82"
+            ]
+        ]
+    },
+    {
+        "id": "2782d013.1eafd",
+        "type": "inject",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "topic": "select * from Recipe",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "x": 165.33331680297852,
+        "y": 122.7999677658081,
+        "wires": [
+            [
+                "c01dd8e8.4bbd68"
+            ]
+        ]
+    },
+    {
+        "id": "1d2e89bb.199086",
+        "type": "switch",
+        "z": "c4433a4e.8ba2b8",
+        "name": "Switch send",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "null"
+            },
+            {
+                "t": "gte",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "lt",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 3,
+        "x": 559.2333106994629,
+        "y": 456.46667766571045,
+        "wires": [
+            [
+                "c01dd8e8.4bbd68"
+            ],
+            [
+                "827b7b23.909878",
+                "18307568.c9c85b"
+            ],
+            [
+                "f798a3a3.755ff",
+                "bf4e6590.e206f8"
+            ]
+        ]
+    },
+    {
+        "id": "cb6a9b3.dcb4e68",
+        "type": "ui_template",
+        "z": "f4141af0.d89288",
+        "group": "11f912be.b76ccd",
+        "name": "Sparge Temp Gauge",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "format": "<script src=\"/myjs/myGauge-min.js\"></script>\n<script>\nvar radialSparge;\n    (function(scope){\n        scope.$watch('msg', function(msg) {\n           if (typeof(msg.payload.desc) != \"undefined\") radialSparge.setUnitString(msg.payload.desc);\n           if (typeof(msg.payload.tempActual) != \"undefined\") radialSparge.setValue(msg.payload.tempActual);\n           if (typeof(msg.payload.tempTarget) != \"undefined\") radialSparge.setThreshold(msg.payload.tempTarget);\n           if (typeof(msg.payload.boilValve) != \"undefined\") {\n//\t\t\t\tradialSparge.blinkUserLed(msg.payload.boilValve); \n\t\t\t\tradialSparge.setUserLedOnOff(msg.payload.boilValve); \n\t\t\t}\n           if (typeof(msg.payload.fire) != \"undefined\") {\n\t\t\t\tradialSparge.blinkLed(msg.payload.fire); \n\t\t\t\tradialSparge.setLedOnOff(msg.payload.fire); \n\t\t\t}\n           if (typeof(msg.payload.trend) != \"undefined\")\n            {\n                if (msg.payload.trend==1)     radialSparge.setTrend(steelseries.TrendState.UP);\n                if (msg.payload.trend==0)     radialSparge.setTrend(steelseries.TrendState.STEADY);\n                if (msg.payload.trend==-1)    radialSparge.setTrend(steelseries.TrendState.DOWN);\n                if (msg.payload.trend==-2)    radialSparge.setTrend(steelseries.TrendState.OFF);\n            }\n        });\n    })(scope);\n\n    var sections = [steelseries.Section(20, 68, 'rgba(0, 0, 220, 0.3)'),\n                        steelseries.Section(70, 80, 'rgba(0, 220, 0, 0.3)'),\n                        steelseries.Section(80, 90, 'rgba(220, 0, 0, 0.3)') ],\n\n            // Define one area\n    areas = [steelseries.Section(80, 90, 'rgba(220, 0, 0, 0.3)')],\n\n    radialSparge = new steelseries.Radial('canvasRadialSparge', {\n            gaugeType: steelseries.GaugeType.TYPE4,\n            size: 292,\n            section: sections,\n            area: areas,\n            titleString: \"Sparge\",\n            unitString: \"\",\n            threshold: 0,\n            thresholdRising: false,\n            userLedVisible: true,\n            useOdometer: false,\n            lcdVisible: false,\n            trendVisible: true,\n//\t\t\tuserLedColor: steelseries.LedColor.BLUE_LED,\n\t\t\tPointerType: steelseries.PointerType.TYPE11,\n\t\t\tFrameDesign: steelseries.FrameDesign.BLACK_METAL,\n\t\t\tframeVisible: false,\n\t\t\tminValue : 20,\n\t\t\tmaxValue : 90\n        });\n                       \n//    radial4.setFrameDesign(steelseries.FrameDesign.BLACK_METAL);\n    radialSparge.setValue(0);\n    radialSparge.setThreshold(0);\n    radialSparge.blinkUserLed(0);\n//\tradial4.setPointerType(steelseries.PointerType.TYPE11)\n\n\n</script>\n\n<canvas id=\"canvasRadialSparge\" width=\"401\" height=\"401\"></canvas>\n",
+        "storeOutMessages": false,
+        "fwdInMessages": false,
+        "templateScope": "local",
+        "x": 420,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "892668f2.b2dce8",
+        "type": "mqtt in",
+        "z": "f4141af0.d89288",
+        "name": "sparge/status",
+        "topic": "sparge/status",
+        "qos": "0",
+        "broker": "fe2dcf7a.8b271",
+        "x": 112,
+        "y": 62,
+        "wires": [
+            [
+                "bb6555b9.1098b8"
+            ]
+        ]
+    },
+    {
+        "id": "bb6555b9.1098b8",
+        "type": "json",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "pretty": false,
+        "x": 230,
+        "y": 120,
+        "wires": [
+            [
+                "cb6a9b3.dcb4e68",
+                "2a2da0f7.2929e",
+                "c85d374f.7362b8"
+            ]
+        ]
+    },
+    {
+        "id": "c79d102f.cb88f",
+        "type": "ui_template",
+        "z": "f4141af0.d89288",
+        "group": "faee2d.c36841d",
+        "name": "Boil Temp Gauge",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "format": "<script src=\"/myjs/myGauge-min.js\"></script>\n<script>\nvar radialBoil;\n    (function(scope){\n        scope.$watch('msg', function(msg) {\n           if (typeof(msg.payload.desc) != \"undefined\") radialBoil.setUnitString(msg.payload.desc);\n           if (typeof(msg.payload.tempActual) != \"undefined\") radialBoil.setValue(msg.payload.tempActual);\n           if (typeof(msg.payload.bigFire) != \"undefined\") {\n\t\t\t\tradialBoil.blinkUserLed(msg.payload.bigFire); \n\t\t\t\tradialBoil.setUserLedOnOff(msg.payload.bigFire); \n\t\t\t}\n           if (typeof(msg.payload.smallFire) != \"undefined\") {\n\t\t\t\tradialBoil.blinkLed(msg.payload.smallFire); \n\t\t\t\tradialBoil.setLedOnOff(msg.payload.smallFire); \n\t\t\t}\n           if (typeof(msg.payload.trend) != \"undefined\")\n            {\n                if (msg.payload.trend==1)     radialBoil.setTrend(steelseries.TrendState.UP);\n                if (msg.payload.trend==0)     radialBoil.setTrend(steelseries.TrendState.STEADY);\n                if (msg.payload.trend==-1)    radialBoil.setTrend(steelseries.TrendState.DOWN);\n                if (msg.payload.trend==-2)    radialBoil.setTrend(steelseries.TrendState.OFF);\n            }\n        });\n    })(scope);\n\n    var sections = [steelseries.Section(50, 99, 'rgba(0, 0, 220, 0.3)'),\n                    steelseries.Section(99, 110, 'rgba(220, 0, 0, 0.3)') ],\n\n            // Define one area\n    areas = [steelseries.Section(99, 110, 'rgba(220, 0, 0, 0.3)')],\n\n    radialBoil = new steelseries.Radial('canvasRadialBoil', {\n            gaugeType: steelseries.GaugeType.TYPE4,\n            size: 292,\n            section: sections,\n            area: areas,\n            titleString: \"Boil\",\n            unitString: \"\",\n            thresholdVisible: false,\n            thresholdRising: false,\n            userLedVisible: true,\n            useOdometer: false,\n            lcdVisible: false,\n            trendVisible: true,\n\t\t\tuserLedColor: steelseries.LedColor.RED_LED,\n\t\t\tPointerType: steelseries.PointerType.TYPE11,\n\t\t\tFrameDesign: steelseries.FrameDesign.BLACK_METAL,\n\t\t\tframeVisible: false,\n\t\t\tminValue : 50,\n\t\t\tmaxValue : 110\n        });\n                       \n//    radial4.setFrameDesign(steelseries.FrameDesign.BLACK_METAL);\n    radialBoil.setValue(0);\n//    radialBoil.setThreshold(0);\n    radialBoil.blinkUserLed(0);\n//\tradial4.setPointerType(steelseries.PointerType.TYPE11)\n\n\n</script>\n\n<canvas id=\"canvasRadialBoil\" width=\"401\" height=\"401\"></canvas>\n",
+        "storeOutMessages": true,
+        "fwdInMessages": false,
+        "x": 563,
+        "y": 642,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f833314b.e3d7e",
+        "type": "mqtt in",
+        "z": "f4141af0.d89288",
+        "name": "boil/status",
+        "topic": "boil/status",
+        "qos": "0",
+        "broker": "fe2dcf7a.8b271",
+        "x": 103,
+        "y": 646,
+        "wires": [
+            [
+                "7d50104.7bf54f"
+            ]
+        ]
+    },
+    {
+        "id": "7d50104.7bf54f",
+        "type": "json",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "x": 308,
+        "y": 640,
+        "wires": [
+            [
+                "c79d102f.cb88f",
+                "c1838d6b.42632",
+                "b67170f2.83949",
+                "50b0bbc9.b844e4"
+            ]
+        ]
+    },
+    {
+        "id": "c1838d6b.42632",
+        "type": "function",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "func": "if (msg.payload.timeFinish) {\n    msg.progress = 100 * (Date.now() - msg.payload.timeStart*1000) / (1000 * (msg.payload.timeFinish -msg.payload.timeStart));\n    data = new Date(msg.payload.timeStart * 1000);\n    msg.payload.timeStart = data.getHours() + \":\" + ((data.getMinutes() < 10) ? \"0\" :\"\") + data.getMinutes();\n    data = new Date(msg.payload.timeFinish * 1000);\n    msg.payload.timeFinish = data.getHours() + \":\" + ((data.getMinutes() < 10) ? \"0\" :\"\") + data.getMinutes();\n} else {\n    msg.progress = 0\n    msg.payload.timeStart = \"--:--\";\n    msg.payload.timeFinish = \"--:--\";\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 370,
+        "y": 840,
+        "wires": [
+            [
+                "716cc6f.7ab1f38"
+            ]
+        ]
+    },
+    {
+        "id": "716cc6f.7ab1f38",
+        "type": "ui_template",
+        "z": "f4141af0.d89288",
+        "group": "faee2d.c36841d",
+        "name": "Boil Time Bar",
+        "order": 5,
+        "width": "6",
+        "height": "1",
+        "format": "<div layout=\"row\" layout-align=\"space-between center\">\n{{msg.payload.timeStart}}<progress value={{msg.progress}} max=\"100\"></progress>{{msg.payload.timeFinish}}\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": false,
+        "x": 560,
+        "y": 840,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ec150aa8.303118",
+        "type": "ui_template",
+        "z": "c4433a4e.8ba2b8",
+        "group": "faee2d.c36841d",
+        "name": "stepBoilTable",
+        "order": 4,
+        "width": "0",
+        "height": "0",
+        "format": "<table style=\"width : 100%;\">\n<table style=\"width : 100%;\">\n    <tr>\n      <th align=\"left\" >Step</th>\n      <th>°C</th>\n      <th>Durata</th>\n      <th style=\"text-align : right;\">\n         <md-button class=\"md-button\" ng-click=\"send({payload: -1})\">\n              <ng-md-icon icon=\"stop\"></ng-md-icon>\n          </md-button>\n      </th>\n    </tr>\n    <tr ng-repeat=\"step in msg.payload\">\n        <td>{{step.desc}}</td>\n        <td>{{step.temp}}</td>\n        <td style=\"text-align : right;\">{{step.time}}</td>\n        <td style=\"text-align : right;\">\n           <md-button class=\"md-button\" ng-click=\"send({payload: $index})\">\n                <ng-md-icon icon=\"play_arrow\"></ng-md-icon>\n            </md-button>\n        </td>\n    </tr>\n  </table>\n",
+        "storeOutMessages": true,
+        "fwdInMessages": false,
+        "templateScope": "local",
+        "x": 1183.756103515625,
+        "y": 459,
+        "wires": [
+            [
+                "7cf91049.e6559"
+            ]
+        ]
+    },
+    {
+        "id": "49b5230.f11d1dc",
+        "type": "sqlite",
+        "z": "c4433a4e.8ba2b8",
+        "mydb": "5b7e929d.9fa20c",
+        "name": "jbbs",
+        "x": 1045,
+        "y": 375.2442321777344,
+        "wires": [
+            [
+                "ec150aa8.303118",
+                "60d1e41c.c977ac"
+            ]
+        ]
+    },
+    {
+        "id": "f6472657.54a6e8",
+        "type": "function",
+        "z": "c4433a4e.8ba2b8",
+        "name": "SelectBoilSteps",
+        "func": "var id = msg.payload.id;\n\nmsg.topic = \"select s.*, r.desc as 'ricetta' \";\nmsg.topic += \" from boilstep as s \";\nmsg.topic += \" inner join recipe as r \";\nmsg.topic += \" on s.idRicetta =r.id \";\nmsg.topic += \" where s.idRicetta=\" + id;\nmsg.topic += \" order by prog;\";\nreturn (msg);",
+        "outputs": "1",
+        "noerr": 0,
+        "x": 1227.9666442871094,
+        "y": 264.866512298584,
+        "wires": [
+            [
+                "49b5230.f11d1dc"
+            ]
+        ]
+    },
+    {
+        "id": "28b68991.6f1576",
+        "type": "mqtt out",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "topic": "dashboard/boil/start",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 1578.111083984375,
+        "y": 436.15533447265625,
+        "wires": []
+    },
+    {
+        "id": "950ab73a.e5fff8",
+        "type": "mqtt out",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "topic": "dashboard/boil/load",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 1580,
+        "y": 369.3775634765625,
+        "wires": []
+    },
+    {
+        "id": "60d1e41c.c977ac",
+        "type": "function",
+        "z": "c4433a4e.8ba2b8",
+        "name": "0=>False, 1=>True",
+        "func": "for (var ind in msg.payload) {\n    if (msg.payload[ind].pump === 0) {\n        msg.payload[ind].pump = false;\n    } else {\n        msg.payload[ind].pump = true;\n    }\n}\nreturn msg",
+        "outputs": "1",
+        "noerr": 0,
+        "x": 1234.2999267578125,
+        "y": 375.97760009765625,
+        "wires": [
+            [
+                "950ab73a.e5fff8"
+            ]
+        ]
+    },
+    {
+        "id": "370f38b.1a182c8",
+        "type": "mqtt out",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "topic": "dashboard/boil/stop",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 1576.7666015625,
+        "y": 504.1108703613281,
+        "wires": []
+    },
+    {
+        "id": "7cf91049.e6559",
+        "type": "switch",
+        "z": "c4433a4e.8ba2b8",
+        "name": "Switch send",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gte",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "lt",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 2,
+        "x": 1368.6666259765625,
+        "y": 461.57757568359375,
+        "wires": [
+            [
+                "28b68991.6f1576"
+            ],
+            [
+                "370f38b.1a182c8"
+            ]
+        ]
+    },
+    {
+        "id": "2b0c79bb.edd726",
+        "type": "ui_switch",
+        "z": "f4141af0.d89288",
+        "name": "boilReady",
+        "label": "Ready",
+        "group": "faee2d.c36841d",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "1",
+        "onvalueType": "num",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "0",
+        "offvalueType": "num",
+        "officon": "",
+        "offcolor": "",
+        "x": 620,
+        "y": 780,
+        "wires": [
+            [
+                "f2c72a7f.0a0878"
+            ]
+        ]
+    },
+    {
+        "id": "f2c72a7f.0a0878",
+        "type": "mqtt out",
+        "z": "f4141af0.d89288",
+        "name": "dashboard/boil/ready",
+        "topic": "dashboard/boil/ready",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 800,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "4a1d4aa7.e016c4",
+        "type": "mqtt out",
+        "z": "f4141af0.d89288",
+        "name": "dashboard/boil/setboil",
+        "topic": "dashboard/boil/setboil",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 780,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "84393e5c.285a7",
+        "type": "ui_numeric",
+        "z": "f4141af0.d89288",
+        "name": "Boil Temp",
+        "label": "Boil Temp",
+        "group": "faee2d.c36841d",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "topic": "",
+        "format": "{{value}}",
+        "min": "90",
+        "max": "110",
+        "step": 1,
+        "x": 560,
+        "y": 720,
+        "wires": [
+            [
+                "4a1d4aa7.e016c4"
+            ]
+        ]
+    },
+    {
+        "id": "b67170f2.83949",
+        "type": "function",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "func": "\nreturn msg.payload.boilTemp;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 364.8368377685547,
+        "y": 721.4410552978516,
+        "wires": [
+            [
+                "84393e5c.285a7"
+            ]
+        ]
+    },
+    {
+        "id": "50b0bbc9.b844e4",
+        "type": "function",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "func": "msg.payload=msg.payload.status;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 370,
+        "y": 780,
+        "wires": [
+            [
+                "2bf0bb43.aa3954"
+            ]
+        ]
+    },
+    {
+        "id": "bed82913.376e48",
+        "type": "ui_switch",
+        "z": "f4141af0.d89288",
+        "name": "spargeReady",
+        "label": "Ready",
+        "group": "11f912be.b76ccd",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "1",
+        "onvalueType": "num",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "0",
+        "offvalueType": "num",
+        "officon": "",
+        "offcolor": "",
+        "x": 540,
+        "y": 180,
+        "wires": [
+            [
+                "830bc0a3.3b19c"
+            ]
+        ]
+    },
+    {
+        "id": "86e3b8dc.b41188",
+        "type": "ui_switch",
+        "z": "f4141af0.d89288",
+        "name": "mashReady",
+        "label": "Ready",
+        "group": "1f79b609.15d25a",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "1",
+        "onvalueType": "num",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "0",
+        "offvalueType": "num",
+        "officon": "",
+        "offcolor": "",
+        "x": 670,
+        "y": 500,
+        "wires": [
+            [
+                "d83ed393.f5a89"
+            ]
+        ]
+    },
+    {
+        "id": "ae585e41.42f7e",
+        "type": "function",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "func": "msg.payload=msg.payload.status;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 390,
+        "y": 500,
+        "wires": [
+            [
+                "3bfa35ce.11e5ca"
+            ]
+        ]
+    },
+    {
+        "id": "2a2da0f7.2929e",
+        "type": "function",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "func": "msg.payload=msg.payload.status;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 230,
+        "y": 180,
+        "wires": [
+            [
+                "6300709c.eee81"
+            ]
+        ]
+    },
+    {
+        "id": "830bc0a3.3b19c",
+        "type": "mqtt out",
+        "z": "f4141af0.d89288",
+        "name": "dashboard/sparge/ready",
+        "topic": "dashboard/sparge/ready",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 770,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "d83ed393.f5a89",
+        "type": "mqtt out",
+        "z": "f4141af0.d89288",
+        "name": "dashboard/mash/ready",
+        "topic": "dashboard/mash/ready",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 880,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "b5f74e84.85fce",
+        "type": "debug",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 517.6902923583984,
+        "y": 112.34943389892578,
+        "wires": []
+    },
+    {
+        "id": "f3d8cc.53f15738",
+        "type": "mqtt out",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "topic": "dashboard/sparge/start",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 950,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "bf4e6590.e206f8",
+        "type": "mqtt out",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "topic": "dashboard/sparge/stop",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 780,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "18307568.c9c85b",
+        "type": "function",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "func": "msg.payload=40\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 750,
+        "y": 420,
+        "wires": [
+            [
+                "f3d8cc.53f15738"
+            ]
+        ]
+    },
+    {
+        "id": "3bfa35ce.11e5ca",
+        "type": "rbe",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "x": 512.2358016967773,
+        "y": 500.53125762939453,
+        "wires": [
+            [
+                "86e3b8dc.b41188"
+            ]
+        ]
+    },
+    {
+        "id": "6300709c.eee81",
+        "type": "rbe",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "x": 359.23860931396484,
+        "y": 180.53124237060547,
+        "wires": [
+            [
+                "bed82913.376e48"
+            ]
+        ]
+    },
+    {
+        "id": "2bf0bb43.aa3954",
+        "type": "rbe",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "x": 490,
+        "y": 780,
+        "wires": [
+            [
+                "2b0c79bb.edd726"
+            ]
+        ]
+    },
+    {
+        "id": "c85d374f.7362b8",
+        "type": "debug",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 385.7017059326172,
+        "y": 59.72159194946289,
+        "wires": []
+    }
+]

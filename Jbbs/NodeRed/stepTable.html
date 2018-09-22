@@ -1,0 +1,24 @@
+<div layout="row" layout-align="start center">
+<span flex>Ricetta: {{msg.payload[0].ricetta}}</span>
+</div>
+<div layout="row" layout-align="start center">
+<span flex>Step</span>
+<span flex>Descrizione</span>
+<span flex>Temperatura</span>
+<span flex>Durata</span>
+<span flex>Pompa</span>
+<span flex></span>
+</div>
+
+<div layout="row" layout-align="start center" ng-repeat="step in msg.payload">
+<span flex >{{step.prog}}</span>
+<span flex >{{step.desc}}</span>
+<span flex >{{step.temp}}</span>
+<span flex >{{step.time}}</span>
+<span flex >{{step.pump}}</span>
+<span flex >
+   <md-button class="md-icon-button" ng-click="send({payload: $index})">
+        <ng-md-icon icon="play_arrow"></ng-md-icon>
+    </md-button>
+</span>
+</div>

@@ -1,0 +1,21 @@
+- 	Calcolare il trend in modo diverso
+- 	mettere poca acqua per il mash in, cosi' rimane spazio di manovra per mettere il filtro
+-	Angolo su pentola di bollitura e di sparge per far pescare fino alla fine
+- 	Aggiungere gli allarmi sonori
+- 	Aggiungere orario alle segnalazioni di errore
+-	PROBLEMA: A pompa ferma non ho una lettura corretta della temperatura :(
+-	Mettere avvio automatico di Jbbs
+-	implementare in modo migliore lo start dello sparge, per esempio farlo partire quando manca un'ora alla fine del mash
+
+
+Fatto
+- Gestire LCD
+- mandare i 5v alle sonde, ora leggono sempre malissimo
+- Integrare sensori di livello
+- eliminare lo step di mash in dalle ricette
+
+- Gestire il flag "Ready" sui tre tun
+- 	rivedere l'algoritmo di gestione del fornello quando si avvicina alla temperatura target:  
+	rimane troppo tempo spento. 
+-	Aggiungere valorizzazione della barra di avanzamento anche in fase di riscaldamento
+-	Automatizzare boil (fornello + rilevazione della ebollizione
