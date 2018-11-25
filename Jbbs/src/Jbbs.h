@@ -21,10 +21,10 @@
 
 // Include locali
 #include "JbbsCommons.h"
-#include "MQTTJbbs.h"
 #include "JbbsLcd.h"
 #include "Sparge.h"
 #include "Mash.h"
+#include "Boil.h"
 
 void onConnectCallback(int rc);
 void onMessageCallBack(const struct mosquitto_message* message);

@@ -10,11 +10,15 @@
 GlobalStatus jbbsStatus;
 class Sparge spargeTun( &jbbsStatus );
 class Mash mashTun( &jbbsStatus );
+class Boil boilTun( &jbbsStatus );
 
 //MQTT globals
 class MQTTJbbs *mqttClient;
-const int mqtt_max_topics = 1;
-const char* const mqtt_topics[mqtt_max_topics] = {"dashboard/#"};
+const int mqtt_max_topics = 3;
+const char* const mqtt_topics[mqtt_max_topics] = 	{	"dashboard/#",
+														MashMqttID.c_str(),
+														SpargeMqttID.c_str()
+													};
 
 // LCD
 class JbbsLcd lcd(LCD_ADDR, LCD_BASE);
@@ -58,6 +62,7 @@ bool setup() {
 	}
 
 	mqttClient = new MQTTJbbs("Jbbs", "localhost", 1883, onConnectCallback, onMessageCallBack);
+	jbbsStatus.mqttClient = mqttClient;
 
 	std::cout << "Setup completato Correttamente " << std::endl;
 	return (true);
@@ -69,8 +74,12 @@ bool setup() {
 // --------------------------------------------------------------
 void loop() {
 
-	int ret;
+	const int LOOPTIME = 60;
+
 	static int cicle = 0;
+	static time_t windowStartTime = 0;
+
+	int ret;
 	char buffLabel[30];
 	std::string tunStatus;
 
@@ -102,42 +111,80 @@ void loop() {
 		std::cout << "\t Payload=|" << tunStatus << "|" << std::endl;
 	}
 
-	// Aggiorno i dati sull'LCD
+// --- Loop del Boil
 
-	// Le temperature
-	lcd.setTempSparge(spargeTun.getTempActual());
-	lcd.setTempMash(mashTun.getTempActual());
-	lcd.setTempBoil(0.0);
+	boilTun.loop();
+	tunStatus = boilTun.getStatus();
+//	std::cout << tunStatus << std::endl;
 
-	switch(cicle) {
-		case 0 : // Turno dello Sparge
-			sprintf(buffLabel, "Sparge: %*s", 12, spargeTun.getStateDesc());
-			lcd.setStepLabel(buffLabel);
-			break;
-		case 1 : // Turno del MASH
-			// Il nome della step in esecuzione
-			sprintf(buffLabel, "Mash: %*s", 14, mashTun.getStateDesc());
-			lcd.setStepLabel(buffLabel);
-			break;
-		case 2 : // Turno del boil
-			break;
+	if ((ret=mqttClient->publish(NULL, boilTun.statusTopic.c_str(), tunStatus.length(), tunStatus.c_str(),2))) {
+
+		std::cout << "Problema nell'invio dello Status del MASH. Return code: " << ret << std::endl;
+		std::cout << "\t Topic: |" << boilTun.statusTopic << "|" << std::endl;
+		std::cout << "\t Length=" << tunStatus.length()+1 << std::endl;
+		std::cout << "\t Payload=|" << tunStatus << "|" << std::endl;
 	}
-	cicle = (cicle + 1) % 2; // Passo al successivo
 
-	// La progress Bar
-    if (strftime(lblL, sizeof(lblL), "%R", localtime(mashTun.getTimeStart()))) {
-        lcd.setBarLeftLabel(lblL);
-    } else {
-        lcd.setBarLeftLabel("Error");
-    }
-    if (strftime(lblR, sizeof(lblR), "%R", localtime(mashTun.getTimeFinish()))) {
-        lcd.setBarRightLabel(lblR);
-    }
-    lcd.setBarPercent(mashTun.getPercent());
+	// Aggiorno i dati sull'LCD ogni LOOPTIME secondi
+	if ( (time(0) - windowStartTime) > LOOPTIME) {
 
-    lcd.draw();
+		windowStartTime = time(0);
 
-	std::this_thread::sleep_for(std::chrono::seconds(1));
+		// Le temperature
+		lcd.setTempSparge(spargeTun.getTempActual());
+		lcd.setTempMash(mashTun.getTempActual());
+		lcd.setTempBoil(0.0);
+
+		switch(cicle) {
+
+			case 0 : // Turno dello Sparge
+				sprintf(buffLabel, "Sparge: %*s", 12, spargeTun.getStateDesc());
+				lcd.setStepLabel(buffLabel);
+				if (strftime(lblL, sizeof(lblL), "%R", localtime(spargeTun.getTimeStart()))) {
+					lcd.setBarLeftLabel(lblL);
+				} else {
+					lcd.setBarLeftLabel("Error");
+				}
+				if (strftime(lblR, sizeof(lblR), "%R", localtime(spargeTun.getTimeFinish()))) {
+					lcd.setBarRightLabel(lblR);
+				}
+				lcd.setBarPercent(spargeTun.getPercent());
+				break;
+			case 1 : // Turno del MASH
+				// Il nome della step in esecuzione
+				sprintf(buffLabel, "Mash: %*s", 14, mashTun.getStateDesc());
+				lcd.setStepLabel(buffLabel);
+				if (strftime(lblL, sizeof(lblL), "%R", localtime(mashTun.getTimeStart()))) {
+					lcd.setBarLeftLabel(lblL);
+				} else {
+					lcd.setBarLeftLabel("Error");
+				}
+				if (strftime(lblR, sizeof(lblR), "%R", localtime(mashTun.getTimeFinish()))) {
+					lcd.setBarRightLabel(lblR);
+				}
+				lcd.setBarPercent(mashTun.getPercent());
+				break;
+			case 2 : // Turno del boil
+				sprintf(buffLabel, "Boil: %*s", 14, boilTun.getStateDesc());
+				lcd.setStepLabel(buffLabel);
+				if (strftime(lblL, sizeof(lblL), "%R", localtime(boilTun.getTimeStart()))) {
+					lcd.setBarLeftLabel(lblL);
+				} else {
+					lcd.setBarLeftLabel("Error");
+				}
+				if (strftime(lblR, sizeof(lblR), "%R", localtime(boilTun.getTimeFinish()))) {
+					lcd.setBarRightLabel(lblR);
+				}
+				lcd.setBarPercent(boilTun.getPercent());
+				break;
+		}
+
+		cicle = (cicle + 1) % 3; // Passo al successivo
+
+		lcd.draw();
+	}
+
+	// std::this_thread::sleep_for(std::chrono::seconds(1));
 
 }
 

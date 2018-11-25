@@ -12,8 +12,6 @@
 #include "json.hpp" 	// Json for modern c++
 using json = nlohmann::json; // for convenience
 
-const unsigned char MAXSTEP = 10;
-
 // Include locali
 #include "JbbsCommons.h"
 #include "MQTTJbbs.h"
@@ -25,8 +23,6 @@ class Mash {
 	class DS18B20* myDS18B20;
 	GlobalStatus *jbbsStatus;
 
-	bool ready 		= false;
-	bool gotRecipe 	= false;
 	int startStep = -1;
 
 	struct {
@@ -47,6 +43,7 @@ class Mash {
 		stato			status		= OFF;
 	   std::string  	desc		= "";
 	   int          	numStep		= 0;    // indice Step nell'array Recipe
+	   unsigned char 	lastStep	= 0;	// Numero totale di step nella ricetta
 	   double       	tempStart	= 0;    // timestamp
 	   double       	tempTarget	= 0;
 	   double       	tempActual	= 0;
@@ -59,16 +56,11 @@ class Mash {
 	   bool         	warming		= false;
 	   int 				trend		= 0;
        bool				alarm		= false;
+       bool 			gotRecipe 	= false; // Flag caricament ricetta
+       bool 			ready 		= false; // flag Pentola pronta. Va true solo in manuale
 	 } status;
 
 	// commands related stuff
-	const std::string COMMAND_PUMP 	= "pump";
-	const std::string COMMAND_FIRE 	= "fire";
-	const std::string COMMAND_LOAD 	= "load";
-	const std::string COMMAND_START = "start";
-	const std::string COMMAND_STOP	= "stop";
-	const std::string COMMAND_READY	= "ready";
-
     void driveFire(bool );
     void drivePump(bool );
     bool loadSteps(const char* );
@@ -79,7 +71,9 @@ class Mash {
 
   public:
     Mash (GlobalStatus *js);
-	const std::string statusTopic = "mash/status";
+	const std::string statusTopic = MashMqttID + "/" + "Status";   //"mash/status";
+	const std::string spargeStartCommand = MashMqttID + "/" + SpargeMqttID + COMMAND_SPARGE; // "mash//sparge/sparge";
+	const std::string boilStartCommand = MashMqttID + "/" + BoilMqttID + COMMAND_START; // "mash/boil/start";
 
     void 	loop();
     bool 	execute (const char *, const char *);

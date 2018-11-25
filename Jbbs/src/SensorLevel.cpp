@@ -8,7 +8,6 @@
 #include "SensorLevel.h"
 
 SensorLevel::SensorLevel(const int gpioLow, const int gpioHigh) {
-	// TODO Auto-generated constructor stub
 	// settare gpio ad input
 	sensorGpioLow = gpioLow;
 	sensorGpioHigh = gpioHigh;
@@ -38,8 +37,3 @@ bool SensorLevel::isHigh() {
 	return (digitalRead(sensorGpioHigh));
 
 }
-
-SensorLevel::~SensorLevel() {
-	// TODO Auto-generated destructor stub
-}
-
