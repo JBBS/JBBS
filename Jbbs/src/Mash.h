@@ -39,11 +39,13 @@ class Mash {
 	};
 	const char* stateDesc[3] = { "Off", "Ready", "Working"};
 
+	char *boilRecipe;
+
 	struct {
 		stato			status		= OFF;
 	   std::string  	desc		= "";
-	   int          	numStep		= 0;    // indice Step nell'array Recipe
-	   unsigned char 	lastStep	= 0;	// Numero totale di step nella ricetta
+	   int          	currentStep	= 0;    // indice Step nell'array Recipe
+	   unsigned char 	lastStep	= 0;	// punta all'ultimo step nella ricetta
 	   double       	tempStart	= 0;    // timestamp
 	   double       	tempTarget	= 0;
 	   double       	tempActual	= 0;
@@ -66,13 +68,17 @@ class Mash {
     bool loadSteps(const char* );
     bool start(int);
     void stop();
+
     void PID_setup();
     void PID_loop();
+    int time2Finish();
 
   public:
     Mash (GlobalStatus *js);
 	const std::string statusTopic = MashMqttID + "/" + "Status";   //"mash/status";
-	const std::string spargeStartCommand = MashMqttID + "/" + SpargeMqttID + COMMAND_SPARGE; // "mash//sparge/sparge";
+	const std::string spargeStartCommand = MashMqttID + "/" + SpargeMqttID + COMMAND_START; // "mash/sparge/sparge";
+	const std::string spargeSpargeCommand = MashMqttID + "/" + SpargeMqttID + COMMAND_SPARGE; // "mash/sparge/sparge";
+	const std::string boilLoadCommand = MashMqttID + "/" + BoilMqttID + COMMAND_LOAD; // "mash/boil/load";
 	const std::string boilStartCommand = MashMqttID + "/" + BoilMqttID + COMMAND_START; // "mash/boil/start";
 
     void 	loop();

@@ -65,6 +65,7 @@ const std::string BoilMqttID = "boil";
 const std::string COMMAND_SMALLFIRE	= "smallfire";
 const std::string COMMAND_BIGFIRE 	= "bigfire";
 const std::string COMMAND_LOAD 		= "load";
+const std::string COMMAND_LOADBOIL	= "loadboil";
 const std::string COMMAND_START 	= "start";
 const std::string COMMAND_SPARGE 	= "sparge";
 const std::string COMMAND_STOP		= "stop";

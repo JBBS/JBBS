@@ -18,4 +18,37 @@ Fatto
 - 	rivedere l'algoritmo di gestione del fornello quando si avvicina alla temperatura target:  
 	rimane troppo tempo spento. 
 -	Aggiungere valorizzazione della barra di avanzamento anche in fase di riscaldamento
--	Automatizzare boil (fornello + rilevazione della ebollizione
+-	Automatizzare boil (fornello + rilevazione della ebollizione)
+
+
+gestione ricetta boil in caso di cotta concatenata: potrei passara inizialmente al mash e a fine mash da lui a boil in fase di start
+
+------------
+
+Novità:
+Passo in JbsStatus l'istanza del client mqtt
+faccio sottoscrivere a jbbs anche i topic di mash e sparge
+Mash invia a Sparge e boil il messaggio di inizio
+Personalizzato progress bar per sparge e boil
+Limitata la temporizzazione ad un secondo al solo aggionramnto del display. Questo dovrebbe risolvere i problemi di comunicazione MQTT
+
+da fare: adeguare node red
+
+
+Test da effettuare
+verificare che a fine mash partano i messaggi di inizio sparge e boil
+verificare corretta visualizzazione stato sparge, mash e boil su LCD
+
+---------------------------------------------
+Automazione tino di Boil
+
+test  da fare
+- caricamento ricette
+- esecuzione comandi
+- passaggi di stato
+- inizio ciclo fatto partire da messaggio di iizio sparge e boil inviati da mash a fine ciclo
+- accensione fornello piccolo dopo 5 minuti
+- passaggio a preboil ed accensione fornello grande dopo 10 minuti
+- loop step
+- mantenimento temperatura
+

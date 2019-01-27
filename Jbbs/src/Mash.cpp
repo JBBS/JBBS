@@ -33,7 +33,6 @@ void Mash::loop() {
 	double appo	= 0;    // timestamp inizio step
 	int ret = 0;
 
-
   // Leggo la temperatura del mosto
 
 	tempActual = myDS18B20->getTemp();
@@ -67,6 +66,21 @@ void Mash::loop() {
 
 			PID_loop();
 
+			// se manca meno di un'ora, faccio partire il riscaldamento del
+			// tino di sparge
+
+			if (time2Finish() <= 60 && jbbsStatus->spargeTarget <= 0) {
+
+				if ((ret=jbbsStatus->mqttClient->publish(NULL, spargeStartCommand.c_str(), 2, "70", 2))) {
+
+					std::cout << "Problema nell'invio del messaggio di inizio riscaldamento Sparge. Return code: " << ret << std::endl;
+					std::cout << "\t Topic: |" << spargeStartCommand << "|" << std::endl;
+					std::cout << "\t Length=" << 2 << std::endl;
+					std::cout << "\t Payload=|" << "70" << "|" << std::endl;
+				}
+
+			}
+
 			// Se sto riscaldando ...
 			if (status.warming) {
 
@@ -94,19 +108,27 @@ void Mash::loop() {
 				// ... altrimenti, controllo se ho finito la durata dello step ...
 				if ( status.timeFinish <= time(0) ) {
 					// ... se c'è passo allo step successivo ...
-					if (status.numStep < status.lastStep) {
-						Mash::start (status.numStep + 1);
+					if (status.currentStep < status.lastStep) {
+						Mash::start (status.currentStep + 1);
 					} else {
 						// ... altrimenti ho finito e lancio lo sparge ed il boil
 //						jbbsStatus->spargeStart = true;
-						if ((ret=jbbsStatus->mqttClient->publish(NULL, spargeStartCommand.c_str(), 1, "1", 2))) {
+						if ((ret=jbbsStatus->mqttClient->publish(NULL, spargeSpargeCommand.c_str(), 1, "1", 2))) {
 
 							std::cout << "Problema nell'invio del messaggio di inizio Sparge. Return code: " << ret << std::endl;
-							std::cout << "\t Topic: |" << spargeStartCommand << "|" << std::endl;
+							std::cout << "\t Topic: |" << spargeSpargeCommand << "|" << std::endl;
 							std::cout << "\t Length=" << 1 << std::endl;
 							std::cout << "\t Payload=|" << "1" << "|" << std::endl;
 						}
 
+						// Quando lancio il boil, gli passo anche la sua ricetta
+						if ((ret=jbbsStatus->mqttClient->publish(NULL, boilLoadCommand.c_str(), strlen(boilRecipe), boilRecipe, 2))) {
+
+							std::cout << "Problema nell'invio del messaggio di inizio Boil. Return code: " << ret << std::endl;
+							std::cout << "\t Topic: |" << boilLoadCommand << "|" << std::endl;
+							std::cout << "\t Length=" << strlen(boilRecipe) << std::endl;
+							std::cout << "\t Payload=|" << boilRecipe << "|" << std::endl;
+						}
 						if ((ret=jbbsStatus->mqttClient->publish(NULL, boilStartCommand.c_str(), 1, "0", 2))) {
 
 							std::cout << "Problema nell'invio del messaggio di inizio Boil. Return code: " << ret << std::endl;
@@ -146,6 +168,8 @@ bool Mash::execute (const char *command, const char *parameters) {
     }
   } else if (COMMAND_LOAD.compare (command) == 0) {
     success = Mash::loadSteps(parameters);
+  } else if (COMMAND_LOADBOIL.compare (command) == 0) {
+    strcpy(boilRecipe, parameters);
   } else if (COMMAND_START.compare (command) == 0) {
     startStep = atoi(parameters);
   } else if (COMMAND_STOP.compare (command) == 0) {
@@ -224,7 +248,7 @@ void Mash::stop() {
 	// Azzero status
 	status.status		= OFF;
 	status.desc        = "";
-	status.numStep     = -1;
+	status.currentStep = -1;
 	status.tempStart   = 0;
 	status.tempTarget  = 0;
 	status.timeStart   = 0;
@@ -255,7 +279,7 @@ bool Mash::start (int ind) {
 
 	// Inizializzo currentstep
 	status.desc        	= recipe[ind].desc;
-	status.numStep     	= ind;
+	status.currentStep  = ind;
 	status.pump        	= recipe[ind].pump;
 	status.timeStart   	= time(0);
 	status.tempStart   	= status.tempActual;
@@ -323,7 +347,7 @@ const std::string Mash::getStatus() {
 
 	json jStatus;
 	jStatus["status"]	  = status.status;
-	jStatus["step"]       = status.numStep;
+	jStatus["step"]       = status.currentStep;
 	jStatus["desc"]       = status.desc;
 	jStatus["tempStart"]  = status.tempStart;
 	jStatus["tempTarget"] = status.tempTarget;
@@ -367,6 +391,29 @@ const char* Mash::getStateDesc(){
 	}
 
 	return ("");
+
+}
+
+int Mash::time2Finish() {
+	// devo sommare tempo a fine step + durata step successive + differenza
+	// di temperatura tra quella attuale e quella dell'ultima step.
+
+	int t2f = 0;
+
+	// sommo la durata in minuti di tutte le rimanenti step
+	for (int i = status.currentStep+1; i <= status.lastStep; i++) {
+		t2f += recipe[i].time;
+	}
+
+	// aggiugo la differenza di temperatura quella attuale e quella dell'ultima step
+	// considero che ci voglia un minuto per elevare la T° di un grado
+	t2f += (recipe[status.lastStep].temp - status.tempActual);
+
+	// Aggiungo il tempo che ci vuole alla fine della step attuale
+
+	t2f += ((status.timeFinish - time(0) / 60));
+
+	return (t2f);
 
 }
 

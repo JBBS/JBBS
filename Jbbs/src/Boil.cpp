@@ -101,8 +101,8 @@ void Boil::loop() {
 
 				// Eventualmente suono allarme
 				// ... se c'è passo allo step successivo ...
-				if (status.numStep < status.lastStep) {
-					Boil::start (status.numStep + 1);
+				if (status.CurrentStep < status.lastStep) {
+					Boil::start (status.CurrentStep + 1);
 				} else {
 				// ... altrimenti ho finito
 					Boil::stop();
@@ -217,7 +217,7 @@ void Boil::stop() {
 	// Azzero status
 	status.status			= OFF;
 	status.desc        		= "";
-	status.numStep     		= -1;
+	status.CurrentStep     		= -1;
 	status.tempStart  		= 0;
 	status.timeStart   		= 0;
 	status.timeStep    		= 0;
@@ -245,7 +245,7 @@ bool Boil::start (int ind) {
 
 	// Inizializzo currentstep
 	status.desc        	= recipe[ind].desc;
-	status.numStep     	= ind;
+	status.CurrentStep     	= ind;
 	status.timeStart   	= time(0);
 	status.tempStart   	= status.tempActual;
 	status.timeStep    	= recipe[ind].time;
@@ -270,7 +270,7 @@ const std::string Boil::getStatus() {
 
 	json jStatus;
 	jStatus["status"]	  = status.status;
-	jStatus["step"]       = status.numStep;
+	jStatus["step"]       = status.CurrentStep;
 	jStatus["desc"]       = status.desc;
 	jStatus["tempStart"]  = status.tempStart;
 	jStatus["tempActual"] = status.tempActual;

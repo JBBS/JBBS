@@ -44,7 +44,7 @@ class Boil {
 	struct {
 		stato			status		= OFF;
 		std::string  	desc		= "";
-		int          	numStep		= 0;    // indice Step nell'array Recipe
+		int          	CurrentStep		= 0;    // indice Step nell'array Recipe
 		double       	tempStart	= 0;    // timestamp
 		double       	tempActual	= 0;
 		time_t       	timeStart	= 0;    // timestamp inizio step
