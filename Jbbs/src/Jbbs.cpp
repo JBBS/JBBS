@@ -8,16 +8,23 @@
 #include "Jbbs.h"               // For Jbbs
 
 GlobalStatus jbbsStatus;
-class Sparge spargeTun( &jbbsStatus );
-class Mash mashTun( &jbbsStatus );
-class Boil boilTun( &jbbsStatus );
+//class Sparge spargeTun( &jbbsStatus );
+//class Mash mashTun( &jbbsStatus );
+//class Boil boilTun( &jbbsStatus );
+
+Sparge *spargeTun;
+Mash *mashTun;
+Boil *boilTun;
+
+
 
 //MQTT globals
 class MQTTJbbs *mqttClient;
-const int mqtt_max_topics = 3;
+const int mqtt_max_topics = 4;
 const char* const mqtt_topics[mqtt_max_topics] = 	{	"dashboard/#",
 														MashMqttID.c_str(),
-														SpargeMqttID.c_str()
+														SpargeMqttID.c_str(),
+														BoilMqttID.c_str()
 													};
 
 // LCD
@@ -64,6 +71,11 @@ bool setup() {
 	mqttClient = new MQTTJbbs("Jbbs", "localhost", 1883, onConnectCallback, onMessageCallBack);
 	jbbsStatus.mqttClient = mqttClient;
 
+	spargeTun = new Sparge( &jbbsStatus );
+	mashTun = new Mash ( &jbbsStatus );
+	boilTun = new Boil( &jbbsStatus );
+
+
 	std::cout << "Setup completato Correttamente " << std::endl;
 	return (true);
 
@@ -74,7 +86,7 @@ bool setup() {
 // --------------------------------------------------------------
 void loop() {
 
-	const int LOOPTIME = 60;
+	const int LOOPTIME = 5;
 
 	static int cicle = 0;
 	static time_t windowStartTime = 0;
@@ -86,41 +98,41 @@ void loop() {
 	mqttClient->loop();
 
 // --- Loop dello Sparge
-	spargeTun.loop();
-	tunStatus = spargeTun.getStatus();
+	spargeTun->loop();
+	tunStatus = spargeTun->getStatus();
 //	std::cout << tunStatus << std::endl;
 
-	if ((ret=mqttClient->publish(NULL, spargeTun.statusTopic.c_str(), tunStatus.length(), tunStatus.c_str(),2))) {
+	if ((ret=mqttClient->publish(NULL, spargeTun->statusTopic.c_str(), tunStatus.length(), tunStatus.c_str(),2))) {
 
 		std::cout << "Problema nell'invio dello Status dello Sparge. Return code: " << ret << std::endl;
-		std::cout << "\t Topic: |" << spargeTun.statusTopic << "|" << std::endl;
+		std::cout << "\t Topic: |" << spargeTun->statusTopic << "|" << std::endl;
 		std::cout << "\t Length=" << tunStatus.length()+1 << std::endl;
 		std::cout << "\t Payload=|" << tunStatus << "|" << std::endl;
 	}
 
 // --- Loop del Mash
-	mashTun.loop();
-	tunStatus = mashTun.getStatus();
+	mashTun->loop();
+	tunStatus = mashTun->getStatus();
 //	std::cout << tunStatus << std::endl;
 
-	if ((ret=mqttClient->publish(NULL, mashTun.statusTopic.c_str(), tunStatus.length(), tunStatus.c_str(),2))) {
+	if ((ret=mqttClient->publish(NULL, mashTun->statusTopic.c_str(), tunStatus.length(), tunStatus.c_str(),2))) {
 
 		std::cout << "Problema nell'invio dello Status del MASH. Return code: " << ret << std::endl;
-		std::cout << "\t Topic: |" << mashTun.statusTopic << "|" << std::endl;
+		std::cout << "\t Topic: |" << mashTun->statusTopic << "|" << std::endl;
 		std::cout << "\t Length=" << tunStatus.length()+1 << std::endl;
 		std::cout << "\t Payload=|" << tunStatus << "|" << std::endl;
 	}
 
 // --- Loop del Boil
 
-	boilTun.loop();
-	tunStatus = boilTun.getStatus();
+	boilTun->loop();
+	tunStatus = boilTun->getStatus();
 //	std::cout << tunStatus << std::endl;
 
-	if ((ret=mqttClient->publish(NULL, boilTun.statusTopic.c_str(), tunStatus.length(), tunStatus.c_str(),2))) {
+	if ((ret=mqttClient->publish(NULL, boilTun->statusTopic.c_str(), tunStatus.length(), tunStatus.c_str(),2))) {
 
-		std::cout << "Problema nell'invio dello Status del MASH. Return code: " << ret << std::endl;
-		std::cout << "\t Topic: |" << boilTun.statusTopic << "|" << std::endl;
+		std::cout << "Problema nell'invio dello Status del BOIL. Return code: " << ret << std::endl;
+		std::cout << "\t Topic: |" << boilTun->statusTopic << "|" << std::endl;
 		std::cout << "\t Length=" << tunStatus.length()+1 << std::endl;
 		std::cout << "\t Payload=|" << tunStatus << "|" << std::endl;
 	}
@@ -131,51 +143,51 @@ void loop() {
 		windowStartTime = time(0);
 
 		// Le temperature
-		lcd.setTempSparge(spargeTun.getTempActual());
-		lcd.setTempMash(mashTun.getTempActual());
-		lcd.setTempBoil(0.0);
+		lcd.setTempSparge(spargeTun->getTempActual());
+		lcd.setTempMash(mashTun->getTempActual());
+		lcd.setTempBoil(boilTun->getTempActual());
 
 		switch(cicle) {
 
 			case 0 : // Turno dello Sparge
-				sprintf(buffLabel, "Sparge: %*s", 12, spargeTun.getStateDesc());
+				sprintf(buffLabel, "Sparge: %*s", 12, spargeTun->getStateDesc());
 				lcd.setStepLabel(buffLabel);
-				if (strftime(lblL, sizeof(lblL), "%R", localtime(spargeTun.getTimeStart()))) {
+				if (strftime(lblL, sizeof(lblL), "%R", localtime(spargeTun->getTimeStart()))) {
 					lcd.setBarLeftLabel(lblL);
 				} else {
 					lcd.setBarLeftLabel("Error");
 				}
-				if (strftime(lblR, sizeof(lblR), "%R", localtime(spargeTun.getTimeFinish()))) {
+				if (strftime(lblR, sizeof(lblR), "%R", localtime(spargeTun->getTimeFinish()))) {
 					lcd.setBarRightLabel(lblR);
 				}
-				lcd.setBarPercent(spargeTun.getPercent());
+				lcd.setBarPercent(spargeTun->getPercent());
 				break;
 			case 1 : // Turno del MASH
 				// Il nome della step in esecuzione
-				sprintf(buffLabel, "Mash: %*s", 14, mashTun.getStateDesc());
+				sprintf(buffLabel, "Mash: %*s", 14, mashTun->getStateDesc());
 				lcd.setStepLabel(buffLabel);
-				if (strftime(lblL, sizeof(lblL), "%R", localtime(mashTun.getTimeStart()))) {
+				if (strftime(lblL, sizeof(lblL), "%R", localtime(mashTun->getTimeStart()))) {
 					lcd.setBarLeftLabel(lblL);
 				} else {
 					lcd.setBarLeftLabel("Error");
 				}
-				if (strftime(lblR, sizeof(lblR), "%R", localtime(mashTun.getTimeFinish()))) {
+				if (strftime(lblR, sizeof(lblR), "%R", localtime(mashTun->getTimeFinish()))) {
 					lcd.setBarRightLabel(lblR);
 				}
-				lcd.setBarPercent(mashTun.getPercent());
+				lcd.setBarPercent(mashTun->getPercent());
 				break;
 			case 2 : // Turno del boil
-				sprintf(buffLabel, "Boil: %*s", 14, boilTun.getStateDesc());
+				sprintf(buffLabel, "Boil: %*s", 14, boilTun->getStateDesc());
 				lcd.setStepLabel(buffLabel);
-				if (strftime(lblL, sizeof(lblL), "%R", localtime(boilTun.getTimeStart()))) {
+				if (strftime(lblL, sizeof(lblL), "%R", localtime(boilTun->getTimeStart()))) {
 					lcd.setBarLeftLabel(lblL);
 				} else {
 					lcd.setBarLeftLabel("Error");
 				}
-				if (strftime(lblR, sizeof(lblR), "%R", localtime(boilTun.getTimeFinish()))) {
+				if (strftime(lblR, sizeof(lblR), "%R", localtime(boilTun->getTimeFinish()))) {
 					lcd.setBarRightLabel(lblR);
 				}
-				lcd.setBarPercent(boilTun.getPercent());
+				lcd.setBarPercent(boilTun->getPercent());
 				break;
 		}
 
@@ -242,11 +254,15 @@ void onMessageCallBack(const struct mosquitto_message* message) {
 
 	// Indirizzo il messaggio al giusto destinatario
 	if (strcasecmp(topics[1], MashMqttID.c_str()) == 0) {
-	  mashTun.execute(topics[2], parms);
+	  mashTun->execute(topics[2], parms);
 	}
 
 	if (strcasecmp(topics[1], SpargeMqttID.c_str()) == 0) {
-	  spargeTun.execute(topics[2], parms);
+	  spargeTun->execute(topics[2], parms);
+	}
+
+	if (strcasecmp(topics[1], BoilMqttID.c_str()) == 0) {
+	  boilTun->execute(topics[2], parms);
 	}
 
 }

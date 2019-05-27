@@ -18,7 +18,7 @@ using json = nlohmann::json; // for convenience
 
 class Boil {
 
-	const std::string TEMP_BOIL = "28.FF9285711503";
+	const std::string TEMP_BOIL = "28.59B04D000000";
 	class DS18B20* myDS18B20;
 	GlobalStatus *jbbsStatus;
 
