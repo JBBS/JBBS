@@ -122,12 +122,12 @@ void Mash::loop() {
 						}
 
 						// Quando lancio il boil, gli passo anche la sua ricetta
-						if ((ret=jbbsStatus->mqttClient->publish(NULL, boilLoadCommand.c_str(), strlen(boilRecipe), boilRecipe, 2))) {
+						if ((ret=jbbsStatus->mqttClient->publish(NULL, boilLoadCommand.c_str(), strlen(boilRecipe.c_str()), boilRecipe.c_str(), 2))) {
 
 							std::cout << "Problema nell'invio del messaggio di inizio Boil. Return code: " << ret << std::endl;
 							std::cout << "\t Topic: |" << boilLoadCommand << "|" << std::endl;
-							std::cout << "\t Length=" << strlen(boilRecipe) << std::endl;
-							std::cout << "\t Payload=|" << boilRecipe << "|" << std::endl;
+							std::cout << "\t Length=" << strlen(boilRecipe.c_str()) << std::endl;
+							std::cout << "\t Payload=|" << boilRecipe.c_str() << "|" << std::endl;
 						}
 						if ((ret=jbbsStatus->mqttClient->publish(NULL, boilStartCommand.c_str(), 1, "0", 2))) {
 
@@ -167,9 +167,10 @@ bool Mash::execute (const char *command, const char *parameters) {
         Mash::stop();
     }
   } else if (COMMAND_LOAD.compare (command) == 0) {
-    success = Mash::loadSteps(parameters);
+	  success = Mash::loadSteps(parameters);
   } else if (COMMAND_LOADBOIL.compare (command) == 0) {
-    strcpy(boilRecipe, parameters);
+    // strcpy(boilRecipe, parameters);
+	  boilRecipe.assign(parameters);
   } else if (COMMAND_START.compare (command) == 0) {
     startStep = atoi(parameters);
   } else if (COMMAND_STOP.compare (command) == 0) {

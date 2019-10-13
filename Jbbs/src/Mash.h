@@ -39,7 +39,8 @@ class Mash {
 	};
 	const char* stateDesc[3] = { "Off", "Ready", "Working"};
 
-	char *boilRecipe;
+	// char *boilRecipe;
+	std::string boilRecipe;
 
 	struct {
 		stato			status		= OFF;

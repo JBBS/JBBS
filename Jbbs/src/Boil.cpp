@@ -7,7 +7,6 @@
 
 #include "JbbsCommons.h"
 
-
 Boil::Boil (GlobalStatus *js) {
 
 	myDS18B20 = new DS18B20(TEMP_BOIL);
