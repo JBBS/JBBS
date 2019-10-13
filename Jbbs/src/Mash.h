@@ -76,11 +76,11 @@ class Mash {
 
   public:
     Mash (GlobalStatus *js);
-	const std::string statusTopic = MashMqttID + "/" + "Status";   //"mash/status";
-	const std::string spargeStartCommand = MashMqttID + "/" + SpargeMqttID + COMMAND_START; // "mash/sparge/sparge";
-	const std::string spargeSpargeCommand = MashMqttID + "/" + SpargeMqttID + COMMAND_SPARGE; // "mash/sparge/sparge";
-	const std::string boilLoadCommand = MashMqttID + "/" + BoilMqttID + COMMAND_LOAD; // "mash/boil/load";
-	const std::string boilStartCommand = MashMqttID + "/" + BoilMqttID + COMMAND_START; // "mash/boil/start";
+	const std::string statusTopic = MashMqttID + "/" + "status";   //"mash/status";
+	const std::string spargeStartCommand = MashMqttID + "/" + SpargeMqttID + "/" + COMMAND_START; // "mash/sparge/start";
+	const std::string spargeSpargeCommand = MashMqttID + "/" + SpargeMqttID + "/" + COMMAND_SPARGE; // "mash/sparge/sparge";
+	const std::string boilLoadCommand = MashMqttID + "/" + BoilMqttID + "/" + COMMAND_LOAD; // "mash/boil/load";
+	const std::string boilStartCommand = MashMqttID + "/" + BoilMqttID + "/" + COMMAND_START; // "mash/boil/start";
 
     void 	loop();
     bool 	execute (const char *, const char *);

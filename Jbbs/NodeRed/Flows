@@ -488,8 +488,7 @@
                 "c01dd8e8.4bbd68"
             ],
             [
-                "827b7b23.909878",
-                "18307568.c9c85b"
+                "827b7b23.909878"
             ],
             [
                 "f798a3a3.755ff",
@@ -510,7 +509,7 @@
         "storeOutMessages": false,
         "fwdInMessages": false,
         "templateScope": "local",
-        "x": 420,
+        "x": 440,
         "y": 120,
         "wires": [
             []
@@ -638,9 +637,9 @@
         "group": "faee2d.c36841d",
         "name": "stepBoilTable",
         "order": 4,
-        "width": "0",
-        "height": "0",
-        "format": "<table style=\"width : 100%;\">\n    <tr>\n      <th align=\"left\" >Step</th>\n      <th>°C</th>\n      <th>Durata</th>\n      <th style=\"text-align : right;\">\n         <md-button class=\"md-button\" ng-click=\"send({payload: -1})\">\n              <ng-md-icon icon=\"stop\"></ng-md-icon>\n          </md-button>\n      </th>\n    </tr>\n    <tr ng-repeat=\"step in msg.payload\">\n        <td>{{step.desc}}</td>\n        <td>{{step.temp}}</td>\n        <td style=\"text-align : right;\">{{step.time}}</td>\n        <td style=\"text-align : right;\">\n           <md-button class=\"md-button\" ng-click=\"send({payload: $index})\">\n                <ng-md-icon icon=\"play_arrow\"></ng-md-icon>\n            </md-button>\n        </td>\n    </tr>\n  </table>\n",
+        "width": "6",
+        "height": "4",
+        "format": "<table style=\"width : 100%;\">\n    <tr>\n      <th align=\"left\" >Step</th>\n      <th>Durata</th>\n      <th style=\"text-align : right;\">\n         <md-button class=\"md-button\" ng-click=\"send({payload: -1})\">\n              <ng-md-icon icon=\"stop\"></ng-md-icon>\n          </md-button>\n      </th>\n    </tr>\n    <tr ng-repeat=\"step in msg.payload\">\n        <td>{{step.desc}}</td>\n        <td style=\"text-align : right;\">{{step.time}}</td>\n        <td style=\"text-align : right;\">\n           <md-button class=\"md-button\" ng-click=\"send({payload: $index})\">\n                <ng-md-icon icon=\"play_arrow\"></ng-md-icon>\n            </md-button>\n        </td>\n    </tr>\n  </table>\n",
         "storeOutMessages": false,
         "fwdInMessages": false,
         "templateScope": "local",
@@ -658,12 +657,11 @@
         "z": "c4433a4e.8ba2b8",
         "mydb": "5b7e929d.9fa20c",
         "name": "jbbs",
-        "x": 1250,
+        "x": 1230,
         "y": 340,
         "wires": [
             [
-                "950ab73a.e5fff8",
-                "ec150aa8.303118"
+                "950ab73a.e5fff8"
             ]
         ]
     },
@@ -672,7 +670,7 @@
         "type": "function",
         "z": "c4433a4e.8ba2b8",
         "name": "SelectBoilSteps",
-        "func": "var id = msg.payload.id;\n\nmsg.topic = \"select s.*, r.desc as 'ricetta' \";\nmsg.topic += \" from boilstep as s \";\nmsg.topic += \" inner join recipe as r \";\nmsg.topic += \" on s.idRicetta =r.id \";\nmsg.topic += \" where s.idRicetta=\" + id;\nmsg.topic += \" order by prog;\";\nreturn (msg);",
+        "func": "var id = msg.payload.id;\n\nmsg.topic = \"select * \";\nmsg.topic += \" from boilstep \";\nmsg.topic += \" where idRicetta=\" + id;\nmsg.topic += \" order by prog;\";\nreturn (msg);",
         "outputs": "1",
         "noerr": 0,
         "x": 1227.9666442871094,
@@ -1074,6 +1072,22 @@
         "wires": [
             [
                 "2b0c79bb.edd726"
+            ]
+        ]
+    },
+    {
+        "id": "7c5d2b18.855bc4",
+        "type": "mqtt in",
+        "z": "c4433a4e.8ba2b8",
+        "name": "mash/boil/load",
+        "topic": "mash/boil/load",
+        "qos": "2",
+        "broker": "fe2dcf7a.8b271",
+        "x": 1010,
+        "y": 500,
+        "wires": [
+            [
+                "ec150aa8.303118"
             ]
         ]
     }

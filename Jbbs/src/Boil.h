@@ -28,7 +28,6 @@ class Boil {
 
 	struct {
 	  std::string 	desc;
-	  double 		temp;
 	  unsigned char time = 0;
 	} recipe[MAXSTEP];
 

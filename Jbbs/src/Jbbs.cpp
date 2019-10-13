@@ -22,9 +22,9 @@ Boil *boilTun;
 class MQTTJbbs *mqttClient;
 const int mqtt_max_topics = 4;
 const char* const mqtt_topics[mqtt_max_topics] = 	{	"dashboard/#",
-														MashMqttID.c_str(),
-														SpargeMqttID.c_str(),
-														BoilMqttID.c_str()
+														"mash/#",		//MashMqttID.c_str(),
+														"sparge/#", 	//SpargeMqttID.c_str(),
+														"boil/#"			//BoilMqttID.c_str()
 													};
 
 // LCD
@@ -86,10 +86,16 @@ bool setup() {
 // --------------------------------------------------------------
 void loop() {
 
+	// temporizzazione visualizzazione LCD
 	const int LOOPTIME = 5;
 
 	static int cicle = 0;
 	static time_t windowStartTime = 0;
+
+	// temporizzazione invio status mqtt
+	const int TIMESTATUS = 2;
+	static time_t mqttStartTime = 0;
+	bool sendMQTT = false;
 
 	int ret;
 	char buffLabel[30];
@@ -97,44 +103,58 @@ void loop() {
 
 	mqttClient->loop();
 
+	sendMQTT = ( (time(0) - mqttStartTime) > TIMESTATUS );
+	if ( sendMQTT ) {
+
+		mqttStartTime = time(0);
+	}
+
+
 // --- Loop dello Sparge
 	spargeTun->loop();
-	tunStatus = spargeTun->getStatus();
-//	std::cout << tunStatus << std::endl;
+	if ( sendMQTT ) {
 
-	if ((ret=mqttClient->publish(NULL, spargeTun->statusTopic.c_str(), tunStatus.length(), tunStatus.c_str(),2))) {
+		tunStatus = spargeTun->getStatus();
+	//	std::cout << tunStatus << std::endl;
 
-		std::cout << "Problema nell'invio dello Status dello Sparge. Return code: " << ret << std::endl;
-		std::cout << "\t Topic: |" << spargeTun->statusTopic << "|" << std::endl;
-		std::cout << "\t Length=" << tunStatus.length()+1 << std::endl;
-		std::cout << "\t Payload=|" << tunStatus << "|" << std::endl;
+		if ((ret=mqttClient->publish(NULL, spargeTun->statusTopic.c_str(), tunStatus.length(), tunStatus.c_str(),2))) {
+
+			std::cout << "Problema nell'invio dello Status dello Sparge. Return code: " << ret << std::endl;
+			std::cout << "\t Topic: |" << spargeTun->statusTopic << "|" << std::endl;
+			std::cout << "\t Length=" << tunStatus.length()+1 << std::endl;
+			std::cout << "\t Payload=|" << tunStatus << "|" << std::endl;
+		}
 	}
 
 // --- Loop del Mash
 	mashTun->loop();
-	tunStatus = mashTun->getStatus();
-//	std::cout << tunStatus << std::endl;
+	if ( sendMQTT ) {
+		tunStatus = mashTun->getStatus();
+	//	std::cout << tunStatus << std::endl;
 
-	if ((ret=mqttClient->publish(NULL, mashTun->statusTopic.c_str(), tunStatus.length(), tunStatus.c_str(),2))) {
+		if ((ret=mqttClient->publish(NULL, mashTun->statusTopic.c_str(), tunStatus.length(), tunStatus.c_str(),2))) {
 
-		std::cout << "Problema nell'invio dello Status del MASH. Return code: " << ret << std::endl;
-		std::cout << "\t Topic: |" << mashTun->statusTopic << "|" << std::endl;
-		std::cout << "\t Length=" << tunStatus.length()+1 << std::endl;
-		std::cout << "\t Payload=|" << tunStatus << "|" << std::endl;
+			std::cout << "Problema nell'invio dello Status del MASH. Return code: " << ret << std::endl;
+			std::cout << "\t Topic: |" << mashTun->statusTopic << "|" << std::endl;
+			std::cout << "\t Length=" << tunStatus.length()+1 << std::endl;
+			std::cout << "\t Payload=|" << tunStatus << "|" << std::endl;
+		}
 	}
 
 // --- Loop del Boil
 
 	boilTun->loop();
-	tunStatus = boilTun->getStatus();
+	if ( sendMQTT ) {
+		tunStatus = boilTun->getStatus();
 //	std::cout << tunStatus << std::endl;
 
-	if ((ret=mqttClient->publish(NULL, boilTun->statusTopic.c_str(), tunStatus.length(), tunStatus.c_str(),2))) {
+		if ((ret=mqttClient->publish(NULL, boilTun->statusTopic.c_str(), tunStatus.length(), tunStatus.c_str(),2))) {
 
-		std::cout << "Problema nell'invio dello Status del BOIL. Return code: " << ret << std::endl;
-		std::cout << "\t Topic: |" << boilTun->statusTopic << "|" << std::endl;
-		std::cout << "\t Length=" << tunStatus.length()+1 << std::endl;
-		std::cout << "\t Payload=|" << tunStatus << "|" << std::endl;
+			std::cout << "Problema nell'invio dello Status del BOIL. Return code: " << ret << std::endl;
+			std::cout << "\t Topic: |" << boilTun->statusTopic << "|" << std::endl;
+			std::cout << "\t Length=" << tunStatus.length()+1 << std::endl;
+			std::cout << "\t Payload=|" << tunStatus << "|" << std::endl;
+		}
 	}
 
 	// Aggiorno i dati sull'LCD ogni LOOPTIME secondi

@@ -78,7 +78,7 @@ void Boil::loop() {
 				status.percent = 0;
 				status.status = BOIL;
 	    	 } else {
-			 // altrimenti tengo a ccesi i fornelli ed aggiorno la barra
+			 // altrimenti tengo accesi i fornelli ed aggiorno la barra
 
 	    		 Boil::driveBigFire(ACCESO);
 	    		 status.percent = 100 * ((status.tempActual - status.tempStart) /
@@ -191,7 +191,6 @@ bool Boil::loadSteps (const char* parameter) {
 	int i = 0;
 	for (json::iterator it = jsonArray.begin(); it != jsonArray.end(); ++it) {
 		recipe[i].desc = (*it)["desc"];
-		recipe[i].temp = (*it)["temp"];
 		recipe[i].time = (*it)["time"];
 		i++;
 	}
