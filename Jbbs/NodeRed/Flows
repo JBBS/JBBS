@@ -219,8 +219,8 @@
         "type": "ui_ui_control",
         "z": "c4433a4e.8ba2b8",
         "name": "openTab",
-        "x": 755.6778564453125,
-        "y": 173.42225551605225,
+        "x": 680,
+        "y": 160,
         "wires": [
             []
         ]
@@ -275,8 +275,7 @@
         "y": 222.42222595214844,
         "wires": [
             [
-                "5a4961b3.b056b",
-                "b5f74e84.85fce"
+                "5a4961b3.b056b"
             ]
         ]
     },
@@ -544,8 +543,7 @@
         "wires": [
             [
                 "cb6a9b3.dcb4e68",
-                "2a2da0f7.2929e",
-                "c85d374f.7362b8"
+                "2a2da0f7.2929e"
             ]
         ]
     },
@@ -642,12 +640,12 @@
         "order": 4,
         "width": "0",
         "height": "0",
-        "format": "<table style=\"width : 100%;\">\n<table style=\"width : 100%;\">\n    <tr>\n      <th align=\"left\" >Step</th>\n      <th>°C</th>\n      <th>Durata</th>\n      <th style=\"text-align : right;\">\n         <md-button class=\"md-button\" ng-click=\"send({payload: -1})\">\n              <ng-md-icon icon=\"stop\"></ng-md-icon>\n          </md-button>\n      </th>\n    </tr>\n    <tr ng-repeat=\"step in msg.payload\">\n        <td>{{step.desc}}</td>\n        <td>{{step.temp}}</td>\n        <td style=\"text-align : right;\">{{step.time}}</td>\n        <td style=\"text-align : right;\">\n           <md-button class=\"md-button\" ng-click=\"send({payload: $index})\">\n                <ng-md-icon icon=\"play_arrow\"></ng-md-icon>\n            </md-button>\n        </td>\n    </tr>\n  </table>\n",
-        "storeOutMessages": true,
+        "format": "<table style=\"width : 100%;\">\n    <tr>\n      <th align=\"left\" >Step</th>\n      <th>°C</th>\n      <th>Durata</th>\n      <th style=\"text-align : right;\">\n         <md-button class=\"md-button\" ng-click=\"send({payload: -1})\">\n              <ng-md-icon icon=\"stop\"></ng-md-icon>\n          </md-button>\n      </th>\n    </tr>\n    <tr ng-repeat=\"step in msg.payload\">\n        <td>{{step.desc}}</td>\n        <td>{{step.temp}}</td>\n        <td style=\"text-align : right;\">{{step.time}}</td>\n        <td style=\"text-align : right;\">\n           <md-button class=\"md-button\" ng-click=\"send({payload: $index})\">\n                <ng-md-icon icon=\"play_arrow\"></ng-md-icon>\n            </md-button>\n        </td>\n    </tr>\n  </table>\n",
+        "storeOutMessages": false,
         "fwdInMessages": false,
         "templateScope": "local",
-        "x": 1183.756103515625,
-        "y": 459,
+        "x": 1230,
+        "y": 500,
         "wires": [
             [
                 "7cf91049.e6559"
@@ -660,12 +658,12 @@
         "z": "c4433a4e.8ba2b8",
         "mydb": "5b7e929d.9fa20c",
         "name": "jbbs",
-        "x": 1045,
-        "y": 375.2442321777344,
+        "x": 1250,
+        "y": 340,
         "wires": [
             [
-                "ec150aa8.303118",
-                "60d1e41c.c977ac"
+                "950ab73a.e5fff8",
+                "ec150aa8.303118"
             ]
         ]
     },
@@ -694,8 +692,8 @@
         "qos": "2",
         "retain": "",
         "broker": "fe2dcf7a.8b271",
-        "x": 1578.111083984375,
-        "y": 436.15533447265625,
+        "x": 1570,
+        "y": 460,
         "wires": []
     },
     {
@@ -703,29 +701,13 @@
         "type": "mqtt out",
         "z": "c4433a4e.8ba2b8",
         "name": "",
-        "topic": "dashboard/boil/load",
+        "topic": "dashboard/mash/loadboil",
         "qos": "2",
         "retain": "",
         "broker": "fe2dcf7a.8b271",
-        "x": 1580,
-        "y": 369.3775634765625,
+        "x": 1590,
+        "y": 340,
         "wires": []
-    },
-    {
-        "id": "60d1e41c.c977ac",
-        "type": "function",
-        "z": "c4433a4e.8ba2b8",
-        "name": "0=>False, 1=>True",
-        "func": "for (var ind in msg.payload) {\n    if (msg.payload[ind].pump === 0) {\n        msg.payload[ind].pump = false;\n    } else {\n        msg.payload[ind].pump = true;\n    }\n}\nreturn msg",
-        "outputs": "1",
-        "noerr": 0,
-        "x": 1234.2999267578125,
-        "y": 375.97760009765625,
-        "wires": [
-            [
-                "950ab73a.e5fff8"
-            ]
-        ]
     },
     {
         "id": "370f38b.1a182c8",
@@ -736,8 +718,8 @@
         "qos": "2",
         "retain": "",
         "broker": "fe2dcf7a.8b271",
-        "x": 1576.7666015625,
-        "y": 504.1108703613281,
+        "x": 1570,
+        "y": 540,
         "wires": []
     },
     {
@@ -761,8 +743,8 @@
         ],
         "checkall": "true",
         "outputs": 2,
-        "x": 1368.6666259765625,
-        "y": 461.57757568359375,
+        "x": 1390,
+        "y": 500,
         "wires": [
             [
                 "28b68991.6f1576"
@@ -1003,18 +985,6 @@
         "wires": []
     },
     {
-        "id": "b5f74e84.85fce",
-        "type": "debug",
-        "z": "c4433a4e.8ba2b8",
-        "name": "",
-        "active": true,
-        "console": "false",
-        "complete": "false",
-        "x": 517.6902923583984,
-        "y": 112.34943389892578,
-        "wires": []
-    },
-    {
         "id": "f3d8cc.53f15738",
         "type": "mqtt out",
         "z": "c4433a4e.8ba2b8",
@@ -1045,7 +1015,7 @@
         "type": "function",
         "z": "c4433a4e.8ba2b8",
         "name": "",
-        "func": "msg.payload=40\nreturn msg;",
+        "func": "msg.payload=70\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 750,
@@ -1106,17 +1076,5 @@
                 "2b0c79bb.edd726"
             ]
         ]
-    },
-    {
-        "id": "c85d374f.7362b8",
-        "type": "debug",
-        "z": "f4141af0.d89288",
-        "name": "",
-        "active": true,
-        "console": "false",
-        "complete": "false",
-        "x": 385.7017059326172,
-        "y": 59.72159194946289,
-        "wires": []
     }
 ]
