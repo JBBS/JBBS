@@ -1,0 +1,247 @@
+[
+    {
+        "id": "82492ab2.2ae638",
+        "type": "ui_template",
+        "z": "e406df93.f7e36",
+        "group": "8aed3725.929458",
+        "name": "Boil Temp Gauge",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "format": "<script src=\"/myjs/myGauge-min.js\"></script>\n<script>\nvar radialBoil;\n    (function(scope){\n        scope.$watch('msg', function(msg) {\n           if (typeof(msg.payload.desc) != \"undefined\") radialBoil.setUnitString(msg.payload.desc);\n           if (typeof(msg.payload.tempActual) != \"undefined\") radialBoil.setValue(msg.payload.tempActual);\n           if (typeof(msg.payload.bigFire) != \"undefined\") {\n\t\t\t\tradialBoil.blinkUserLed(msg.payload.bigFire); \n\t\t\t\tradialBoil.setUserLedOnOff(msg.payload.bigFire); \n\t\t\t}\n           if (typeof(msg.payload.smallFire) != \"undefined\") {\n\t\t\t\tradialBoil.blinkLed(msg.payload.smallFire); \n\t\t\t\tradialBoil.setLedOnOff(msg.payload.smallFire); \n\t\t\t}\n           if (typeof(msg.payload.trend) != \"undefined\")\n            {\n                if (msg.payload.trend==1)     radialBoil.setTrend(steelseries.TrendState.UP);\n                if (msg.payload.trend==0)     radialBoil.setTrend(steelseries.TrendState.STEADY);\n                if (msg.payload.trend==-1)    radialBoil.setTrend(steelseries.TrendState.DOWN);\n                if (msg.payload.trend==-2)    radialBoil.setTrend(steelseries.TrendState.OFF);\n            }\n        });\n    })(scope);\n\n    var sections = [steelseries.Section(50, 99, 'rgba(0, 0, 220, 0.3)'),\n                    steelseries.Section(99, 110, 'rgba(220, 0, 0, 0.3)') ],\n\n            // Define one area\n    areas = [steelseries.Section(99, 110, 'rgba(220, 0, 0, 0.3)')],\n\n    radialBoil = new steelseries.Radial('canvasRadialBoil', {\n            gaugeType: steelseries.GaugeType.TYPE4,\n            size: 292,\n            section: sections,\n            area: areas,\n            titleString: \"Boil\",\n            unitString: \"\",\n            thresholdVisible: false,\n            thresholdRising: false,\n            userLedVisible: true,\n            useOdometer: false,\n            lcdVisible: false,\n            trendVisible: true,\n\t\t\tuserLedColor: steelseries.LedColor.RED_LED,\n\t\t\tPointerType: steelseries.PointerType.TYPE11,\n\t\t\tFrameDesign: steelseries.FrameDesign.BLACK_METAL,\n\t\t\tframeVisible: false,\n\t\t\tminValue : 50,\n\t\t\tmaxValue : 110\n        });\n                       \n//    radial4.setFrameDesign(steelseries.FrameDesign.BLACK_METAL);\n    radialBoil.setValue(0);\n//    radialBoil.setThreshold(0);\n    radialBoil.blinkUserLed(0);\n//\tradial4.setPointerType(steelseries.PointerType.TYPE11)\n\n\n</script>\n\n<canvas id=\"canvasRadialBoil\" width=\"401\" height=\"401\"></canvas>\n",
+        "storeOutMessages": true,
+        "fwdInMessages": false,
+        "x": 550,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3033eb5e.13c454",
+        "type": "mqtt in",
+        "z": "e406df93.f7e36",
+        "name": "boil/status",
+        "topic": "boil/status",
+        "qos": "0",
+        "broker": "fe2dcf7a.8b271",
+        "x": 100,
+        "y": 320,
+        "wires": [
+            [
+                "3cd8881a.7b45d8",
+                "1ca757de.38ade8"
+            ]
+        ]
+    },
+    {
+        "id": "3cd8881a.7b45d8",
+        "type": "debug",
+        "z": "e406df93.f7e36",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 164,
+        "y": 538.0000152587891,
+        "wires": []
+    },
+    {
+        "id": "1ca757de.38ade8",
+        "type": "json",
+        "z": "e406df93.f7e36",
+        "name": "",
+        "x": 290,
+        "y": 320,
+        "wires": [
+            [
+                "82492ab2.2ae638",
+                "b71bff50.4c2de",
+                "29d9d4be.4f898c",
+                "6c4f9b75.af7b44"
+            ]
+        ]
+    },
+    {
+        "id": "b71bff50.4c2de",
+        "type": "function",
+        "z": "e406df93.f7e36",
+        "name": "",
+        "func": "if (msg.payload.timeFinish) {\n    msg.progress = 100 * (Date.now() - msg.payload.timeStart*1000) / (1000 * (msg.payload.timeFinish -msg.payload.timeStart));\n    data = new Date(msg.payload.timeStart * 1000);\n    msg.payload.timeStart = data.getHours() + \":\" + ((data.getMinutes() < 10) ? \"0\" :\"\") + data.getMinutes();\n    data = new Date(msg.payload.timeFinish * 1000);\n    msg.payload.timeFinish = data.getHours() + \":\" + ((data.getMinutes() < 10) ? \"0\" :\"\") + data.getMinutes();\n} else {\n    msg.progress = 0\n    msg.payload.timeStart = \"--:--\";\n    msg.payload.timeFinish = \"--:--\";\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 370,
+        "y": 500,
+        "wires": [
+            [
+                "829119d7.576ed8"
+            ]
+        ]
+    },
+    {
+        "id": "829119d7.576ed8",
+        "type": "ui_template",
+        "z": "e406df93.f7e36",
+        "group": "8aed3725.929458",
+        "name": "Boil Time Bar",
+        "order": 5,
+        "width": "6",
+        "height": "1",
+        "format": "<div layout=\"row\" layout-align=\"space-between center\">\n{{msg.payload.timeStart}}<progress value={{msg.progress}} max=\"100\"></progress>{{msg.payload.timeFinish}}\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": false,
+        "x": 540,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "48beb1ff.8ffe7",
+        "type": "ui_switch",
+        "z": "e406df93.f7e36",
+        "name": "boilReady",
+        "label": "Ready",
+        "group": "8aed3725.929458",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "1",
+        "onvalueType": "num",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "0",
+        "offvalueType": "num",
+        "officon": "",
+        "offcolor": "",
+        "x": 530,
+        "y": 440,
+        "wires": [
+            [
+                "ef1142b9.f608a"
+            ]
+        ]
+    },
+    {
+        "id": "ef1142b9.f608a",
+        "type": "mqtt out",
+        "z": "e406df93.f7e36",
+        "name": "dashboard/boil/ready",
+        "topic": "dashboard/boil/ready",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 780,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "d29d2f5e.0d611",
+        "type": "mqtt out",
+        "z": "e406df93.f7e36",
+        "name": "dashboard/boil/setboil",
+        "topic": "dashboard/boil/setboil",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 780,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "633f0afd.53d8d4",
+        "type": "ui_numeric",
+        "z": "e406df93.f7e36",
+        "name": "Boil Temp",
+        "label": "Boil Temp",
+        "group": "8aed3725.929458",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "topic": "",
+        "format": "{{value}}",
+        "min": "90",
+        "max": "110",
+        "step": 1,
+        "x": 520,
+        "y": 380,
+        "wires": [
+            [
+                "d29d2f5e.0d611"
+            ]
+        ]
+    },
+    {
+        "id": "29d9d4be.4f898c",
+        "type": "function",
+        "z": "e406df93.f7e36",
+        "name": "",
+        "func": "\nreturn msg.payload.boilTemp;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 370,
+        "y": 380,
+        "wires": [
+            [
+                "633f0afd.53d8d4"
+            ]
+        ]
+    },
+    {
+        "id": "6c4f9b75.af7b44",
+        "type": "function",
+        "z": "e406df93.f7e36",
+        "name": "",
+        "func": "\nreturn msg.payload.ready;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 370,
+        "y": 440,
+        "wires": [
+            [
+                "48beb1ff.8ffe7"
+            ]
+        ]
+    },
+    {
+        "id": "8aed3725.929458",
+        "type": "ui_group",
+        "z": "",
+        "name": "Boil",
+        "tab": "c3ed2d11.076da",
+        "order": 4,
+        "disp": false,
+        "width": "6"
+    },
+    {
+        "id": "fe2dcf7a.8b271",
+        "type": "mqtt-broker",
+        "z": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": ""
+    },
+    {
+        "id": "c3ed2d11.076da",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Jbbs",
+        "icon": "dashboard",
+        "order": 2
+    }
+]

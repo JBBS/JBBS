@@ -1,0 +1,28 @@
+/**
+ * 
+ */
+ 
+ <table style="width : 100%;">
+<table style="width : 100%;">
+    <tr>
+      <th align="left" >Step</th>
+      <th>°C</th>
+      <th>Durata</th>
+      <th style="text-align : right;">
+         <md-button class="md-button" ng-click="send({payload: -1})">
+              <ng-md-icon icon="stop"></ng-md-icon>
+          </md-button>
+      </th>
+    </tr>
+    <tr ng-repeat="step in msg.payload">
+        <td>{{step.desc}}</td>
+        <td>{{step.temp}}</td>
+        <td style="text-align : right;">{{step.time}}</td>
+        <td style="text-align : right;">
+           <md-button class="md-button" ng-click="send({payload: $index})">
+                <ng-md-icon icon="play_arrow"></ng-md-icon>
+            </md-button>
+        </td>
+    </tr>
+  </table>
+ 

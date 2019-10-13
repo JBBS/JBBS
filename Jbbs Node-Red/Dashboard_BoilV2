@@ -1,0 +1,498 @@
+[
+    {
+        "id": "f1c651fd.c9f3b",
+        "type": "ui_template",
+        "z": "c4433a4e.8ba2b8",
+        "group": "1f79b609.15d25a",
+        "name": "stepMashTable",
+        "order": 4,
+        "width": "6",
+        "height": "4",
+        "format": "<table style=\"width : 100%;\">\n\t<tr>\n\t\t<td>Ricetta: {{msg.payload[0].ricetta}}\n\t\t</td>\n\t\t<td style=\"text-align : right;\">\n\t\t         <md-button class=\"md-button\" ng-click=\"send({topic: 'select * from Recipe'})\">\n              <ng-md-icon icon=\"list\"></ng-md-icon>\n          </md-button>\n\t\t</td>\n\t</tr>\n</table>\n\n<table style=\"width : 100%;\">\n    <tr>\n      <th align=\"left\" >Step</th>\n      <th>°C</th>\n      <th>Durata</th>\n      <th style=\"text-align : right;\">\n         <md-button class=\"md-button\" ng-click=\"send({payload: -1})\">\n              <ng-md-icon icon=\"stop\"></ng-md-icon>\n          </md-button>\n      </th>\n    </tr>\n    <tr ng-repeat=\"step in msg.payload\">\n        <td>{{step.desc}}</td>\n        <td>{{step.temp}}</td>\n        <td style=\"text-align : right;\">{{step.time}}</td>\n        <td style=\"text-align : right;\">\n           <md-button class=\"md-button\" ng-click=\"send({payload: $index})\">\n                <ng-md-icon icon=\"play_arrow\"></ng-md-icon>\n            </md-button>\n        </td>\n    </tr>\n  </table>\n",
+        "storeOutMessages": false,
+        "fwdInMessages": false,
+        "templateScope": "local",
+        "x": 370.32269287109375,
+        "y": 456.88909912109375,
+        "wires": [
+            [
+                "1d2e89bb.199086"
+            ]
+        ]
+    },
+    {
+        "id": "80e6ff1c.8694c",
+        "type": "sqlite",
+        "z": "c4433a4e.8ba2b8",
+        "mydb": "5b7e929d.9fa20c",
+        "name": "jbbs",
+        "x": 197.56663513183594,
+        "y": 372.1333312988281,
+        "wires": [
+            [
+                "f1c651fd.c9f3b",
+                "bac83694.dc4108"
+            ]
+        ]
+    },
+    {
+        "id": "a2ae33de.5c76",
+        "type": "ui_ui_control",
+        "z": "c4433a4e.8ba2b8",
+        "name": "openTab",
+        "x": 680,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "256daff7.200ae",
+        "type": "ui_template",
+        "z": "c4433a4e.8ba2b8",
+        "group": "b759a2a3.a6d76",
+        "name": "RecipeTable",
+        "order": 4,
+        "width": "0",
+        "height": "0",
+        "format": "<div layout=\"row\" layout-align=\"start center\">\n<span flex>Descrizione</span>\n<span flex></span>\n</div>\n\n<div layout=\"row\" layout-align=\"start center\" ng-repeat=\"recipe in msg.payload\">\n<span flex >{{recipe.id}}</span>\n<span flex >{{recipe.desc}}</span>\n<span flex >\n   <md-button class=\"md-button\" ng-click=\"send({payload: recipe})\">\n        <ng-md-icon icon=\"play_arrow\"></ng-md-icon>\n    </md-button>\n</span>\n</div>\n",
+        "storeOutMessages": false,
+        "fwdInMessages": false,
+        "x": 458.5332908630371,
+        "y": 219.75558757781982,
+        "wires": [
+            [
+                "357c875c.4f8728",
+                "f6472657.54a6e8"
+            ]
+        ]
+    },
+    {
+        "id": "5a4961b3.b056b",
+        "type": "function",
+        "z": "c4433a4e.8ba2b8",
+        "name": "Splitter",
+        "func": "var msgTab = { \"payload\" : \"Recipe\" }\nreturn [msg, msgTab];",
+        "outputs": "2",
+        "noerr": 0,
+        "x": 464.90009689331055,
+        "y": 166.2000560760498,
+        "wires": [
+            [
+                "256daff7.200ae"
+            ],
+            [
+                "a2ae33de.5c76"
+            ]
+        ]
+    },
+    {
+        "id": "c01dd8e8.4bbd68",
+        "type": "sqlite",
+        "z": "c4433a4e.8ba2b8",
+        "mydb": "5b7e929d.9fa20c",
+        "name": "jbbs",
+        "x": 193.86666870117188,
+        "y": 222.42222595214844,
+        "wires": [
+            [
+                "5a4961b3.b056b",
+                "b5f74e84.85fce"
+            ]
+        ]
+    },
+    {
+        "id": "357c875c.4f8728",
+        "type": "function",
+        "z": "c4433a4e.8ba2b8",
+        "name": "SelectMashSteps",
+        "func": "var msgTab = { \"payload\" : \"Jbbs\" };\n\n\nvar id = msg.payload.id;\n\nmsg.topic = \"select s.*, r.desc as 'ricetta' \";\nmsg.topic += \" from step as s \";\nmsg.topic += \" inner join recipe as r \";\nmsg.topic += \" on s.idRicetta =r.id \";\nmsg.topic += \" where s.idRicetta=\" + id;\nmsg.topic += \" order by prog;\";\nreturn [msgTab, msg];",
+        "outputs": "2",
+        "noerr": 0,
+        "x": 477.5333595275879,
+        "y": 265.75561809539795,
+        "wires": [
+            [
+                "a2ae33de.5c76"
+            ],
+            [
+                "80e6ff1c.8694c"
+            ]
+        ]
+    },
+    {
+        "id": "827b7b23.909878",
+        "type": "mqtt out",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "topic": "dashboard/mash/start",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 780,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "7400d7b1.0ff298",
+        "type": "mqtt out",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "topic": "dashboard/mash/load",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 787.5666542053223,
+        "y": 369.2666606903076,
+        "wires": []
+    },
+    {
+        "id": "bac83694.dc4108",
+        "type": "function",
+        "z": "c4433a4e.8ba2b8",
+        "name": "0=>False, 1=>True",
+        "func": "for (var ind in msg.payload) {\n    if (msg.payload[ind].pump === 0) {\n        msg.payload[ind].pump = false;\n    } else {\n        msg.payload[ind].pump = true;\n    }\n}\nreturn msg",
+        "outputs": "1",
+        "noerr": 0,
+        "x": 448.8666343688965,
+        "y": 368.8666887283325,
+        "wires": [
+            [
+                "7400d7b1.0ff298"
+            ]
+        ]
+    },
+    {
+        "id": "f798a3a3.755ff",
+        "type": "mqtt out",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "topic": "dashboard/mash/stop",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 781.3333129882812,
+        "y": 504.9999694824219,
+        "wires": []
+    },
+    {
+        "id": "2782d013.1eafd",
+        "type": "inject",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "topic": "select * from Recipe",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "x": 165.33331680297852,
+        "y": 122.7999677658081,
+        "wires": [
+            [
+                "c01dd8e8.4bbd68"
+            ]
+        ]
+    },
+    {
+        "id": "1d2e89bb.199086",
+        "type": "switch",
+        "z": "c4433a4e.8ba2b8",
+        "name": "Switch send",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "null"
+            },
+            {
+                "t": "gte",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "lt",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 3,
+        "x": 559.2333106994629,
+        "y": 456.46667766571045,
+        "wires": [
+            [
+                "c01dd8e8.4bbd68"
+            ],
+            [
+                "827b7b23.909878",
+                "18307568.c9c85b"
+            ],
+            [
+                "f798a3a3.755ff",
+                "bf4e6590.e206f8"
+            ]
+        ]
+    },
+    {
+        "id": "ec150aa8.303118",
+        "type": "ui_template",
+        "z": "c4433a4e.8ba2b8",
+        "group": "faee2d.c36841d",
+        "name": "stepBoilTable",
+        "order": 4,
+        "width": "0",
+        "height": "0",
+        "format": "<table style=\"width : 100%;\">\n<table style=\"width : 100%;\">\n    <tr>\n      <th align=\"left\" >Step</th>\n      <th>°C</th>\n      <th>Durata</th>\n      <th style=\"text-align : right;\">\n         <md-button class=\"md-button\" ng-click=\"send({payload: -1})\">\n              <ng-md-icon icon=\"stop\"></ng-md-icon>\n          </md-button>\n      </th>\n    </tr>\n    <tr ng-repeat=\"step in msg.payload\">\n        <td>{{step.desc}}</td>\n        <td>{{step.temp}}</td>\n        <td style=\"text-align : right;\">{{step.time}}</td>\n        <td style=\"text-align : right;\">\n           <md-button class=\"md-button\" ng-click=\"send({payload: $index})\">\n                <ng-md-icon icon=\"play_arrow\"></ng-md-icon>\n            </md-button>\n        </td>\n    </tr>\n  </table>\n",
+        "storeOutMessages": true,
+        "fwdInMessages": false,
+        "templateScope": "local",
+        "x": 1190,
+        "y": 500,
+        "wires": [
+            [
+                "7cf91049.e6559"
+            ]
+        ]
+    },
+    {
+        "id": "49b5230.f11d1dc",
+        "type": "sqlite",
+        "z": "c4433a4e.8ba2b8",
+        "mydb": "5b7e929d.9fa20c",
+        "name": "jbbs",
+        "x": 1250,
+        "y": 340,
+        "wires": [
+            [
+                "950ab73a.e5fff8"
+            ]
+        ]
+    },
+    {
+        "id": "f6472657.54a6e8",
+        "type": "function",
+        "z": "c4433a4e.8ba2b8",
+        "name": "SelectBoilSteps",
+        "func": "var id = msg.payload.id;\n\nmsg.topic = \"select s.*, r.desc as 'ricetta' \";\nmsg.topic += \" from boilstep as s \";\nmsg.topic += \" inner join recipe as r \";\nmsg.topic += \" on s.idRicetta =r.id \";\nmsg.topic += \" where s.idRicetta=\" + id;\nmsg.topic += \" order by prog;\";\nreturn (msg);",
+        "outputs": "1",
+        "noerr": 0,
+        "x": 1227.9666442871094,
+        "y": 264.866512298584,
+        "wires": [
+            [
+                "49b5230.f11d1dc"
+            ]
+        ]
+    },
+    {
+        "id": "28b68991.6f1576",
+        "type": "mqtt out",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "topic": "dashboard/boil/start",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 1570,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "950ab73a.e5fff8",
+        "type": "mqtt out",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "topic": "dashboard/mash/loadboil",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 1590,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "370f38b.1a182c8",
+        "type": "mqtt out",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "topic": "dashboard/boil/stop",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 1570,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "7cf91049.e6559",
+        "type": "switch",
+        "z": "c4433a4e.8ba2b8",
+        "name": "Switch send",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gte",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "lt",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 2,
+        "x": 1350,
+        "y": 500,
+        "wires": [
+            [
+                "28b68991.6f1576"
+            ],
+            [
+                "370f38b.1a182c8"
+            ]
+        ]
+    },
+    {
+        "id": "b5f74e84.85fce",
+        "type": "debug",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 510,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "f3d8cc.53f15738",
+        "type": "mqtt out",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "topic": "dashboard/sparge/start",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 950,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "bf4e6590.e206f8",
+        "type": "mqtt out",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "topic": "dashboard/sparge/stop",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 780,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "18307568.c9c85b",
+        "type": "function",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "func": "msg.payload=70\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 750,
+        "y": 420,
+        "wires": [
+            [
+                "f3d8cc.53f15738"
+            ]
+        ]
+    },
+    {
+        "id": "99b582cb.b8c28",
+        "type": "mqtt in",
+        "z": "c4433a4e.8ba2b8",
+        "name": "",
+        "topic": "mash/boil/load",
+        "qos": "2",
+        "broker": "fe2dcf7a.8b271",
+        "x": 1010,
+        "y": 500,
+        "wires": [
+            [
+                "ec150aa8.303118"
+            ]
+        ]
+    },
+    {
+        "id": "1f79b609.15d25a",
+        "type": "ui_group",
+        "z": "",
+        "name": "Mash",
+        "tab": "c3ed2d11.076da",
+        "order": 3,
+        "disp": false,
+        "width": "6"
+    },
+    {
+        "id": "5b7e929d.9fa20c",
+        "type": "sqlitedb",
+        "z": "",
+        "db": "/home/pi/db/jbbs.sqlite"
+    },
+    {
+        "id": "b759a2a3.a6d76",
+        "type": "ui_group",
+        "z": "",
+        "name": "Elenco Ricette",
+        "tab": "b46b75cb.cfdf28",
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "fe2dcf7a.8b271",
+        "type": "mqtt-broker",
+        "z": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "Jbbs-NodeRed",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": ""
+    },
+    {
+        "id": "faee2d.c36841d",
+        "type": "ui_group",
+        "z": "",
+        "name": "Boil",
+        "tab": "c3ed2d11.076da",
+        "order": 4,
+        "disp": false,
+        "width": "6"
+    },
+    {
+        "id": "c3ed2d11.076da",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Jbbs",
+        "icon": "dashboard",
+        "order": 2
+    },
+    {
+        "id": "b46b75cb.cfdf28",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Recipe",
+        "icon": "dashboard",
+        "order": 1
+    }
+]
