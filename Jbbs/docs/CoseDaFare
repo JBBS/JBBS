@@ -1,54 +1,22 @@
-- 	Calcolare il trend in modo diverso
+- 	Calcolare il trend in modo diverso (perchè?)
 - 	mettere poca acqua per il mash in, cosi' rimane spazio di manovra per mettere il filtro
 -	Angolo su pentola di bollitura e di sparge per far pescare fino alla fine
-- 	Aggiungere gli allarmi sonori
+- 	==>> Aggiungere gli allarmi sonori
 - 	Aggiungere orario alle segnalazioni di errore
 -	PROBLEMA: A pompa ferma non ho una lettura corretta della temperatura :(
--	Mettere avvio automatico di Jbbs
-
+-	==>> Mettere avvio automatico di Jbbs
+-	==>> Verificare messa a terra telaio
+-	Aggiungere sensore di livello Boil
+-	Durante il riposo cola acqua. Si alza il livello.
+-	Se uno per errore gioca con il ready del boil, poi non c'è più modo di reinviare la ricetta e far ripartire l'automatismo
+-	In generale, bisogna poter partire da uno stato definito manualmente.
+-	Interruttore fornello piccolo su auto sfarfalla
+-	Spostare su barra del tempo boil, eliminare setboil
+-	Alzare boiltemp a 99.7
+-	scala boil 80-105. Verde 99-101
+-	cambiare raccorderia scambiatore. Si potrebbe mettere la stessa della pentola.
+-	Raccordare i tubi del ricircolo in modo da poterli smontare per lavarli.
+-	comprare Iodophor, malto in polvere light
 
 Fatto
-- Gestire LCD
-- mandare i 5v alle sonde, ora leggono sempre malissimo
-- Integrare sensori di livello
-- eliminare lo step di mash in dalle ricette
-
-- Gestire il flag "Ready" sui tre tun
-- 	rivedere l'algoritmo di gestione del fornello quando si avvicina alla temperatura target:  
-	rimane troppo tempo spento. 
--	Aggiungere valorizzazione della barra di avanzamento anche in fase di riscaldamento
--	Automatizzare boil (fornello + rilevazione della ebollizione)
--	gestione ricetta boil in caso di cotta concatenata: è il mash che quando ha finito passa la ricetta a boil
--	il riscaldamento dello sparge parte quando manca un'ora alla fine del mash
-
-da fare: adeguare node red, FLow aggiornati, da riportare nel node-red di jbbs. FOrse bisogna far puntare di nuovo
-			i nodi sqlite al file del db
-
-
-------------
-
-Novità:
-Passo in JbsStatus l'istanza del client mqtt
-faccio sottoscrivere a jbbs anche i topic di mash e sparge
-Mash invia a Sparge e boil il messaggio di inizio
-Personalizzato progress bar per sparge e boil
-Limitata la temporizzazione ad un secondo al solo aggionramento del display. Questo dovrebbe risolvere i problemi di comunicazione MQTT
-
-Test da effettuare
-verificare che a fine mash partano i messaggi di inizio sparge, invio ricetta a boil e start boil
-verificare corretta visualizzazione stato sparge, mash e boil su LCD
-verificare start sparge ad un'ora dalla fine del mash
-
----------------------------------------------
-Automazione tino di Boil
-
-test  da fare
-- caricamento ricette
-- esecuzione comandi
-- passaggi di stato
-- inizio ciclo fatto partire da messaggio di inizio sparge e boil inviati da mash a fine ciclo
-- accensione fornello piccolo dopo 5 minuti
-- passaggio a preboil ed accensione fornello grande dopo 10 minuti
-- loop step
-- mantenimento temperatura
-
+-	definito boiltemp come costante double = 99.5, commentata l'esecuzione del comando MQTT setboil

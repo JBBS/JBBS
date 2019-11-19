@@ -138,8 +138,8 @@ bool Boil::execute (const char *command, const char *parameters) {
     success = Boil::loadSteps(parameters);
   } else if (COMMAND_START.compare (command) == 0) {
     startStep = atoi(parameters);
-  } else if (COMMAND_SETBOIL.compare (command) == 0) {
-    boilTemp = atoi(parameters);
+//  } else if (COMMAND_SETBOIL.compare (command) == 0) {
+//    boilTemp = atoi(parameters);
   } else if (COMMAND_STOP.compare (command) == 0) {
     Boil::stop();
   }
