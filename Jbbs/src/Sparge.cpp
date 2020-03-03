@@ -38,6 +38,8 @@ void Sparge::loop() {
 	     case READY :
 			status.trend = trendOff;
 			if (jbbsStatus->spargeTarget > 0 ) {
+				status.tempStart   	= status.tempActual;
+				status.timeStart = time(0);
 				status.status = WARMING;
 			}
 			break;
@@ -45,12 +47,20 @@ void Sparge::loop() {
 			// Controllo della temperatura
 	    	 if ( status.tempActual >= jbbsStatus->spargeTarget){
 	    		 status.status = HOT;
+	    	 } else {
+
+	    		 status.percent = 100 * ((status.tempActual - status.tempStart) /
+												(jbbsStatus->spargeTarget - status.tempStart));
+
+				 status.timeFinish = status.timeStart +
+								((time(0) - status.timeStart) * ((jbbsStatus->spargeTarget - status.tempStart) /
+																(status.tempActual -status.tempStart)));
 	    	 }
 	    	 /* no break */
 	     case HOT  :
-	    	 if (jbbsStatus->spargeStart && jbbsStatus->boilReady) {
-				Sparge::driveFire(Off);
-				Sparge::driveBoilValve(Scarico);
+	    	 if (status.sparge && jbbsStatus->boilReady) {
+				Sparge::driveFire(SPENTO);
+				Sparge::driveBoilValve(SCARICO);
 	    	    status.status = SPARGING;
 	    	 } else {
 	    		 Sparge::driveFire( status.tempActual < jbbsStatus->spargeTarget);
@@ -58,10 +68,10 @@ void Sparge::loop() {
 	    	 break;
 	     case SPARGING  :
 			if (mashSensLevel->isLow()) {
-				Sparge::driveMashValve(On);
+				Sparge::driveMashValve(ACCESO);
 			}
 			if (mashSensLevel->isHigh()) {
-				Sparge::driveMashValve(Off);
+				Sparge::driveMashValve(SPENTO);
 			}
 	    	 break;
 	}
@@ -83,6 +93,8 @@ bool Sparge::execute (const char *command, const char *parameters) {
     if (!ready) {
         Sparge::stop();
     }
+  } else if (COMMAND_SPARGE.compare (command) == 0) {
+	  status.sparge = ( (parameters[0] == '1'));
   }
 
   return (success);
@@ -137,19 +149,23 @@ void Sparge::driveBoilValve(bool parameter) {
 void Sparge::stop() {
 
   // Spengo tutto
-	Sparge::driveBoilValve(Ricircolo);
-	Sparge::driveMashValve(Off);
-	Sparge::driveFire(Off);
+	Sparge::driveBoilValve(RICIRCOLO);
+	Sparge::driveMashValve(SPENTO);
+	Sparge::driveFire(SPENTO);
 
 
    // Azzero status
 	status.status				= OFF;
-	status.fire   				= Off;
-	status.mashValve   			= Off;
-	status.boilValve  	 		= Off;
+	status.fire   				= SPENTO;
+	status.mashValve   			= SPENTO;
+	status.boilValve  	 		= RICIRCOLO;
 	status.trend				= trendOff;
 	jbbsStatus->spargeTarget	= 0;
-	jbbsStatus->spargeStart		= false;
+	status.sparge				= false;
+	status.tempStart  		= 0;
+	status.timeStart   		= 0;
+	status.timeFinish  		= 0;
+	status.percent			= 0;
 	ready						= false;
 }
 
@@ -180,4 +196,13 @@ const char *Sparge::getStateDesc(){
 	return (stateDesc[status.status]);
 
 }
+int Sparge::getPercent() {
+	return (status.percent);
+}
+time_t *Sparge::getTimeStart() {
+	return (&status.timeStart);
+};
+time_t *Sparge::getTimeFinish() {
+	return (&status.timeFinish);
+};
 

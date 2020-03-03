@@ -3,6 +3,8 @@
 
 #include <cstdio>
 #include <iostream>
+#include "MQTTJbbs.h"
+
 
 // Indirizzi Schede I/O expander
 const int MCP23017 				= 0x20;				// Output expander per i rele'
@@ -27,30 +29,49 @@ const int GPIO_MASHHILEVEL		= PCF_BASE + 7;
 const int LCD_ADDR				= 0x3F; 			// Indirizzo LCD
 const int LCD_BASE				= 300;
 
+
+// Variabili di stato globali per la comunicazione con Node Red
 struct GlobalStatus {
 	int spargeTarget	= 0; 		// Messaggio di impostazione temperatura acqua di Sparge
-	bool spargeStart	= false; 	// Messaggio di inizio sparge da Mash a Sparge
 	bool boilReady		= false;  	// Messaggio di pronto allo sparge da boil a Sparge
+	class MQTTJbbs *mqttClient;
+
  } ;
 
 
 
 // Costanti varie
-static const char On = true;
-static const char Off = false;
+const char ACCESO = true;
+const char SPENTO = false;
 
-static const bool Ricircolo = false;
-static const bool Scarico = true;
+const bool RICIRCOLO = false;
+const bool SCARICO = true;
+
+const unsigned char MAXSTEP = 10;
+//const int 			BOILTEMP = 99; // gradi ebollizione
 
 // Costanti per l'indicatore del trend in dashboard
-static const int trendOff = -2;
-static const int trendUp = 1;
-static const int trendSteady = 0;
-static const int trendDown = -1;
+const int trendOff = -2;
+const int trendUp = 1;
+const int trendSteady = 0;
+const int trendDown = -1;
 
 // Costanti per MQTT
 const std::string SpargeMqttID = "sparge";
 const std::string MashMqttID = "mash";
 const std::string BoilMqttID = "boil";
+
+// Comandi MQTT
+const std::string COMMAND_SMALLFIRE	= "smallfire";
+const std::string COMMAND_BIGFIRE 	= "bigfire";
+const std::string COMMAND_LOAD 		= "load";
+const std::string COMMAND_LOADBOIL	= "loadboil";
+const std::string COMMAND_START 	= "start";
+const std::string COMMAND_SPARGE 	= "sparge";
+const std::string COMMAND_STOP		= "stop";
+const std::string COMMAND_SETBOIL	= "setboil";
+const std::string COMMAND_READY		= "ready";
+const std::string COMMAND_PUMP 		= "pump";
+const std::string COMMAND_FIRE 		= "fire";
 
 #endif

@@ -18,7 +18,6 @@ public:
 	SensorLevel(const int, const int);
 	bool isLow();
 	bool isHigh();
-	virtual ~SensorLevel();
 };
 
 #endif /* SENSORLEVEL_H_ */

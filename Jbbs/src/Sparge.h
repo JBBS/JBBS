@@ -49,13 +49,14 @@ class Sparge {
 		bool         	mashValve 	= false;
 		bool         	boilValve 	= false;
 		int 			trend		= 0;
+		bool 			sparge		= false; 	// Flag di inizio sparge da Mash a Sparge
+		double       	tempStart	= 0;    // timestamp
+		time_t       	timeStart	= 0;    // timestamp inizio step
+		time_t       	timeFinish	= 0 ;   // timestamp fine step
+		int				percent		= 0;	// Percentuale di avanzamento step
 	 } status;
 
 	// commands related stuff
-	const std::string COMMAND_START		= "start";
-	const std::string COMMAND_STOP		= "stop";
-	const std::string COMMAND_READY		= "ready";
-	const std::string COMMAND_BOILREADY	= "boilready";
 
      static const int WAIT_TIME = 5; // faccio il loop ogni 5 secondi
 
@@ -73,6 +74,9 @@ class Sparge {
     const std::string getStatus ();
     const char * getStateDesc();
     double getTempActual();
+    int		getPercent();
+	time_t *getTimeStart();
+	time_t *getTimeFinish();
 };
 
 #endif

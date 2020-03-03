@@ -1,0 +1,64 @@
+<script src="/myjs/myGauge-min.js"></script>
+<script>
+var radialSparge;
+    (function(scope){
+        scope.$watch('msg', function(msg) {
+           if (typeof(msg.payload.desc) != "undefined") radialSparge.setUnitString(msg.payload.desc);
+           if (typeof(msg.payload.tempActual) != "undefined") radialSparge.setValue(msg.payload.tempActual);
+           if (typeof(msg.payload.tempTarget) != "undefined") radialSparge.setThreshold(msg.payload.tempTarget);
+           if (typeof(msg.payload.boilValve) != "undefined") {
+//				radialSparge.blinkUserLed(msg.payload.boilValve); 
+				radialSparge.setUserLedOnOff(msg.payload.boilValve); 
+			}
+           if (typeof(msg.payload.fire) != "undefined") {
+				radialSparge.blinkLed(msg.payload.fire); 
+				radialSparge.setLedOnOff(msg.payload.fire); 
+			}
+           if (typeof(msg.payload.trend) != "undefined")
+            {
+                if (msg.payload.trend==1)     radialSparge.setTrend(steelseries.TrendState.UP);
+                if (msg.payload.trend==0)     radialSparge.setTrend(steelseries.TrendState.STEADY);
+                if (msg.payload.trend==-1)    radialSparge.setTrend(steelseries.TrendState.DOWN);
+                if (msg.payload.trend==-2)    radialSparge.setTrend(steelseries.TrendState.OFF);
+            }
+        });
+    })(scope);
+
+    var sections = [steelseries.Section(20, 68, 'rgba(0, 0, 220, 0.3)'),
+                        steelseries.Section(70, 80, 'rgba(0, 220, 0, 0.3)'),
+                        steelseries.Section(80, 90, 'rgba(220, 0, 0, 0.3)') ],
+
+            // Define one area
+    areas = [steelseries.Section(80, 90, 'rgba(220, 0, 0, 0.3)')],
+
+    radialSparge = new steelseries.Radial('canvasRadialSparge', {
+            gaugeType: steelseries.GaugeType.TYPE4,
+            size: 292,
+            section: sections,
+            area: areas,
+            titleString: "Sparge",
+            unitString: "",
+            threshold: 0,
+            thresholdRising: false,
+            userLedVisible: true,
+            useOdometer: false,
+            lcdVisible: false,
+            trendVisible: true,
+//			userLedColor: steelseries.LedColor.BLUE_LED,
+			PointerType: steelseries.PointerType.TYPE11,
+			FrameDesign: steelseries.FrameDesign.BLACK_METAL,
+			frameVisible: false,
+			minValue : 20,
+			maxValue : 90
+        });
+                       
+//    radial4.setFrameDesign(steelseries.FrameDesign.BLACK_METAL);
+    radialSparge.setValue(0);
+    radialSparge.setThreshold(0);
+    radialSparge.blinkUserLed(0);
+//	radial4.setPointerType(steelseries.PointerType.TYPE11)
+
+
+</script>
+
+<canvas id="canvasRadialSparge" width="401" height="401"></canvas>

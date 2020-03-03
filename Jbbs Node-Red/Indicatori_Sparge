@@ -1,0 +1,85 @@
+[
+    {
+        "id": "7ec1248b.3332bc",
+        "type": "ui_template",
+        "z": "e406df93.f7e36",
+        "group": "38ee9b45.ef8404",
+        "name": "Sparge Temp Gauge",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "format": "<script src=\"/myjs/myGauge-min.js\"></script>\n<script>\nvar radialSparge;\n    (function(scope){\n        scope.$watch('msg', function(msg) {\n           if (typeof(msg.payload.desc) != \"undefined\") radialSparge.setUnitString(msg.payload.desc);\n           if (typeof(msg.payload.tempActual) != \"undefined\") radialSparge.setValue(msg.payload.tempActual);\n           if (typeof(msg.payload.tempTarget) != \"undefined\") radialSparge.setThreshold(msg.payload.tempTarget);\n           if (typeof(msg.payload.valve) != \"undefined\") {\n//\t\t\t\tradialSparge.blinkUserLed(msg.payload.valve); \n\t\t\t\tradialSparge.setUserLedOnOff(msg.payload.valve); \n\t\t\t}\n           if (typeof(msg.payload.fire) != \"undefined\") {\n\t\t\t\tradialSparge.blinkLed(msg.payload.fire); \n\t\t\t\tradialSparge.setLedOnOff(msg.payload.fire); \n\t\t\t}\n           if (typeof(msg.payload.trend) != \"undefined\")\n            {\n                if (msg.payload.trend==1)     radialSparge.setTrend(steelseries.TrendState.UP);\n                if (msg.payload.trend==0)     radialSparge.setTrend(steelseries.TrendState.STEADY);\n                if (msg.payload.trend==-1)    radialSparge.setTrend(steelseries.TrendState.DOWN);\n                if (msg.payload.trend==-2)    radialSparge.setTrend(steelseries.TrendState.OFF);\n            }\n        });\n    })(scope);\n\n    var sections = [steelseries.Section(20, 68, 'rgba(0, 0, 220, 0.3)'),\n                        steelseries.Section(70, 80, 'rgba(0, 220, 0, 0.3)'),\n                        steelseries.Section(80, 90, 'rgba(220, 0, 0, 0.3)') ],\n\n            // Define one area\n    areas = [steelseries.Section(80, 90, 'rgba(220, 0, 0, 0.3)')],\n\n    radialSparge = new steelseries.Radial('canvasRadialSparge', {\n            gaugeType: steelseries.GaugeType.TYPE4,\n            size: 292,\n            section: sections,\n            area: areas,\n            titleString: \"Sparge\",\n            unitString: \"\",\n            threshold: 0,\n            thresholdRising: false,\n            userLedVisible: true,\n            useOdometer: false,\n            lcdVisible: false,\n            trendVisible: true,\n//\t\t\tuserLedColor: steelseries.LedColor.BLUE_LED,\n\t\t\tPointerType: steelseries.PointerType.TYPE11,\n\t\t\tFrameDesign: steelseries.FrameDesign.BLACK_METAL,\n\t\t\tframeVisible: false,\n\t\t\tminValue : 20,\n\t\t\tmaxValue : 90\n        });\n                       \n//    radial4.setFrameDesign(steelseries.FrameDesign.BLACK_METAL);\n    radialSparge.setValue(0);\n    radialSparge.setThreshold(0);\n    radialSparge.blinkUserLed(0);\n//\tradial4.setPointerType(steelseries.PointerType.TYPE11)\n\n\n</script>\n\n<canvas id=\"canvasRadialSparge\" width=\"401\" height=\"401\"></canvas>\n",
+        "storeOutMessages": true,
+        "fwdInMessages": false,
+        "x": 600,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8849ed4b.eb83a",
+        "type": "mqtt in",
+        "z": "e406df93.f7e36",
+        "name": "sparge/status",
+        "topic": "sparge/status",
+        "qos": "0",
+        "broker": "fe2dcf7a.8b271",
+        "x": 110,
+        "y": 60,
+        "wires": [
+            [
+                "9dadd69c.a7c198"
+            ]
+        ]
+    },
+    {
+        "id": "9dadd69c.a7c198",
+        "type": "json",
+        "z": "e406df93.f7e36",
+        "name": "",
+        "x": 290,
+        "y": 60,
+        "wires": [
+            [
+                "7ec1248b.3332bc"
+            ]
+        ]
+    },
+    {
+        "id": "38ee9b45.ef8404",
+        "type": "ui_group",
+        "z": "",
+        "name": "Sparge",
+        "tab": "c3ed2d11.076da",
+        "order": 2,
+        "disp": false,
+        "width": "6"
+    },
+    {
+        "id": "fe2dcf7a.8b271",
+        "type": "mqtt-broker",
+        "z": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": ""
+    },
+    {
+        "id": "c3ed2d11.076da",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Jbbs",
+        "icon": "dashboard",
+        "order": 2
+    }
+]

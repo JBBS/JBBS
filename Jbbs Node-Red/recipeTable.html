@@ -1,0 +1,14 @@
+<div layout="row" layout-align="start center">
+<span flex>Descrizione</span>
+<span flex></span>
+</div>
+
+<div layout="row" layout-align="start center" ng-repeat="recipe in msg.payload">
+<span flex >{{recipe.id}}</span>
+<span flex >{{recipe.desc}}</span>
+<span flex >
+   <md-button class="md-button" ng-click="send({payload: recipe})">
+        <ng-md-icon icon="playlist_add_check"></ng-md-icon>
+    </md-button>
+</span>
+</div>

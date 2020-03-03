@@ -1,11 +1,9 @@
 #include "Mash.h" //include the declaration for this class
 
-double tempActual;
 double tempTarget;
+double tempActual;
 
 // Step stuff
-unsigned char lastStep=0;
-
 // PID Stuff
 const time_t WindowSize = 30; // 30 secondi
 time_t windowStartTime = 0;
@@ -33,7 +31,7 @@ Mash::Mash (GlobalStatus *js) {
 void Mash::loop() {
 
 	double appo	= 0;    // timestamp inizio step
-
+	int ret = 0;
 
   // Leggo la temperatura del mosto
 
@@ -52,7 +50,7 @@ void Mash::loop() {
 	switch(status.status) {
 	     case OFF :
 			status.trend = trendOff;
-	    	 if (ready && gotRecipe) {
+	    	 if (status.ready && status.gotRecipe) {
 	    		 status.status = READY;
 	    	 }
 			 break;
@@ -67,6 +65,21 @@ void Mash::loop() {
 	     case WORKING  :
 
 			PID_loop();
+
+			// se manca meno di un'ora, faccio partire il riscaldamento del
+			// tino di sparge
+
+			if (time2Finish() <= 60 && jbbsStatus->spargeTarget <= 0) {
+
+				if ((ret=jbbsStatus->mqttClient->publish(NULL, spargeStartCommand.c_str(), 2, "70", 2))) {
+
+					std::cout << "Problema nell'invio del messaggio di inizio riscaldamento Sparge. Return code: " << ret << std::endl;
+					std::cout << "\t Topic: |" << spargeStartCommand << "|" << std::endl;
+					std::cout << "\t Length=" << 2 << std::endl;
+					std::cout << "\t Payload=|" << "70" << "|" << std::endl;
+				}
+
+			}
 
 			// Se sto riscaldando ...
 			if (status.warming) {
@@ -95,11 +108,34 @@ void Mash::loop() {
 				// ... altrimenti, controllo se ho finito la durata dello step ...
 				if ( status.timeFinish <= time(0) ) {
 					// ... se c'è passo allo step successivo ...
-					if (status.numStep < lastStep) {
-					  Mash::start (status.numStep + 1);
+					if (status.currentStep < status.lastStep) {
+						Mash::start (status.currentStep + 1);
 					} else {
-						// ... altrimenti ho finito e lancio lo sparge
-						jbbsStatus->spargeStart = true;
+						// ... altrimenti ho finito e lancio lo sparge ed il boil
+//						jbbsStatus->spargeStart = true;
+						if ((ret=jbbsStatus->mqttClient->publish(NULL, spargeSpargeCommand.c_str(), 1, "1", 2))) {
+
+							std::cout << "Problema nell'invio del messaggio di inizio Sparge. Return code: " << ret << std::endl;
+							std::cout << "\t Topic: |" << spargeSpargeCommand << "|" << std::endl;
+							std::cout << "\t Length=" << 1 << std::endl;
+							std::cout << "\t Payload=|" << "1" << "|" << std::endl;
+						}
+
+						// Quando lancio il boil, gli passo anche la sua ricetta
+						if ((ret=jbbsStatus->mqttClient->publish(NULL, boilLoadCommand.c_str(), strlen(boilRecipe.c_str()), boilRecipe.c_str(), 2))) {
+
+							std::cout << "Problema nell'invio del messaggio di inizio Boil. Return code: " << ret << std::endl;
+							std::cout << "\t Topic: |" << boilLoadCommand << "|" << std::endl;
+							std::cout << "\t Length=" << strlen(boilRecipe.c_str()) << std::endl;
+							std::cout << "\t Payload=|" << boilRecipe.c_str() << "|" << std::endl;
+						}
+						if ((ret=jbbsStatus->mqttClient->publish(NULL, boilStartCommand.c_str(), 1, "0", 2))) {
+
+							std::cout << "Problema nell'invio del messaggio di inizio Boil. Return code: " << ret << std::endl;
+							std::cout << "\t Topic: |" << boilStartCommand << "|" << std::endl;
+							std::cout << "\t Length=" << 1 << std::endl;
+							std::cout << "\t Payload=|" << "0" << "|" << std::endl;
+						}
 						Mash::stop();
 					}
 				} else {
@@ -126,12 +162,15 @@ bool Mash::execute (const char *command, const char *parameters) {
   } else if (COMMAND_FIRE.compare (command) == 0) {
     Mash::driveFire( (parameters[0] == '1'));
   } else if (COMMAND_READY.compare (command) == 0) {
-    ready = ( (parameters[0] == '1'));
-    if (!ready) {
+	  status.ready = ( (parameters[0] == '1'));
+    if (!status.ready) {
         Mash::stop();
     }
   } else if (COMMAND_LOAD.compare (command) == 0) {
-    success = Mash::loadSteps(parameters);
+	  success = Mash::loadSteps(parameters);
+  } else if (COMMAND_LOADBOIL.compare (command) == 0) {
+    // strcpy(boilRecipe, parameters);
+	  boilRecipe.assign(parameters);
   } else if (COMMAND_START.compare (command) == 0) {
     startStep = atoi(parameters);
   } else if (COMMAND_STOP.compare (command) == 0) {
@@ -190,9 +229,9 @@ bool Mash::loadSteps (const char* parameter) {
 		i++;
 	}
 
-	lastStep = i - 1;
+	status.lastStep = i - 1;
 
-	gotRecipe = true;
+	status.gotRecipe = true;
 	return (true);
 
 }
@@ -204,24 +243,25 @@ bool Mash::loadSteps (const char* parameter) {
 void Mash::stop() {
 
 	// Spengo tutto
-	Mash::drivePump(Off);
-	Mash::driveFire(Off);
+	Mash::drivePump(SPENTO);
+	Mash::driveFire(SPENTO);
 
 	// Azzero status
 	status.status		= OFF;
 	status.desc        = "";
-	status.numStep     = -1;
+	status.currentStep = -1;
 	status.tempStart   = 0;
 	status.tempTarget  = 0;
 	status.timeStart   = 0;
 	status.timeStep    = 0;
 	status.timeFinish  = 0;
 	status.percent		= 0;
-	status.pump        	= Off;
-	status.fire     	= Off;
+	status.pump        	= SPENTO;
+	status.fire     	= SPENTO;
 	status.warming   	= false;
 	status.alarm		= false;
-	ready				= false;
+	status.gotRecipe	= false;
+	status.ready		= false;
 	startStep			= -1;
 
 }
@@ -240,7 +280,7 @@ bool Mash::start (int ind) {
 
 	// Inizializzo currentstep
 	status.desc        	= recipe[ind].desc;
-	status.numStep     	= ind;
+	status.currentStep  = ind;
 	status.pump        	= recipe[ind].pump;
 	status.timeStart   	= time(0);
 	status.tempStart   	= status.tempActual;
@@ -293,9 +333,9 @@ void Mash::PID_loop() {
 
 	// Accendo il fornello solo se è accesa anche la pompa
 	if ( (Output >= (time(0) - windowStartTime) ) && status.pump ) {
-		Mash::driveFire (On);
+		Mash::driveFire (ACCESO);
 	} else {
-		Mash::driveFire (Off);
+		Mash::driveFire (SPENTO);
 	}
 
 }
@@ -308,7 +348,7 @@ const std::string Mash::getStatus() {
 
 	json jStatus;
 	jStatus["status"]	  = status.status;
-	jStatus["step"]       = status.numStep;
+	jStatus["step"]       = status.currentStep;
 	jStatus["desc"]       = status.desc;
 	jStatus["tempStart"]  = status.tempStart;
 	jStatus["tempTarget"] = status.tempTarget;
@@ -352,6 +392,29 @@ const char* Mash::getStateDesc(){
 	}
 
 	return ("");
+
+}
+
+int Mash::time2Finish() {
+	// devo sommare tempo a fine step + durata step successive + differenza
+	// di temperatura tra quella attuale e quella dell'ultima step.
+
+	int t2f = 0;
+
+	// sommo la durata in minuti di tutte le rimanenti step
+	for (int i = status.currentStep+1; i <= status.lastStep; i++) {
+		t2f += recipe[i].time;
+	}
+
+	// aggiugo la differenza di temperatura quella attuale e quella dell'ultima step
+	// considero che ci voglia un minuto per elevare la T° di un grado
+	t2f += (recipe[status.lastStep].temp - status.tempActual);
+
+	// Aggiungo il tempo che ci vuole alla fine della step attuale
+
+	t2f += ((status.timeFinish - time(0) / 60));
+
+	return (t2f);
 
 }
 
