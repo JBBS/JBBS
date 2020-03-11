@@ -23,11 +23,9 @@ void Boil::loop() {
 	double appo	= 0;    // timestamp inizio step
 	double tempActual;
 
-	const int STARTSMALLFIRE = 300; // secondi prima della partenza del fornello piccolo
-	const int STARTBIGFIRE = 600; 	// secondi prima della partenza del fornello grande
+	const int STARTSMALLFIRE = 150; // secondi prima della partenza del fornello piccolo
+	const int STARTBIGFIRE = 300; 	// secondi prima della partenza del fornello grande
 	static time_t initBoil = 0;
-
-
 
   // Leggo la temperatura del mosto
 
@@ -44,13 +42,13 @@ void Boil::loop() {
 	status.tempActual = tempActual;
 
 	switch(status.status) {
-	     case OFF :
+	     case OFF:
 			status.trend = trendOff;
 	    	 if (jbbsStatus->boilReady && status.gotRecipe) {
 	    		 status.status = READY;
 	    	 }
 			 break;
-	     case READY :
+	     case READY:
 			status.trend = trendOff;
 			if (startStep >= 0) {
 				Boil::start(startStep);
@@ -59,7 +57,7 @@ void Boil::loop() {
 			}
 			break;
 	     case FILLING:
-	    	 // Faccio riempire un po' il rino e accendo solo dopo STARTSMALLFIRE secondi
+	    	 // Faccio riempire un po' il tino e accendo solo dopo STARTSMALLFIRE secondi
 	    	 if ((time(0) - initBoil) > STARTSMALLFIRE) {
 	    		 Boil::driveSmallFire(ACCESO);
 	    	 }
@@ -89,7 +87,6 @@ void Boil::loop() {
 																(status.tempActual -status.tempStart)));
 	    	 }
 
-	    	 //
 	    	 break;
 	     case BOIL:
 
@@ -138,8 +135,6 @@ bool Boil::execute (const char *command, const char *parameters) {
     success = Boil::loadSteps(parameters);
   } else if (COMMAND_START.compare (command) == 0) {
     startStep = atoi(parameters);
-//  } else if (COMMAND_SETBOIL.compare (command) == 0) {
-//    boilTemp = atoi(parameters);
   } else if (COMMAND_STOP.compare (command) == 0) {
     Boil::stop();
   }
@@ -248,9 +243,7 @@ bool Boil::start (int ind) {
 	status.tempStart   	= status.tempActual;
 	status.timeStep    	= recipe[ind].time;
 
-	if (status.tempActual < boilTemp) {
-		status.timeFinish  = 0;
-	} else {
+	if (status.status == BOIL){
 		status.timeFinish = status.timeStart + (status.timeStep * 60);
 	}
 	status.percent = 0;
@@ -312,4 +305,3 @@ const char* Boil::getStateDesc(){
 	return ("");
 
 }
-

@@ -14,7 +14,6 @@ double ki = 5;  // Coefficiente Integrale
 double kd = 1;  // Coefficiente derivative;
 
 // PID myPID(&tunTemp, &Output, &setpoint, kp, ki, kd, DIRECT);
-//SimplePID myPID( &(status.tempActual), &Output, &(status.tempTarget), kp, ki, kd, DIRECT);
 SimplePID myPID( &(tempActual), &Output, &(tempTarget), kp, ki, kd, DIRECT);
 
 Mash::Mash (GlobalStatus *js) {
@@ -69,9 +68,9 @@ void Mash::loop() {
 			// se manca meno di un'ora, faccio partire il riscaldamento del
 			// tino di sparge
 
-			if (time2Finish() <= 60 && jbbsStatus->spargeTarget <= 0) {
+			if ((time2Finish() <= 60) && (jbbsStatus->spargeWarming = false)) {
 
-				if ((ret=jbbsStatus->mqttClient->publish(NULL, spargeStartCommand.c_str(), 2, "70", 2))) {
+				if ((ret=jbbsStatus->mqttClient->publish(NULL, spargeStartCommand.c_str(), 1, "1", 2))) {
 
 					std::cout << "Problema nell'invio del messaggio di inizio riscaldamento Sparge. Return code: " << ret << std::endl;
 					std::cout << "\t Topic: |" << spargeStartCommand << "|" << std::endl;
@@ -112,7 +111,6 @@ void Mash::loop() {
 						Mash::start (status.currentStep + 1);
 					} else {
 						// ... altrimenti ho finito e lancio lo sparge ed il boil
-//						jbbsStatus->spargeStart = true;
 						if ((ret=jbbsStatus->mqttClient->publish(NULL, spargeSpargeCommand.c_str(), 1, "1", 2))) {
 
 							std::cout << "Problema nell'invio del messaggio di inizio Sparge. Return code: " << ret << std::endl;

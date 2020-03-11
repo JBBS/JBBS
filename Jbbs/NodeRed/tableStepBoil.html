@@ -1,0 +1,19 @@
+<div layout="row" layout-align="start center">
+	<span flex>Step</span>
+	<span flex style="text-align : right;">Durata</span>
+	<span flex>
+         <md-button class="md-icon-button" ng-click="send({payload: -1})">
+              <ng-md-icon icon="stop"></ng-md-icon>
+          </md-button>
+	</span>
+</div>
+
+<div layout="row" layout-align="start center" ng-repeat="step in msg.payload">
+	<span flex >{{step.desc}}</span>
+	<span flex style="text-align : right;">{{step.time}}</span>
+	<span flex >
+		<md-button class="md-icon-button" ng-click="send({payload: $index})">
+		     <ng-md-icon icon="play_arrow"></ng-md-icon>
+	    </md-button>
+	</span>
+</div>

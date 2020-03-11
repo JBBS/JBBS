@@ -1,4 +1,3 @@
-<script src="/myjs/tween-min.js"></script>
 <script src="/myjs/myGauge-min.js"></script>
 <script>
 var radial4;
@@ -27,12 +26,12 @@ var radial4;
         });
     })(scope);
 
-    var sections = [steelseries.Section(0, 25, 'rgba(0, 0, 220, 0.3)'),
-                        steelseries.Section(25, 50, 'rgba(0, 220, 0, 0.3)'),
-                        steelseries.Section(50, 75, 'rgba(220, 220, 0, 0.3)') ],
+    var sections = [steelseries.Section(20, 50, 'rgba(0, 0, 220, 0.3)'),
+                        steelseries.Section(50, 70, 'rgba(0, 220, 0, 0.3)'),
+                        steelseries.Section(70, 80, 'rgba(220, 0, 0, 0.3)') ],
 
             // Define one area
-    areas = [steelseries.Section(75, 100, 'rgba(220, 0, 0, 0.3)')],
+    areas = [steelseries.Section(70, 80, 'rgba(220, 0, 0, 0.3)')],
 
     radial4 = new steelseries.Radial('canvasRadial4', {
             gaugeType: steelseries.GaugeType.TYPE4,
@@ -51,7 +50,7 @@ var radial4;
 			PointerType: steelseries.PointerType.TYPE11,
 			FrameDesign: steelseries.FrameDesign.BLACK_METAL,
 			frameVisible: false,
-			minValue : 10,
+			minValue : 20,
 			maxValue : 80
         });
                        

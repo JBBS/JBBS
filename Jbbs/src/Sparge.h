@@ -24,6 +24,7 @@ class Sparge {
 	class DS18B20* myDS18B20;
 
 	class SensorLevel* mashSensLevel;
+//	class SensorLevel* boilSensLevel;   => Sensore livello BOIL
 	GlobalStatus *jbbsStatus;
 	double tempActual	= 0;
 	int tempTarget		= 0;
@@ -42,18 +43,18 @@ class Sparge {
 	const char* stateDesc[5] = { "Off", "Ready", "Warming", "Hot", "Sparging"};
 
 	struct {
-		stato			status		= OFF;
-		std::string  	desc		= "";
-		double       	tempActual	= 0;
-		bool         	fire 		= false;
-		bool         	mashValve 	= false;
-		bool         	boilValve 	= false;
-		int 			trend		= 0;
-		bool 			sparge		= false; 	// Flag di inizio sparge da Mash a Sparge
-		double       	tempStart	= 0;    // timestamp
-		time_t       	timeStart	= 0;    // timestamp inizio step
-		time_t       	timeFinish	= 0 ;   // timestamp fine step
-		int				percent		= 0;	// Percentuale di avanzamento step
+		stato		status			= OFF;
+		std::string	desc			= "";
+		double      tempActual		= 0;
+		bool        fire 			= false;
+		bool        mashValve 		= false;
+		bool        boilValve 		= false;
+		int 		trend			= 0;
+		bool 		sparge			= false; 	// Flag di inizio sparge da Mash a Sparge
+		double      tempStart		= 0;    // timestamp
+		time_t      timeStart		= 0;    // timestamp inizio step
+		time_t      timeFinish		= 0 ;   // timestamp fine step
+		int			percent			= 0;	// Percentuale di avanzamento step
 	 } status;
 
 	// commands related stuff

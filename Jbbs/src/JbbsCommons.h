@@ -24,15 +24,16 @@ const int PCF8574				= 0x38; 			// Input expander per i sensori
 const int PCF_BASE				= 200;
 const int GPIO_MASHLOLEVEL		= PCF_BASE + 6;		// gpio sensore di livello del mash
 const int GPIO_MASHHILEVEL		= PCF_BASE + 7;
+// const int GPIO_BOILHILEVEL		= PCF_BASE + 7;		// gpio sensore di livello del boil => Sensore livello BOIL
 
-//
+
 const int LCD_ADDR				= 0x3F; 			// Indirizzo LCD
 const int LCD_BASE				= 300;
 
 
 // Variabili di stato globali per la comunicazione con Node Red
 struct GlobalStatus {
-	int spargeTarget	= 0; 		// Messaggio di impostazione temperatura acqua di Sparge
+	bool spargeWarming 	= false;	// Stato del tun di sparge
 	bool boilReady		= false;  	// Messaggio di pronto allo sparge da boil a Sparge
 	class MQTTJbbs *mqttClient;
 
@@ -46,6 +47,7 @@ const char SPENTO = false;
 
 const bool RICIRCOLO = false;
 const bool SCARICO = true;
+const int SPARGETARGET = 78;
 
 const unsigned char MAXSTEP = 10;
 //const int 			BOILTEMP = 99; // gradi ebollizione

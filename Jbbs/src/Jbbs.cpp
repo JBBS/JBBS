@@ -8,15 +8,10 @@
 #include "Jbbs.h"               // For Jbbs
 
 GlobalStatus jbbsStatus;
-//class Sparge spargeTun( &jbbsStatus );
-//class Mash mashTun( &jbbsStatus );
-//class Boil boilTun( &jbbsStatus );
 
 Sparge *spargeTun;
 Mash *mashTun;
 Boil *boilTun;
-
-
 
 //MQTT globals
 class MQTTJbbs *mqttClient;

@@ -1,22 +1,54 @@
-- 	Calcolare il trend in modo diverso (perchè?)
+8/3/2020
+- Sparge è partito subito dopo averlo messo a ready
+- mettere la barra del tempo anche su sparge
+- Su sparge a volte ready viene visualizzato su off anche se in realtà è on. Nella seconda cotta 
+	la dashboard dava not ready, ma lo status era 3 e sul flow risultava ad on
+- Quando è scattato il travaso da mash a boil tutti e tre i tun su nodered sono passati a "not ready"
+	(è voluto?)
+- Trovare il modo di non dover sifonare il tubo di travaso da mash a boil
+- Attacchi rapidi ovunque
+- Aggiungere comando manuale MQTT SetStatus, caricamento ricetta boil e start boil. 
+	Potrebbero essere cpmandi verso il mash 
+- Mettere uno slider per boiltemp, forse la misurazione dipende dalla posizione della sonda,
+	default a 99.5°. rivedere scala su gauge.
+- Mettere le notifiche anzichè gli allarmi
+- trovare un altro modo per il ricircolo mash, magari senza filtri facendo passare aanche il malto
+	nella pompa
+- replicare comandi fornelloni su interfaccia
+- far segnalare un errore solo la prima volta, e notificarlo
+------------------------------
+
+Precedenti
 - 	mettere poca acqua per il mash in, cosi' rimane spazio di manovra per mettere il filtro
 -	Angolo su pentola di bollitura e di sparge per far pescare fino alla fine
-- 	==>> Aggiungere gli allarmi sonori
-- 	Aggiungere orario alle segnalazioni di errore
--	PROBLEMA: A pompa ferma non ho una lettura corretta della temperatura :(
--	==>> Mettere avvio automatico di Jbbs
--	==>> Verificare messa a terra telaio
--	Aggiungere sensore di livello Boil
+-	Aggiungere sensore di livello Boil. Codice in bozza già scritto, bisogna perdisporre hw e definire il PIN di controllo
 -	Durante il riposo cola acqua. Si alza il livello.
 -	Se uno per errore gioca con il ready del boil, poi non c'è più modo di reinviare la ricetta e far ripartire l'automatismo
 -	In generale, bisogna poter partire da uno stato definito manualmente.
 -	Interruttore fornello piccolo su auto sfarfalla
--	Spostare su barra del tempo boil, eliminare setboil
--	Alzare boiltemp a 99.7
--	scala boil 80-105. Verde 99-101
 -	cambiare raccorderia scambiatore. Si potrebbe mettere la stessa della pentola.
--	Raccordare i tubi del ricircolo in modo da poterli smontare per lavarli.
 -	comprare Iodophor, malto in polvere light
+
+Modifiche da committare
+- Aumentare temperatura di sparge a 78°. Rivedere scala su gauge
+- i due fuochi possono iniziare a scaldare anche un po' prima. Ridotto a 150 e 300 secondi (dimezzati i tempi);
+- In tutte e due le cotte boil è andato improvvisamente in off ed ha spento tutto. 
+	Nella prima mentre riempiva, nella seconda appena ha raggiunto la temperatura di ebollizione 
+	e sarebbe dovut passare da preboil a step1 => Ho corretto una logica errata in boil::start() che basava il 
+	calcolo	del tempo di fine step condizionandolo alla temperatura del mosto. Ora calcola il fine step solo 
+	se ero già in fase di BOIL. 
+
+
+Modifiche da committare, utilizzate in cotta dell'8/3/2020
+-	scritto codice per gestione sensore di livello boil, ma per ora lo tengo commentato. TAG "Sensore livello BOIL"
+-	Messo avvio automatico di Jbbs come servizio systemd
+-	Verificata messa a terra telaio
+-	Alzato boiltemp a 99.7
+-	Raccordati i tubi del ricircolo con attacchi rapidi come quelli della pentola.
+-	Spostata su barra del tempo boil, eliminato setboil
+-	scala boil 80-105. Verde 99-101
+- 	aggiornato Node.red all'ultima versione. Gran casino, aggiornati anche i template HTML.
+-	ripulito un po' il codice da commenti vecchi
 
 Fatto
 -	definito boiltemp come costante double = 99.5, commentata l'esecuzione del comando MQTT setboil
