@@ -137,6 +137,8 @@ bool Boil::execute (const char *command, const char *parameters) {
     startStep = atoi(parameters);
   } else if (COMMAND_STOP.compare (command) == 0) {
     Boil::stop();
+  } else if (COMMAND_SETBOIL.compare (command) == 0) {
+    boilTemp = atof(parameters);
   }
 
   return (success);
@@ -265,12 +267,14 @@ const std::string Boil::getStatus() {
 	jStatus["desc"]       = status.desc;
 	jStatus["tempStart"]  = status.tempStart;
 	jStatus["tempActual"] = status.tempActual;
+	jStatus["tempTarget"] = boilTemp;
 	jStatus["timeStart"]  = status.timeStart;
 	jStatus["timeStep"]   = status.timeStep;
 	jStatus["timeFinish"] = status.timeFinish;
 	jStatus["smallFire"]  = status.smallFire;
 	jStatus["bigFire"]    = status.bigFire;
 	jStatus["trend"]	  = status.trend;
+
 
 	return (jStatus.dump(4));
 }

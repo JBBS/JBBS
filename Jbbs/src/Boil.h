@@ -22,7 +22,7 @@ class Boil {
 	class DS18B20* myDS18B20;
 	GlobalStatus *jbbsStatus;
 
-	const double boilTemp = 99.5; // Temperatura di ebollizione, modificabile al volo con messaggio MQTT COMMAND_SETBOIL
+	double boilTemp = 99.5; // Temperatura di ebollizione, modificabile al volo con messaggio MQTT COMMAND_SETBOIL
 
 	int 	startStep = -1;
 

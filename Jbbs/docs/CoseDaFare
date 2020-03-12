@@ -8,9 +8,7 @@
 - Trovare il modo di non dover sifonare il tubo di travaso da mash a boil
 - Attacchi rapidi ovunque
 - Aggiungere comando manuale MQTT SetStatus, caricamento ricetta boil e start boil. 
-	Potrebbero essere cpmandi verso il mash 
-- Mettere uno slider per boiltemp, forse la misurazione dipende dalla posizione della sonda,
-	default a 99.5°. rivedere scala su gauge.
+	Potrebbero essere comandi verso il mash 
 - Mettere le notifiche anzichè gli allarmi
 - trovare un altro modo per il ricircolo mash, magari senza filtri facendo passare aanche il malto
 	nella pompa
@@ -27,17 +25,18 @@ Precedenti
 -	In generale, bisogna poter partire da uno stato definito manualmente.
 -	Interruttore fornello piccolo su auto sfarfalla
 -	cambiare raccorderia scambiatore. Si potrebbe mettere la stessa della pentola.
--	comprare Iodophor, malto in polvere light
+-	comprare Betadine (Iodophor), malto in polvere light
 
 Modifiche da committare
-- Aumentare temperatura di sparge a 78°. Rivedere scala su gauge
+- Aumentata temperatura di sparge a 78°. Aggiornata scala su gauge
 - i due fuochi possono iniziare a scaldare anche un po' prima. Ridotto a 150 e 300 secondi (dimezzati i tempi);
 - In tutte e due le cotte boil è andato improvvisamente in off ed ha spento tutto. 
 	Nella prima mentre riempiva, nella seconda appena ha raggiunto la temperatura di ebollizione 
 	e sarebbe dovut passare da preboil a step1 => Ho corretto una logica errata in boil::start() che basava il 
 	calcolo	del tempo di fine step condizionandolo alla temperatura del mosto. Ora calcola il fine step solo 
 	se ero già in fase di BOIL. 
-
+- Mettere uno slider per boiltemp, forse la misurazione dipende dalla posizione della sonda,
+	default a 99.5°. rivedere scala su gauge.
 
 Modifiche da committare, utilizzate in cotta dell'8/3/2020
 -	scritto codice per gestione sensore di livello boil, ma per ora lo tengo commentato. TAG "Sensore livello BOIL"

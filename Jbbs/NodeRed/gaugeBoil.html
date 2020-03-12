@@ -6,6 +6,7 @@ var radialBoil;
         scope.$watch('msg', function(msg) {
            if (typeof(msg.payload.desc) != "undefined") radialBoil.setUnitString(msg.payload.desc);
            if (typeof(msg.payload.tempActual) != "undefined") radialBoil.setValue(msg.payload.tempActual);
+           if (typeof(msg.payload.tempTarget) != "undefined") radialBoil.setThreshold(msg.payload.tempTarget);
            if (typeof(msg.payload.bigFire) != "undefined") {
 				radialBoil.blinkUserLed(msg.payload.bigFire); 
 				radialBoil.setUserLedOnOff(msg.payload.bigFire); 
@@ -24,9 +25,9 @@ var radialBoil;
         });
     })(scope);
 
-    var sections = [steelseries.Section(80, 99, 'rgba(0, 0, 220, 0.3)'),
+    var sections = [steelseries.Section(90, 99, 'rgba(0, 0, 220, 0.3)'),
 	                        steelseries.Section(99, 101, 'rgba(0, 220, 0, 0.3)'),
-	                        steelseries.Section(101, 105, 'rgba(220, 0, 0, 0.3)') ],
+	                        steelseries.Section(101, 104, 'rgba(220, 0, 0, 0.3)') ],
 
             // Define one area
     areas = [steelseries.Section(99, 101, 'rgba(0, 220, 0, 0.3)')],
@@ -38,7 +39,8 @@ var radialBoil;
             area: areas,
             titleString: "Boil",
             unitString: "",
-            thresholdVisible: false,
+            threshold: 99.5,
+//            thresholdVisible: false,
             thresholdRising: false,
             userLedVisible: true,
             useOdometer: false,
@@ -48,8 +50,8 @@ var radialBoil;
 			PointerType: steelseries.PointerType.TYPE11,
 			FrameDesign: steelseries.FrameDesign.BLACK_METAL,
 			frameVisible: false,
-			minValue : 80,
-			maxValue : 105
+			minValue : 90,
+			maxValue : 104
         });
                        
 //    radial4.setFrameDesign(steelseries.FrameDesign.BLACK_METAL);
