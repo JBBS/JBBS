@@ -52,7 +52,7 @@ MQTTJbbs::~MQTTJbbs() {
 
 void MQTTJbbs::on_disconnect(int rc) {
 
-	std::cout << ">> myMosq - disconnection(" << rc << ")" << std::endl;
+//	std::cout << ">> myMosq - disconnection(" << rc << ")" << std::endl;
 //	reconnect_async();
 	reconnect();
  }

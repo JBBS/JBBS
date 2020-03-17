@@ -32,6 +32,9 @@ char lblR[]="00:00";
 // --------------------------------------------------------------
 bool setup() {
 
+	mqttClient = new MQTTJbbs("Jbbs", "homeserver.local", 1883, onConnectCallback, onMessageCallBack);
+	jbbsStatus.mqttClient = mqttClient;
+
 	std::cout << "Jbbs Booting... " << std::endl;
 
 	// setup globale di Wiring Pi
@@ -63,8 +66,6 @@ bool setup() {
 		return (false);
 	}
 
-	mqttClient = new MQTTJbbs("Jbbs", "localhost", 1883, onConnectCallback, onMessageCallBack);
-	jbbsStatus.mqttClient = mqttClient;
 
 	spargeTun = new Sparge( &jbbsStatus );
 	mashTun = new Mash ( &jbbsStatus );
@@ -232,12 +233,12 @@ int main(int argc, char* argv[]) {
 void onConnectCallback(int rc) {
 
 	if(rc == 0){
-		 std::cout << ">> myMosq - connected with server" << std::endl;
+//		 std::cout << ">> myMosq - connected with server" << std::endl;
 
 		// faccio le mie sottoscrizioni
 		for (int i = 0; i < mqtt_max_topics; i++) {
 			mqttClient->subscribe(NULL, mqtt_topics[i], 2);
-			printf("Subscribed to:%s\n", mqtt_topics[i]);
+//			printf("Subscribed to:%s\n", mqtt_topics[i]);
 		}
 
 	} else {

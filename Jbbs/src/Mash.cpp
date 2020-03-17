@@ -53,15 +53,14 @@ void Mash::loop() {
 	    		 status.status = READY;
 	    	 }
 			 break;
-	    	 /* no break */
-	     case READY :
+	     case READY:
 			status.trend = trendOff;
 			if (startStep >= 0) {
 				Mash::start(startStep);
 				status.status = WORKING;
 			}
 			break;
-	     case WORKING  :
+	     case WORKING:
 
 			PID_loop();
 
@@ -120,13 +119,9 @@ void Mash::loop() {
 						}
 
 						// Quando lancio il boil, gli passo anche la sua ricetta
-						if ((ret=jbbsStatus->mqttClient->publish(NULL, boilLoadCommand.c_str(), strlen(boilRecipe.c_str()), boilRecipe.c_str(), 2))) {
+						Mash::sendRecipeCommand();
 
-							std::cout << "Problema nell'invio del messaggio di inizio Boil. Return code: " << ret << std::endl;
-							std::cout << "\t Topic: |" << boilLoadCommand << "|" << std::endl;
-							std::cout << "\t Length=" << strlen(boilRecipe.c_str()) << std::endl;
-							std::cout << "\t Payload=|" << boilRecipe.c_str() << "|" << std::endl;
-						}
+
 						if ((ret=jbbsStatus->mqttClient->publish(NULL, boilStartCommand.c_str(), 1, "0", 2))) {
 
 							std::cout << "Problema nell'invio del messaggio di inizio Boil. Return code: " << ret << std::endl;
@@ -142,6 +137,11 @@ void Mash::loop() {
 					appo /= status.timeFinish - status.timeStart;
 					status.percent = 100 * appo;
 
+					// se mancano meno di x minuti a fine step, invio la notifica
+					if ( status.alarm && (status.timeFinish - time(0)) < (60 * PREALLARME)) {
+						std::cout << "[MASH] Mancano meno di " << PREALLARME << " minuti al completamento dello step: " << status.desc << std::endl;
+					}
+
 				}
 			}
 	}
@@ -156,24 +156,25 @@ bool Mash::execute (const char *command, const char *parameters) {
   bool success = true;
 
   if (COMMAND_PUMP.compare (command) == 0) {
-    Mash::drivePump( (parameters[0] == '1') );
+	  Mash::drivePump( (parameters[0] == '1') );
   } else if (COMMAND_FIRE.compare (command) == 0) {
-    Mash::driveFire( (parameters[0] == '1'));
+	  Mash::driveFire( (parameters[0] == '1'));
   } else if (COMMAND_READY.compare (command) == 0) {
 	  status.ready = ( (parameters[0] == '1'));
-    if (!status.ready) {
-        Mash::stop();
-    }
+	if (!status.ready) {
+		Mash::stop();
+	}
   } else if (COMMAND_LOAD.compare (command) == 0) {
 	  success = Mash::loadSteps(parameters);
-  } else if (COMMAND_LOADBOIL.compare (command) == 0) {
-    // strcpy(boilRecipe, parameters);
-	  boilRecipe.assign(parameters);
+  } else if (COMMAND_SENDRECIPE.compare (command) == 0) {
+ 	  Mash::sendRecipeCommand();
   } else if (COMMAND_START.compare (command) == 0) {
-    startStep = atoi(parameters);
+	  startStep = atoi(parameters);
+  } else if (COMMAND_START.compare (command) == 0) {
+	  startStep = atoi(parameters);
   } else if (COMMAND_STOP.compare (command) == 0) {
-    Mash::stop();
-  }
+	  Mash::stop();
+ }
 
   return (success);
 
@@ -220,10 +221,11 @@ bool Mash::loadSteps (const char* parameter) {
 
 	int i = 0;
 	for (json::iterator it = jsonArray.begin(); it != jsonArray.end(); ++it) {
-		recipe[i].desc = (*it)["desc"];
-		recipe[i].temp = (*it)["temp"];
-		recipe[i].time = (*it)["time"];
-		recipe[i].pump = (*it)["pump"];
+		recipe[i].desc 	= (*it)["desc"];
+		recipe[i].temp 	= (*it)["temp"];
+		recipe[i].time 	= (*it)["time"];
+		recipe[i].pump	= (*it)["pump"];
+		recipe[i].alarm	= (*it)["alarm"];
 		i++;
 	}
 
@@ -261,6 +263,7 @@ void Mash::stop() {
 	status.gotRecipe	= false;
 	status.ready		= false;
 	startStep			= -1;
+	status.alarm       	= false;
 
 }
 
@@ -280,6 +283,7 @@ bool Mash::start (int ind) {
 	status.desc        	= recipe[ind].desc;
 	status.currentStep  = ind;
 	status.pump        	= recipe[ind].pump;
+	status.alarm       	= recipe[ind].alarm;
 	status.timeStart   	= time(0);
 	status.tempStart   	= status.tempActual;
 	status.tempTarget  	= recipe[ind].temp;
@@ -413,6 +417,19 @@ int Mash::time2Finish() {
 	t2f += ((status.timeFinish - time(0) / 60));
 
 	return (t2f);
+
+}
+
+void Mash::sendRecipeCommand() {
+
+	int ret = 0;
+	if ((ret=jbbsStatus->mqttClient->publish(NULL, boilLoadCommand.c_str(), strlen(boilRecipe.c_str()), boilRecipe.c_str(), 2))) {
+
+		std::cout << "Problema nell'invio del messaggio di inizio Boil. Return code: " << ret << std::endl;
+		std::cout << "\t Topic: |" << boilLoadCommand << "|" << std::endl;
+		std::cout << "\t Length=" << strlen(boilRecipe.c_str()) << std::endl;
+		std::cout << "\t Payload=|" << boilRecipe.c_str() << "|" << std::endl;
+	}
 
 }
 

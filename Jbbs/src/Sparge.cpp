@@ -102,6 +102,8 @@ bool Sparge::execute (const char *command, const char *parameters) {
     }
   } else if (COMMAND_SPARGE.compare (command) == 0) {
 	  status.sparge = ( (parameters[0] == '1'));
+  } else if (COMMAND_SETSTATUS.compare (command) == 0) {
+    Sparge::setStatus(atoi(parameters));
   }
 
   return (success);
@@ -186,6 +188,8 @@ const std::string Sparge::getStatus() {
 	jStatus["status"]	 	= status.status;
 	jStatus["tempTarget"]	= SPARGETARGET;
 	jStatus["tempActual"] 	= status.tempActual;
+	jStatus["timeStart"] 	= status.timeStart;
+	jStatus["timeFinish"] 	= status.timeFinish;
 	jStatus["fire"]       	= status.fire;
 	jStatus["mashValve"]	= status.mashValve;
 	jStatus["boilValve"]	= status.boilValve;
@@ -193,6 +197,24 @@ const std::string Sparge::getStatus() {
 
 	return (jStatus.dump(4));
 }
+
+void Sparge::setStatus(int stato){
+	switch(stato) {
+	     case WARMING  :
+	    	 jbbsStatus->spargeWarming = true;
+	    	 status.status = READY;
+	    	 break;
+	     case HOT  :
+			 status.status = HOT;
+	    	 break;
+	     case SPARGING  :
+	    	 status.sparge = true;
+			 status.status = HOT;
+	    	 break;
+	}
+
+}
+
 
 double Sparge::getTempActual() {
 	return (status.tempActual);

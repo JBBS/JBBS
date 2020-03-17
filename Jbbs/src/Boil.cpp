@@ -109,6 +109,10 @@ void Boil::loop() {
 				appo /= status.timeFinish - status.timeStart;
 				status.percent = 100 * appo;
 
+				// se mancano meno di x minuti a fine step, invio la notifica
+				if ( status.alarm && (status.timeFinish - time(0)) < (60 * PREALLARME)) {
+					std::cout << "[BOIL] Mancano meno di " << PREALLARME << " minuti al completamento dello step: " << status.desc << std::endl;
+				}
 			}
 			break;
 	}
@@ -139,6 +143,8 @@ bool Boil::execute (const char *command, const char *parameters) {
     Boil::stop();
   } else if (COMMAND_SETBOIL.compare (command) == 0) {
     boilTemp = atof(parameters);
+  } else if (COMMAND_SETSTATUS.compare (command) == 0) {
+    Boil::setStatus(atoi(parameters));
   }
 
   return (success);
@@ -189,6 +195,7 @@ bool Boil::loadSteps (const char* parameter) {
 	for (json::iterator it = jsonArray.begin(); it != jsonArray.end(); ++it) {
 		recipe[i].desc = (*it)["desc"];
 		recipe[i].time = (*it)["time"];
+		recipe[i].alarm = (*it)["alarm"];
 		i++;
 	}
 
@@ -223,6 +230,7 @@ void Boil::stop() {
 	jbbsStatus->boilReady 	= false;
 	status.gotRecipe 		= false;
 	startStep				= -1;
+	status.alarm       		= false;
 
 }
 
@@ -240,10 +248,11 @@ bool Boil::start (int ind) {
 
 	// Inizializzo currentstep
 	status.desc        	= recipe[ind].desc;
-	status.CurrentStep     	= ind;
+	status.CurrentStep  = ind;
 	status.timeStart   	= time(0);
 	status.tempStart   	= status.tempActual;
 	status.timeStep    	= recipe[ind].time;
+	status.alarm       	= recipe[ind].alarm;
 
 	if (status.status == BOIL){
 		status.timeFinish = status.timeStart + (status.timeStep * 60);
@@ -278,6 +287,21 @@ const std::string Boil::getStatus() {
 
 	return (jStatus.dump(4));
 }
+
+void Boil::setStatus(int stato){
+	switch(stato) {
+	     case FILLING  :
+	    	 startStep = 0;
+	    	 status.status = READY;
+	    	 break;
+	     case PREBOIL  :
+    		 Boil::driveSmallFire(ACCESO);
+			 status.status = PREBOIL;
+	    	 break;
+	}
+
+}
+
 
 double Boil::getTempActual() {
 	return (status.tempActual);

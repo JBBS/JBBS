@@ -65,6 +65,7 @@ class Sparge {
     void driveMashValve(bool);
     void driveBoilValve(bool);
     void stop();
+    void setStatus(int);
 
   public:
     Sparge (GlobalStatus *js); //

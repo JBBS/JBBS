@@ -39,15 +39,16 @@ struct GlobalStatus {
 
  } ;
 
-
-
 // Costanti varie
 const char ACCESO = true;
 const char SPENTO = false;
 
-const bool RICIRCOLO = false;
-const bool SCARICO = true;
-const int SPARGETARGET = 78;
+const int PREALLARME = 5; // Minuti di anticipo per invio notifica fine step
+
+
+const bool 	RICIRCOLO 		= false;
+const bool 	SCARICO 		= true;
+const int	SPARGETARGET	= 78;
 
 const unsigned char MAXSTEP = 10;
 //const int 			BOILTEMP = 99; // gradi ebollizione
@@ -64,16 +65,18 @@ const std::string MashMqttID = "mash";
 const std::string BoilMqttID = "boil";
 
 // Comandi MQTT
-const std::string COMMAND_SMALLFIRE	= "smallfire";
-const std::string COMMAND_BIGFIRE 	= "bigfire";
-const std::string COMMAND_LOAD 		= "load";
-const std::string COMMAND_LOADBOIL	= "loadboil";
-const std::string COMMAND_START 	= "start";
-const std::string COMMAND_SPARGE 	= "sparge";
-const std::string COMMAND_STOP		= "stop";
-const std::string COMMAND_SETBOIL	= "setboil";
-const std::string COMMAND_READY		= "ready";
-const std::string COMMAND_PUMP 		= "pump";
-const std::string COMMAND_FIRE 		= "fire";
+const std::string COMMAND_SMALLFIRE		= "smallfire";
+const std::string COMMAND_BIGFIRE 		= "bigfire";
+const std::string COMMAND_LOAD 			= "load";
+const std::string COMMAND_LOADBOIL		= "loadboil";
+const std::string COMMAND_SENDRECIPE	= "sendrecipe";
+const std::string COMMAND_START 		= "start";
+const std::string COMMAND_SPARGE 		= "sparge";
+const std::string COMMAND_STOP			= "stop";
+const std::string COMMAND_SETBOIL		= "setboil";
+const std::string COMMAND_SETSTATUS		= "setstatus";
+const std::string COMMAND_READY			= "ready";
+const std::string COMMAND_PUMP 			= "pump";
+const std::string COMMAND_FIRE 			= "fire";
 
 #endif

@@ -30,6 +30,7 @@ class Mash {
 	  double 		temp;
 	  unsigned char time = 0;
 	  bool 			pump;
+	  bool			alarm;
 	} recipe[MAXSTEP];
 
 	enum stato {
@@ -44,23 +45,23 @@ class Mash {
 
 	struct {
 		stato			status		= OFF;
-	   std::string  	desc		= "";
-	   int          	currentStep	= 0;    // indice Step nell'array Recipe
-	   unsigned char 	lastStep	= 0;	// punta all'ultimo step nella ricetta
-	   double       	tempStart	= 0;    // timestamp
-	   double       	tempTarget	= 0;
-	   double       	tempActual	= 0;
-	   time_t       	timeStart	= 0;    // timestamp inizio step
-	   unsigned char	timeStep	= 0;    // Step length in minuti
-	   time_t       	timeFinish	= 0 ;   // timestamp fine step
-	   int				percent		= 0;	// Percentuale di avanzamento step
-	   bool         	pump 		= false;
-	   bool         	fire 		= false;
-	   bool         	warming		= false;
-	   int 				trend		= 0;
-       bool				alarm		= false;
-       bool 			gotRecipe 	= false; // Flag caricament ricetta
-       bool 			ready 		= false; // flag Pentola pronta. Va true solo in manuale
+		std::string  	desc		= "";
+		int          	currentStep	= 0;    // indice Step nell'array Recipe
+		unsigned char 	lastStep	= 0;	// punta all'ultimo step nella ricetta
+		double       	tempStart	= 0;    // timestamp
+		double       	tempTarget	= 0;
+		double       	tempActual	= 0;
+		time_t       	timeStart	= 0;    // timestamp inizio step
+		unsigned char	timeStep	= 0;    // Step length in minuti
+		time_t       	timeFinish	= 0 ;   // timestamp fine step
+		int				percent		= 0;	// Percentuale di avanzamento step
+		bool         	pump 		= false;
+		bool         	fire 		= false;
+		bool         	warming		= false;
+		int 			trend		= 0;
+		bool			alarm		= false;
+		bool 			gotRecipe 	= false; // Flag caricament ricetta
+		bool 			ready 		= false; // flag Pentola pronta. Va true solo in manuale
 	 } status;
 
 	// commands related stuff
@@ -73,6 +74,8 @@ class Mash {
     void PID_setup();
     void PID_loop();
     int time2Finish();
+
+    void sendRecipeCommand();
 
   public:
     Mash (GlobalStatus *js);

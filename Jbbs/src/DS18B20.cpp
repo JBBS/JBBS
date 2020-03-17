@@ -29,11 +29,16 @@ float const DS18B20::getTemp() {
 
 	char * buf;
 	char* end;
+	static bool firstError = true;
 
 	if ((OWNET_read(owNet, myTempAddress.c_str(), &buf)) < 0 ) {
-		std::cout << "ERROR! MASH Sens Temp read failed." << std::endl;
+		if (firstError) {
+			firstError = false;
+			std::cout << "ERROR! MASH Sens Temp read failed." << std::endl;
+		}
 		return (85.0);
 	} else {
+		firstError = true;
 		return (strtof(buf, &end));
 	}
 }
