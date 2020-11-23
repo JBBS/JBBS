@@ -1,3 +1,38 @@
+8/7/2020 - 23/11/2020
+- la valvola di non ritorno verso lo sparge non va ed il liquido viene pompato dal mash verso 
+	lo sparge. In più la valvola elettrica non chiude completamente. Si potrebbero sostituire valvola di non ritorno ed elettrovalvola con una 
+	elettrovalvola di quelle col motorino.
+	
+- Quando trova alcuni errori va in dump (ad esempio se durante il caricamento del json trova un formato
+	dato non corretto. Trovare il modo di segnalarlo su telegram.
+
+- potrebbe essere utile un tasto "next" almeno sul mash, per chiudere l'ultimo step prematuramente, 
+	ma in modo ordinato.
+
+- Fare un backup della SD del Raspberry.
+- il fornello dello sparge non parte in automatico => probabile errore di calcolo (una parentesi sbagliata).
+	Corretto, da testare. => Ancora non va. Corretto  ("=" => "=="). Da testare. Non va, parte subito.
+- Mettere su ciascun tun una popup con lachecklist delle cose da fare prima di accendere 
+	"pronto ad iniziare"
+- liquido per pulire scambiatore
+- distanziare elettrodi sensore di livello acqua: er rimasta un po' di schiuma tra due di loro e non 
+	faceva aprire la valvola
+- mettere conferma su pulsante read/not ready
+- far partire allarme sui sensori solo una volta. => NON FUNZIONA
+- Segnalare errore solo una volta, riarmare quando tutto va di nuovo bene => NON FUNZIONA
+	
+	
+Fatti
+
+- Nel messaggio telegram riportare anche il nome dello step oltre al progressivo.
+- Ora segnala l'allarme di fine step solo una volta
+- sulla dashboard segnava un orario a -2 ore. Nel docker si usa UTC anzichè il timezone di Roma. 
+- non arrivano le notifiche telegram. Forse il servizio deve partire dopo mosquitto.
+- Sostituire tubi travasi
+- cambiare raccorderia scambiatore. Si potrebbe mettere la stessa della pentola.
+
+-----------------------------------------------------------------------------------------------
+
 8/3/2020
 - Sparge è partito subito dopo averlo messo a ready
 - Su sparge a volte ready viene visualizzato su off anche se in realtà è on. Nella seconda cotta 
@@ -19,8 +54,9 @@ Precedenti
 -	Se uno per errore gioca con il ready del boil, poi non c'è più modo di reinviare la ricetta e far ripartire l'automatismo
 -	In generale, bisogna poter partire da uno stato definito manualmente.
 -	Interruttore fornello piccolo su auto sfarfalla
--	cambiare raccorderia scambiatore. Si potrebbe mettere la stessa della pentola.
--	comprare Betadine (Iodophor), malto in polvere light
+-	Trovare un modo comodo per caricare acqua di sparge
+-	interfaccia db ricette
+-	Sensore di livello boil: bisogna ampliare la schedina hw del sensore e fare lo schema Eagle/DiY perchè non li trovo più
 
 Da committare
 - mettere la barra del tempo anche su sparge

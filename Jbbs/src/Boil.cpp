@@ -112,6 +112,7 @@ void Boil::loop() {
 				// se mancano meno di x minuti a fine step, invio la notifica
 				if ( status.alarm && (status.timeFinish - time(0)) < (60 * PREALLARME)) {
 					std::cout << "[BOIL] Mancano meno di " << PREALLARME << " minuti al completamento dello step: " << status.desc << std::endl;
+					status.alarm = false;
 				}
 			}
 			break;
@@ -244,7 +245,7 @@ void Boil::stop() {
 
 bool Boil::start (int ind) {
 
-	std::cout << ">> start: " << ind << std::endl;
+	std::cout << "[BOIL] start: " << ind << " " << recipe[ind].desc << std::endl;
 
 	// Inizializzo currentstep
 	status.desc        	= recipe[ind].desc;

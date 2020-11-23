@@ -67,11 +67,11 @@ void Mash::loop() {
 			// se manca meno di un'ora, faccio partire il riscaldamento del
 			// tino di sparge
 
-			if ((time2Finish() <= 60) && (jbbsStatus->spargeWarming = false)) {
+			if ((time2Finish() <= 60) && (jbbsStatus->spargeWarming == false)) {
 
 				if ((ret=jbbsStatus->mqttClient->publish(NULL, spargeStartCommand.c_str(), 1, "1", 2))) {
 
-					std::cout << "Problema nell'invio del messaggio di inizio riscaldamento Sparge. Return code: " << ret << std::endl;
+					std::cout << "[MASH] Problema nell'invio del messaggio di inizio riscaldamento Sparge. Return code: " << ret << std::endl;
 					std::cout << "\t Topic: |" << spargeStartCommand << "|" << std::endl;
 					std::cout << "\t Length=" << 2 << std::endl;
 					std::cout << "\t Payload=|" << "70" << "|" << std::endl;
@@ -112,7 +112,7 @@ void Mash::loop() {
 						// ... altrimenti ho finito e lancio lo sparge ed il boil
 						if ((ret=jbbsStatus->mqttClient->publish(NULL, spargeSpargeCommand.c_str(), 1, "1", 2))) {
 
-							std::cout << "Problema nell'invio del messaggio di inizio Sparge. Return code: " << ret << std::endl;
+							std::cout << "[MASH] Problema nell'invio del messaggio di inizio Sparge. Return code: " << ret << std::endl;
 							std::cout << "\t Topic: |" << spargeSpargeCommand << "|" << std::endl;
 							std::cout << "\t Length=" << 1 << std::endl;
 							std::cout << "\t Payload=|" << "1" << "|" << std::endl;
@@ -124,7 +124,7 @@ void Mash::loop() {
 
 						if ((ret=jbbsStatus->mqttClient->publish(NULL, boilStartCommand.c_str(), 1, "0", 2))) {
 
-							std::cout << "Problema nell'invio del messaggio di inizio Boil. Return code: " << ret << std::endl;
+							std::cout << "[MASH] Problema nell'invio del messaggio di inizio Boil. Return code: " << ret << std::endl;
 							std::cout << "\t Topic: |" << boilStartCommand << "|" << std::endl;
 							std::cout << "\t Length=" << 1 << std::endl;
 							std::cout << "\t Payload=|" << "0" << "|" << std::endl;
@@ -140,6 +140,7 @@ void Mash::loop() {
 					// se mancano meno di x minuti a fine step, invio la notifica
 					if ( status.alarm && (status.timeFinish - time(0)) < (60 * PREALLARME)) {
 						std::cout << "[MASH] Mancano meno di " << PREALLARME << " minuti al completamento dello step: " << status.desc << std::endl;
+						status.alarm = false; // Così segnala una sola volta
 					}
 
 				}
@@ -168,8 +169,8 @@ bool Mash::execute (const char *command, const char *parameters) {
 	  success = Mash::loadSteps(parameters);
   } else if (COMMAND_SENDRECIPE.compare (command) == 0) {
  	  Mash::sendRecipeCommand();
-  } else if (COMMAND_START.compare (command) == 0) {
-	  startStep = atoi(parameters);
+  } else if (COMMAND_LOADBOIL.compare (command) == 0) {
+	  boilRecipe.assign(parameters);
   } else if (COMMAND_START.compare (command) == 0) {
 	  startStep = atoi(parameters);
   } else if (COMMAND_STOP.compare (command) == 0) {
@@ -232,6 +233,8 @@ bool Mash::loadSteps (const char* parameter) {
 	status.lastStep = i - 1;
 
 	status.gotRecipe = true;
+	std::cout << ">> Caricata ricetta " << std::endl;
+
 	return (true);
 
 }
@@ -277,7 +280,7 @@ void Mash::stop() {
 
 bool Mash::start (int ind) {
 
-	std::cout << ">> start: " << ind << std::endl;
+	std::cout << "[MASH] start: " << ind << " " << recipe[ind].desc << std::endl;
 
 	// Inizializzo currentstep
 	status.desc        	= recipe[ind].desc;
@@ -414,7 +417,7 @@ int Mash::time2Finish() {
 
 	// Aggiungo il tempo che ci vuole alla fine della step attuale
 
-	t2f += ((status.timeFinish - time(0) / 60));
+	t2f += ((status.timeFinish - time(0)) / 60);
 
 	return (t2f);
 

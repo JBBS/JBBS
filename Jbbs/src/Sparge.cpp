@@ -63,6 +63,7 @@ void Sparge::loop() {
 				Sparge::driveFire(SPENTO);
 				Sparge::driveBoilValve(SCARICO);
 	    	    status.status = SPARGING;
+	    	    std::cout << "[SPARGE] Inizio Sparging"  << std::endl;
 	    	 } else {
 	    		 Sparge::driveFire( status.tempActual < SPARGETARGET);
 	    	 }
@@ -74,11 +75,12 @@ void Sparge::loop() {
 			if (mashSensLevel->isHigh()) {
 				Sparge::driveMashValve(SPENTO);
 			}
-//			if (boilSensLevel->isHigh()) {			=> Sensore livello BOIL
-//				Sparge::driveMashValve(SPENTO);		=> Sensore livello BOIL
-//				Sparge::driveBoilValve(RICIRCOLO);	=> Sensore livello BOIL
-//	    	    status.status = OFF;				=> Sensore livello BOIL
-//			}										=> Sensore livello BOIL
+//			if (boilSensLevel->isHigh()) {								=> Sensore livello BOIL
+//				Sparge::driveMashValve(SPENTO);							=> Sensore livello BOIL
+//				Sparge::driveBoilValve(RICIRCOLO);						=> Sensore livello BOIL
+//	    	    status.status = OFF;									=> Sensore livello BOIL
+//	    	    std::cout << "[SPARGE] Fine Sparging"  << std::endl; 	=> Sensore livello BOIL
+//			}															=> Sensore livello BOIL
 
 	    	 break;
 	}
