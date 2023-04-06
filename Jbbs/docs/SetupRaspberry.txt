@@ -1,0 +1,14 @@
+Flashare su SSD aggiornare Sistema operativo Raspbian lite
+Copiare in bootfs i tre file ssh, wpasupplicant.conf e userconf.txt (mizio/h501t)
+
+login al raspberry
+copiare le chiavi ssh
+aggiornare il sistema operativo "sudo apt update -y && sudo apt upgrade -y"
+aggiornare hostname Jbbs (facoltativo)
+aggiornare Timezone Europe/Rome
+
+istallare wiringPi dal deb. Non è più supportato, Può essere che lo continuino ad aggiornare qui https://github.com/WiringPi/WiringPi
+istallare mosquitto-clients mosquitto-dev libmosquitto*
+	- stoppare il servizio mosquitto "sudo service mosquitto stop"
+	- disabilitare il servizio mosquitto "sudo systemctl disable mosquitto.service"
+istallare owfs

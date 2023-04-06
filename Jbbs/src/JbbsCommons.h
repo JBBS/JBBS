@@ -24,7 +24,9 @@ const int PCF8574				= 0x38; 			// Input expander per i sensori
 const int PCF_BASE				= 200;
 const int GPIO_MASHLOLEVEL		= PCF_BASE + 6;		// gpio sensore di livello del mash
 const int GPIO_MASHHILEVEL		= PCF_BASE + 7;
-// const int GPIO_BOILHILEVEL		= PCF_BASE + 7;		// gpio sensore di livello del boil => Sensore livello BOIL
+
+// GPIO diretti sul raspberry
+const int GPIO_BOILHILEVEL		= 7;				// gpio sensore di livello del boil => Sensore livello BOIL
 
 
 const int LCD_ADDR				= 0x3F; 			// Indirizzo LCD

@@ -1,0 +1,36 @@
+install steelseries to node red
+
+
+download
+https://github.com/HanSolo/SteelSeries-Canvas
+make a folder in node red /home/pi/.node-red/public/myjs
+copy steelseries min js and tween min js to the myjs folder
+
+
+edit settings
+
+sudo nano /home/pi/.node-red/settings.js
+
+look for this
+
+// By default, all user data is stored in the Node-RED install directory. To
+    // use a different location, the following property can be used
+    //userDir: '/home/pi/.node-red/',
+
+      httpStatic: '/home/pi/.node-red/public',
+
+          ^^^^add this line.... ctrl+x y return ^^^^^
+
+restart
+
+should be ready to go
+jim
+
+---------------------------------------
+Qualche link:
+
+https://github.com/HanSolo/SteelSeries-Canvas // Repository originale
+http://www.wilmslowastro.com/steelseries/demoRadial.html // DEmo impostazioni
+https://tech.scargill.net/steelseries-and-node-red/	// Articolo per utilizzo in node-red
+http://forum.openmarine.net/showthread.php?tid=631
+https://harmoniccode.blogspot.com/2011/04/steelseries-javascript-edition.html

@@ -1,0 +1,92 @@
+8/7/2020 - 23/11/2020
+- la valvola di non ritorno verso lo sparge non va ed il liquido viene pompato dal mash verso 
+	lo sparge. In più la valvola elettrica non chiude completamente. Si potrebbero sostituire valvola di non ritorno ed elettrovalvola con una 
+	elettrovalvola di quelle col motorino.
+	
+- Quando trova alcuni errori va in dump (ad esempio se durante il caricamento del json trova un formato
+	dato non corretto. Trovare il modo di segnalarlo su telegram.
+
+- potrebbe essere utile un tasto "next" almeno sul mash, per chiudere l'ultimo step prematuramente, 
+	ma in modo ordinato.
+
+- Fare un backup della SD del Raspberry.
+- il fornello dello sparge non parte in automatico => probabile errore di calcolo (una parentesi sbagliata).
+	Corretto, da testare. => Ancora non va. Corretto  ("=" => "=="). Da testare. Non va, parte subito.
+- Mettere su ciascun tun una popup con lachecklist delle cose da fare prima di accendere 
+	"pronto ad iniziare"
+- liquido per pulire scambiatore
+- distanziare elettrodi sensore di livello acqua: er rimasta un po' di schiuma tra due di loro e non 
+	faceva aprire la valvola
+- mettere conferma su pulsante read/not ready
+- far partire allarme sui sensori solo una volta. => NON FUNZIONA
+- Segnalare errore solo una volta, riarmare quando tutto va di nuovo bene => NON FUNZIONA
+	
+	
+Fatti
+
+- Nel messaggio telegram riportare anche il nome dello step oltre al progressivo.
+- Ora segnala l'allarme di fine step solo una volta
+- sulla dashboard segnava un orario a -2 ore. Nel docker si usa UTC anzichè il timezone di Roma. 
+- non arrivano le notifiche telegram. Forse il servizio deve partire dopo mosquitto.
+- Sostituire tubi travasi
+- cambiare raccorderia scambiatore. Si potrebbe mettere la stessa della pentola.
+
+-----------------------------------------------------------------------------------------------
+
+8/3/2020
+- Sparge è partito subito dopo averlo messo a ready
+- Su sparge a volte ready viene visualizzato su off anche se in realtà è on. Nella seconda cotta 
+	la dashboard dava not ready, ma lo status era 3 e sul flow risultava ad on
+- Quando è scattato il travaso da mash a boil tutti e tre i tun su nodered sono passati a "not ready"
+	(è voluto?)
+- Trovare il modo di non dover sifonare il tubo di travaso da mash a boil
+- Attacchi rapidi ovunque
+- trovare un altro modo per il ricircolo mash, magari senza filtri facendo passare aanche il malto
+	nella pompa
+- replicare comandi fornelloni su interfaccia
+------------------------------
+
+Precedenti
+- 	mettere poca acqua per il mash in, cosi' rimane spazio di manovra per mettere il filtro
+-	Angolo su pentola di bollitura e di sparge per far pescare fino alla fine
+-	Aggiungere sensore di livello Boil. Codice in bozza già scritto, bisogna perdisporre hw e definire il PIN di controllo
+-	Durante il riposo cola acqua. Si alza il livello.
+-	Se uno per errore gioca con il ready del boil, poi non c'è più modo di reinviare la ricetta e far ripartire l'automatismo
+-	In generale, bisogna poter partire da uno stato definito manualmente.
+-	Interruttore fornello piccolo su auto sfarfalla
+-	Trovare un modo comodo per caricare acqua di sparge
+-	interfaccia db ricette
+-	Sensore di livello boil: bisogna ampliare la schedina hw del sensore e fare lo schema Eagle/DiY perchè non li trovo più
+
+Da committare
+- mettere la barra del tempo anche su sparge
+- Aggiungere comando manuale MQTT SetStatus 
+- caricamento manuale ricetta boil.
+
+Fatto
+-------
+- Mettere le notifiche anzichè gli allarmi
+- far segnalare un errore solo la prima volta, e notificarlo
+- Aumentata temperatura di sparge a 78°. Aggiornata scala su gauge
+- i due fuochi possono iniziare a scaldare anche un po' prima. Ridotto a 150 e 300 secondi (dimezzati i tempi);
+- In tutte e due le cotte boil è andato improvvisamente in off ed ha spento tutto. 
+	Nella prima mentre riempiva, nella seconda appena ha raggiunto la temperatura di ebollizione 
+	e sarebbe dovut passare da preboil a step1 => Ho corretto una logica errata in boil::start() che basava il 
+	calcolo	del tempo di fine step condizionandolo alla temperatura del mosto. Ora calcola il fine step solo 
+	se ero già in fase di BOIL. 
+- Mettere uno slider per boiltemp, forse la misurazione dipende dalla posizione della sonda,
+	default a 99.5°. rivedere scala su gauge.
+
+Fatto, modifiche utilizzate in cotta dell'8/3/2020
+-	scritto codice per gestione sensore di livello boil, ma per ora lo tengo commentato. TAG "Sensore livello BOIL"
+-	Messo avvio automatico di Jbbs come servizio systemd
+-	Verificata messa a terra telaio
+-	Alzato boiltemp a 99.7
+-	Raccordati i tubi del ricircolo con attacchi rapidi come quelli della pentola.
+-	Spostata su barra del tempo boil, eliminato setboil
+-	scala boil 80-105. Verde 99-101
+- 	aggiornato Node.red all'ultima versione. Gran casino, aggiornati anche i template HTML.
+-	ripulito un po' il codice da commenti vecchi
+
+Fatto
+-	definito boiltemp come costante double = 99.5, commentata l'esecuzione del comando MQTT setboil

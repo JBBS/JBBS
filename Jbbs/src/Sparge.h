@@ -24,7 +24,7 @@ class Sparge {
 	class DS18B20* myDS18B20;
 
 	class SensorLevel* mashSensLevel;
-//	class SensorLevel* boilSensLevel;   => Sensore livello BOIL
+	class SensorLevel* boilSensLevel;  // => Sensore livello BOIL
 	GlobalStatus *jbbsStatus;
 	double tempActual	= 0;
 	int tempTarget		= 0;

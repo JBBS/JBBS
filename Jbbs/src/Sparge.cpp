@@ -4,7 +4,7 @@ Sparge::Sparge (GlobalStatus *js) {
 
 	myDS18B20 = new DS18B20(TEMP_SPARGE);
 	mashSensLevel = new SensorLevel(GPIO_MASHLOLEVEL, GPIO_MASHHILEVEL);
-//	boilSensLevel = new SensorLevel(GPIO_BOILHILEVEL, GPIO_BOILHILEVEL); => Sensore livello BOIL
+	boilSensLevel = new SensorLevel(GPIO_BOILHILEVEL, GPIO_BOILHILEVEL); // => Sensore livello BOIL
 	jbbsStatus = js;
 	Sparge::stop();
 
@@ -75,12 +75,12 @@ void Sparge::loop() {
 			if (mashSensLevel->isHigh()) {
 				Sparge::driveMashValve(SPENTO);
 			}
-//			if (boilSensLevel->isHigh()) {								=> Sensore livello BOIL
-//				Sparge::driveMashValve(SPENTO);							=> Sensore livello BOIL
-//				Sparge::driveBoilValve(RICIRCOLO);						=> Sensore livello BOIL
-//	    	    status.status = OFF;									=> Sensore livello BOIL
-//	    	    std::cout << "[SPARGE] Fine Sparging"  << std::endl; 	=> Sensore livello BOIL
-//			}															=> Sensore livello BOIL
+			if (boilSensLevel->isHigh()) {								// => Sensore livello BOIL
+				Sparge::driveMashValve(SPENTO);							// => Sensore livello BOIL
+				Sparge::driveBoilValve(RICIRCOLO);						// => Sensore livello BOIL
+	    	    status.status = OFF;									// => Sensore livello BOIL
+	    	    std::cout << "[SPARGE] Fine Sparging"  << std::endl; 	// => Sensore livello BOIL
+			}															// => Sensore livello BOIL
 
 	    	 break;
 	}
