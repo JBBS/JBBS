@@ -1,0 +1,602 @@
+[
+    {
+        "id": "f4141af0.d89288",
+        "type": "tab",
+        "label": "Indicatori"
+    },
+    {
+        "id": "df50dad2.914f58",
+        "type": "json",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "pretty": false,
+        "x": 301.4445343017578,
+        "y": 385.7777404785156,
+        "wires": [
+            [
+                "60b48703.21d318",
+                "ed9e5a9f.4ad9d8",
+                "ae585e41.42f7e"
+            ]
+        ]
+    },
+    {
+        "id": "bfec0bd8.99c578",
+        "type": "mqtt in",
+        "z": "f4141af0.d89288",
+        "name": "mash/status",
+        "topic": "mash/status",
+        "qos": "0",
+        "broker": "fe2dcf7a.8b271",
+        "x": 105.66665649414062,
+        "y": 385.7777404785156,
+        "wires": [
+            [
+                "df50dad2.914f58"
+            ]
+        ]
+    },
+    {
+        "id": "60b48703.21d318",
+        "type": "ui_template",
+        "z": "f4141af0.d89288",
+        "group": "1f79b609.15d25a",
+        "name": "Mash Temp Gauge",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "format": "<script src=\"/myjs/myGauge-min.js\"></script>\n<script>\nvar radial4;\n    (function(scope){\n        scope.$watch('msg', function(msg) {\n           if (typeof(msg.payload.desc) != \"undefined\") radial4.setUnitString(msg.payload.desc);\n           if (typeof(msg.payload.tempActual) != \"undefined\") radial4.setValue(msg.payload.tempActual);\n//           if (typeof(msg.payload.max) != \"undefined\") radial4.setMaxValue(msg.payload.max);\n//           if (typeof(msg.payload.tempStart) != \"undefined\") radial4.setMinValue(msg.payload.tempStart);\n           if (typeof(msg.payload.tempTarget) != \"undefined\") radial4.setThreshold(msg.payload.tempTarget);\n           if (typeof(msg.payload.pump) != \"undefined\") {\n\t\t\t\tradial4.blinkUserLed(msg.payload.pump); \n\t\t\t\tradial4.setUserLedOnOff(msg.payload.pump); \n\t\t\t}\n           if (typeof(msg.payload.fire) != \"undefined\") {\n\t\t\t\tradial4.blinkLed(msg.payload.fire); \n\t\t\t\tradial4.setLedOnOff(msg.payload.fire); \n\t\t\t}\n           if (typeof(msg.payload.trend) != \"undefined\")\n            {\n                if (msg.payload.trend==1)     radial4.setTrend(steelseries.TrendState.UP);\n                if (msg.payload.trend==0)     radial4.setTrend(steelseries.TrendState.STEADY);\n                if (msg.payload.trend==-1)    radial4.setTrend(steelseries.TrendState.DOWN);\n                if (msg.payload.trend==-2)    radial4.setTrend(steelseries.TrendState.OFF);\n            }\n        });\n    })(scope);\n\n    var sections = [steelseries.Section(20, 50, 'rgba(0, 0, 220, 0.3)'),\n                        steelseries.Section(50, 70, 'rgba(0, 220, 0, 0.3)'),\n                        steelseries.Section(70, 80, 'rgba(220, 0, 0, 0.3)') ],\n\n            // Define one area\n    areas = [steelseries.Section(70, 80, 'rgba(220, 0, 0, 0.3)')],\n\n    radial4 = new steelseries.Radial('canvasRadial4', {\n            gaugeType: steelseries.GaugeType.TYPE4,\n            size: 292,\n            section: sections,\n            area: areas,\n            titleString: \"Mash\",\n            unitString: \"\",\n            threshold: 0,\n            thresholdRising: false,\n            userLedVisible: true,\n            useOdometer: false,\n            lcdVisible: false,\n            trendVisible: true,\n\t\t\tuserLedColor: steelseries.LedColor.BLUE_LED,\n\t\t\tPointerType: steelseries.PointerType.TYPE11,\n\t\t\tFrameDesign: steelseries.FrameDesign.BLACK_METAL,\n\t\t\tframeVisible: false,\n\t\t\tminValue : 20,\n\t\t\tmaxValue : 80\n        });\n                       \n//    radial4.setFrameDesign(steelseries.FrameDesign.BLACK_METAL);\n    radial4.setValue(0);\n    radial4.setThreshold(0);\n    radial4.blinkUserLed(0);\n//\tradial4.setPointerType(steelseries.PointerType.TYPE11)\n\n\n</script>\n\n<canvas id=\"canvasRadial4\" width=\"401\" height=\"401\"></canvas>\n",
+        "storeOutMessages": false,
+        "fwdInMessages": false,
+        "templateScope": "local",
+        "x": 590,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "daae22a2.58d82",
+        "type": "ui_template",
+        "z": "f4141af0.d89288",
+        "group": "1f79b609.15d25a",
+        "name": "Mash Time Bar",
+        "order": 3,
+        "width": "6",
+        "height": "1",
+        "format": "<div layout=\"row\" layout-align=\"space-between center\">\n{{msg.payload.timeStart}}<progress value={{msg.progress}} max=\"100\"></progress>{{msg.payload.timeFinish}}\n</div>",
+        "storeOutMessages": false,
+        "fwdInMessages": false,
+        "templateScope": "local",
+        "x": 596.6000366210938,
+        "y": 438.6000518798828,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ed9e5a9f.4ad9d8",
+        "type": "function",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "func": "if (msg.payload.timeFinish) {\n    msg.progress = 100 * (Date.now() - msg.payload.timeStart*1000) / (1000 * (msg.payload.timeFinish -msg.payload.timeStart));\n    data = new Date(msg.payload.timeStart * 1000);\n    msg.payload.timeStart = data.getHours() + \":\" + ((data.getMinutes() < 10) ? \"0\" :\"\") + data.getMinutes();\n    data = new Date(msg.payload.timeFinish * 1000);\n    msg.payload.timeFinish = data.getHours() + \":\" + ((data.getMinutes() < 10) ? \"0\" :\"\") + data.getMinutes();\n} else {\n    msg.progress = 0\n    msg.payload.timeStart = \"--:--\";\n    msg.payload.timeFinish = \"--:--\";\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 437.1999969482422,
+        "y": 438.20005798339844,
+        "wires": [
+            [
+                "daae22a2.58d82"
+            ]
+        ]
+    },
+    {
+        "id": "cb6a9b3.dcb4e68",
+        "type": "ui_template",
+        "z": "f4141af0.d89288",
+        "group": "11f912be.b76ccd",
+        "name": "Sparge Temp Gauge",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "format": "<script src=\"/myjs/myGauge-min.js\"></script>\n<script>\nvar radialSparge;\n    (function(scope){\n        scope.$watch('msg', function(msg) {\n           if (typeof(msg.payload.desc) != \"undefined\") radialSparge.setUnitString(msg.payload.desc);\n           if (typeof(msg.payload.tempActual) != \"undefined\") radialSparge.setValue(msg.payload.tempActual);\n           if (typeof(msg.payload.tempTarget) != \"undefined\") radialSparge.setThreshold(msg.payload.tempTarget);\n           if (typeof(msg.payload.boilValve) != \"undefined\") {\n//\t\t\t\tradialSparge.blinkUserLed(msg.payload.boilValve); \n\t\t\t\tradialSparge.setUserLedOnOff(msg.payload.boilValve); \n\t\t\t}\n           if (typeof(msg.payload.fire) != \"undefined\") {\n\t\t\t\tradialSparge.blinkLed(msg.payload.fire); \n\t\t\t\tradialSparge.setLedOnOff(msg.payload.fire); \n\t\t\t}\n           if (typeof(msg.payload.trend) != \"undefined\")\n            {\n                if (msg.payload.trend==1)     radialSparge.setTrend(steelseries.TrendState.UP);\n                if (msg.payload.trend==0)     radialSparge.setTrend(steelseries.TrendState.STEADY);\n                if (msg.payload.trend==-1)    radialSparge.setTrend(steelseries.TrendState.DOWN);\n                if (msg.payload.trend==-2)    radialSparge.setTrend(steelseries.TrendState.OFF);\n            }\n        });\n    })(scope);\n\n    var sections = [steelseries.Section(20, 76, 'rgba(0, 0, 220, 0.3)'),\n                        steelseries.Section(76, 80, 'rgba(0, 220, 0, 0.3)'),\n                        steelseries.Section(80, 90, 'rgba(220, 0, 0, 0.3)') ],\n\n            // Define one area\n    areas = [steelseries.Section(76, 80, 'rgba(0, 220, 0, 0.3)')],\n\n    radialSparge = new steelseries.Radial('canvasRadialSparge', {\n            gaugeType: steelseries.GaugeType.TYPE4,\n            size: 292,\n            section: sections,\n            area: areas,\n            titleString: \"Sparge\",\n            unitString: \"\",\n            threshold: 0,\n            thresholdRising: false,\n            userLedVisible: true,\n            useOdometer: false,\n            lcdVisible: false,\n            trendVisible: true,\n//\t\t\tuserLedColor: steelseries.LedColor.BLUE_LED,\n\t\t\tPointerType: steelseries.PointerType.TYPE11,\n\t\t\tFrameDesign: steelseries.FrameDesign.BLACK_METAL,\n\t\t\tframeVisible: false,\n\t\t\tminValue : 20,\n\t\t\tmaxValue : 90\n        });\n                       \n//    radial4.setFrameDesign(steelseries.FrameDesign.BLACK_METAL);\n    radialSparge.setValue(0);\n    radialSparge.setThreshold(0);\n    radialSparge.blinkUserLed(0);\n//\tradial4.setPointerType(steelseries.PointerType.TYPE11)\n\n\n</script>\n\n<canvas id=\"canvasRadialSparge\" width=\"401\" height=\"401\"></canvas>\n",
+        "storeOutMessages": false,
+        "fwdInMessages": false,
+        "templateScope": "local",
+        "x": 440,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "892668f2.b2dce8",
+        "type": "mqtt in",
+        "z": "f4141af0.d89288",
+        "name": "sparge/status",
+        "topic": "sparge/status",
+        "qos": "0",
+        "broker": "fe2dcf7a.8b271",
+        "x": 112,
+        "y": 62,
+        "wires": [
+            [
+                "bb6555b9.1098b8"
+            ]
+        ]
+    },
+    {
+        "id": "bb6555b9.1098b8",
+        "type": "json",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "pretty": false,
+        "x": 230,
+        "y": 120,
+        "wires": [
+            [
+                "cb6a9b3.dcb4e68",
+                "2a2da0f7.2929e"
+            ]
+        ]
+    },
+    {
+        "id": "c79d102f.cb88f",
+        "type": "ui_template",
+        "z": "f4141af0.d89288",
+        "group": "faee2d.c36841d",
+        "name": "Boil Temp Gauge",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "format": "<!DOCTYPE html>\n<script src=\"/myjs/myGauge-min.js\"></script>\n<script>\nvar radialBoil;\n    (function(scope){\n        scope.$watch('msg', function(msg) {\n           if (typeof(msg.payload.desc) != \"undefined\") radialBoil.setUnitString(msg.payload.desc);\n           if (typeof(msg.payload.tempActual) != \"undefined\") radialBoil.setValue(msg.payload.tempActual);\n           if (typeof(msg.payload.tempTarget) != \"undefined\") radialBoil.setThreshold(msg.payload.tempTarget);\n           if (typeof(msg.payload.bigFire) != \"undefined\") {\n\t\t\t\tradialBoil.blinkUserLed(msg.payload.bigFire); \n\t\t\t\tradialBoil.setUserLedOnOff(msg.payload.bigFire); \n\t\t\t}\n           if (typeof(msg.payload.smallFire) != \"undefined\") {\n\t\t\t\tradialBoil.blinkLed(msg.payload.smallFire); \n\t\t\t\tradialBoil.setLedOnOff(msg.payload.smallFire); \n\t\t\t}\n           if (typeof(msg.payload.trend) != \"undefined\")\n            {\n                if (msg.payload.trend==1)     radialBoil.setTrend(steelseries.TrendState.UP);\n                if (msg.payload.trend==0)     radialBoil.setTrend(steelseries.TrendState.STEADY);\n                if (msg.payload.trend==-1)    radialBoil.setTrend(steelseries.TrendState.DOWN);\n                if (msg.payload.trend==-2)    radialBoil.setTrend(steelseries.TrendState.OFF);\n            }\n        });\n    })(scope);\n\n    var sections = [steelseries.Section(90, 99, 'rgba(0, 0, 220, 0.3)'),\n\t                        steelseries.Section(99, 101, 'rgba(0, 220, 0, 0.3)'),\n\t                        steelseries.Section(101, 104, 'rgba(220, 0, 0, 0.3)') ],\n\n            // Define one area\n    areas = [steelseries.Section(99, 101, 'rgba(0, 220, 0, 0.3)')],\n\n    radialBoil = new steelseries.Radial('canvasRadialBoil', {\n            gaugeType: steelseries.GaugeType.TYPE4,\n            size: 292,\n            section: sections,\n            area: areas,\n            titleString: \"Boil\",\n            unitString: \"\",\n            threshold: 99.5,\n//            thresholdVisible: false,\n            thresholdRising: false,\n            userLedVisible: true,\n            useOdometer: false,\n            lcdVisible: false,\n            trendVisible: true,\n\t\t\tuserLedColor: steelseries.LedColor.RED_LED,\n\t\t\tPointerType: steelseries.PointerType.TYPE11,\n\t\t\tFrameDesign: steelseries.FrameDesign.BLACK_METAL,\n\t\t\tframeVisible: false,\n\t\t\tminValue : 90,\n\t\t\tmaxValue : 104\n        });\n                       \n//    radial4.setFrameDesign(steelseries.FrameDesign.BLACK_METAL);\n    radialBoil.setValue(0);\n//    radialBoil.setThreshold(0);\n    radialBoil.blinkUserLed(0);\n//\tradial4.setPointerType(steelseries.PointerType.TYPE11)\n\n\n</script>\n\n<canvas id=\"canvasRadialBoil\" width=\"401\" height=\"401\"></canvas>\n",
+        "storeOutMessages": true,
+        "fwdInMessages": false,
+        "templateScope": "local",
+        "x": 563,
+        "y": 642,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f833314b.e3d7e",
+        "type": "mqtt in",
+        "z": "f4141af0.d89288",
+        "name": "boil/status",
+        "topic": "boil/status",
+        "qos": "0",
+        "broker": "fe2dcf7a.8b271",
+        "x": 100,
+        "y": 640,
+        "wires": [
+            [
+                "7d50104.7bf54f"
+            ]
+        ]
+    },
+    {
+        "id": "7d50104.7bf54f",
+        "type": "json",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "x": 308,
+        "y": 640,
+        "wires": [
+            [
+                "c79d102f.cb88f",
+                "c1838d6b.42632",
+                "b67170f2.83949",
+                "50b0bbc9.b844e4",
+                "414110ec.f04e6"
+            ]
+        ]
+    },
+    {
+        "id": "c1838d6b.42632",
+        "type": "function",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "func": "if (msg.payload.timeFinish) {\n    msg.progress = 100 * (Date.now() - msg.payload.timeStart*1000) / (1000 * (msg.payload.timeFinish -msg.payload.timeStart));\n    data = new Date(msg.payload.timeStart * 1000);\n    msg.payload.timeStart = data.getHours() + \":\" + ((data.getMinutes() < 10) ? \"0\" :\"\") + data.getMinutes();\n    data = new Date(msg.payload.timeFinish * 1000);\n    msg.payload.timeFinish = data.getHours() + \":\" + ((data.getMinutes() < 10) ? \"0\" :\"\") + data.getMinutes();\n} else {\n    msg.progress = 0\n    msg.payload.timeStart = \"--:--\";\n    msg.payload.timeFinish = \"--:--\";\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 370,
+        "y": 840,
+        "wires": [
+            [
+                "716cc6f.7ab1f38"
+            ]
+        ]
+    },
+    {
+        "id": "716cc6f.7ab1f38",
+        "type": "ui_template",
+        "z": "f4141af0.d89288",
+        "group": "faee2d.c36841d",
+        "name": "Boil Time Bar",
+        "order": 3,
+        "width": "6",
+        "height": "1",
+        "format": "<div layout=\"row\" layout-align=\"space-between center\">\n{{msg.payload.timeStart}}<progress value={{msg.progress}} max=\"100\"></progress>{{msg.payload.timeFinish}}\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": false,
+        "x": 560,
+        "y": 840,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2b0c79bb.edd726",
+        "type": "ui_switch",
+        "z": "f4141af0.d89288",
+        "name": "boilReady",
+        "label": "Pronto ad iniziare",
+        "tooltip": "Completate tutte le azioni manuali",
+        "group": "faee2d.c36841d",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "1",
+        "onvalueType": "num",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "0",
+        "offvalueType": "num",
+        "officon": "",
+        "offcolor": "",
+        "x": 620,
+        "y": 780,
+        "wires": [
+            [
+                "f2c72a7f.0a0878"
+            ]
+        ]
+    },
+    {
+        "id": "f2c72a7f.0a0878",
+        "type": "mqtt out",
+        "z": "f4141af0.d89288",
+        "name": "dashboard/boil/ready",
+        "topic": "dashboard/boil/ready",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 800,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "4a1d4aa7.e016c4",
+        "type": "mqtt out",
+        "z": "f4141af0.d89288",
+        "name": "dashboard/boil/setboil",
+        "topic": "dashboard/boil/setboil",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 800,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "b67170f2.83949",
+        "type": "function",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "func": "msg.payload=msg.payload.tempTarget;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 364.8368377685547,
+        "y": 721.4410552978516,
+        "wires": [
+            [
+                "988aeddc.64a62"
+            ]
+        ]
+    },
+    {
+        "id": "50b0bbc9.b844e4",
+        "type": "function",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "func": "msg.payload=msg.payload.status;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 370,
+        "y": 780,
+        "wires": [
+            [
+                "2bf0bb43.aa3954"
+            ]
+        ]
+    },
+    {
+        "id": "bed82913.376e48",
+        "type": "ui_switch",
+        "z": "f4141af0.d89288",
+        "name": "spargeReady",
+        "label": "Pronto ad iniziare",
+        "tooltip": "Completate tutte le azioni manuali",
+        "group": "11f912be.b76ccd",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "1",
+        "onvalueType": "num",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "0",
+        "offvalueType": "num",
+        "officon": "",
+        "offcolor": "",
+        "x": 540,
+        "y": 180,
+        "wires": [
+            [
+                "830bc0a3.3b19c"
+            ]
+        ]
+    },
+    {
+        "id": "86e3b8dc.b41188",
+        "type": "ui_switch",
+        "z": "f4141af0.d89288",
+        "name": "mashReady",
+        "label": "Pronto ad iniziare",
+        "tooltip": "Completate tutte le azioni manuali",
+        "group": "1f79b609.15d25a",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "1",
+        "onvalueType": "num",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "0",
+        "offvalueType": "num",
+        "officon": "",
+        "offcolor": "",
+        "x": 670,
+        "y": 500,
+        "wires": [
+            [
+                "d83ed393.f5a89"
+            ]
+        ]
+    },
+    {
+        "id": "ae585e41.42f7e",
+        "type": "function",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "func": "msg.payload=msg.payload.status;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 390,
+        "y": 500,
+        "wires": [
+            [
+                "3bfa35ce.11e5ca"
+            ]
+        ]
+    },
+    {
+        "id": "2a2da0f7.2929e",
+        "type": "function",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "func": "msg.payload=msg.payload.status;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 230,
+        "y": 180,
+        "wires": [
+            [
+                "6300709c.eee81"
+            ]
+        ]
+    },
+    {
+        "id": "830bc0a3.3b19c",
+        "type": "mqtt out",
+        "z": "f4141af0.d89288",
+        "name": "dashboard/sparge/ready",
+        "topic": "dashboard/sparge/ready",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 770,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "d83ed393.f5a89",
+        "type": "mqtt out",
+        "z": "f4141af0.d89288",
+        "name": "dashboard/mash/ready",
+        "topic": "dashboard/mash/ready",
+        "qos": "2",
+        "retain": "",
+        "broker": "fe2dcf7a.8b271",
+        "x": 880,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "3bfa35ce.11e5ca",
+        "type": "rbe",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "x": 512.2358016967773,
+        "y": 500.53125762939453,
+        "wires": [
+            [
+                "86e3b8dc.b41188"
+            ]
+        ]
+    },
+    {
+        "id": "6300709c.eee81",
+        "type": "rbe",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "x": 359.23860931396484,
+        "y": 180.53124237060547,
+        "wires": [
+            [
+                "bed82913.376e48"
+            ]
+        ]
+    },
+    {
+        "id": "2bf0bb43.aa3954",
+        "type": "rbe",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "x": 490,
+        "y": 780,
+        "wires": [
+            [
+                "2b0c79bb.edd726"
+            ]
+        ]
+    },
+    {
+        "id": "beb69a11.3459c8",
+        "type": "ui_slider",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "label": "Boil Temp",
+        "tooltip": "",
+        "group": "faee2d.c36841d",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "",
+        "min": "99",
+        "max": "101",
+        "step": "0.1",
+        "x": 620,
+        "y": 720,
+        "wires": [
+            [
+                "4a1d4aa7.e016c4"
+            ]
+        ]
+    },
+    {
+        "id": "414110ec.f04e6",
+        "type": "debug",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 550,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "988aeddc.64a62",
+        "type": "rbe",
+        "z": "f4141af0.d89288",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "property": "payload",
+        "x": 490,
+        "y": 720,
+        "wires": [
+            [
+                "beb69a11.3459c8"
+            ]
+        ]
+    },
+    {
+        "id": "fe2dcf7a.8b271",
+        "type": "mqtt-broker",
+        "z": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "Jbbs-NodeRed",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "1f79b609.15d25a",
+        "type": "ui_group",
+        "z": "",
+        "name": "Mash",
+        "tab": "c3ed2d11.076da",
+        "order": 3,
+        "disp": false,
+        "width": "6"
+    },
+    {
+        "id": "11f912be.b76ccd",
+        "type": "ui_group",
+        "z": "",
+        "name": "Sparge",
+        "tab": "c3ed2d11.076da",
+        "order": 2,
+        "disp": false,
+        "width": "6"
+    },
+    {
+        "id": "faee2d.c36841d",
+        "type": "ui_group",
+        "z": "",
+        "name": "Boil",
+        "tab": "c3ed2d11.076da",
+        "order": 4,
+        "disp": false,
+        "width": "6"
+    },
+    {
+        "id": "c3ed2d11.076da",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Jbbs",
+        "icon": "dashboard",
+        "order": 2
+    }
+]

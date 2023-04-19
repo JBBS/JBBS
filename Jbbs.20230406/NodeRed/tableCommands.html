@@ -1,0 +1,21 @@
+<div>
+	<span flex>Tun: </span>
+	<span flex>
+		<select ng-model="selectedTun" 
+				ng-options='x.label for x in [ {label: "Sparge", nome:"sparge"},
+                                               {label: "Boil", nome:"boil"}]'>
+		</select>
+	</span>
+	<span flex>Stato: </span>
+		<select ng-model="selectedState" 
+				ng-options='x.label for x in [  {label: "Warm./Fill.", stato: 2},
+				                                {label: "Hot/Preboil", stato: 3},
+				                                {label: "Sparging", stato: 4}]'>
+		</select>
+	</span>
+	<span flex >
+	   <md-button class="md-icon-button" ng-click="send({topic: 'dashboard/' + selectedTun.nome + '/setstatus', payload: selectedState.stato})">
+	        <ng-md-icon icon="play_arrow"></ng-md-icon>
+	   </md-button>
+	</span>
+</div>

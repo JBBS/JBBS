@@ -4,6 +4,7 @@ Sparge::Sparge (GlobalStatus *js) {
 
 	myDS18B20 = new DS18B20(TEMP_SPARGE);
 	mashSensLevel = new SensorLevel(GPIO_MASHLOLEVEL, GPIO_MASHHILEVEL);
+	boilSensLevel = new SensorLevel(GPIO_BOILHILEVEL, GPIO_BOILHILEVEL); // => Sensore livello BOIL
 	jbbsStatus = js;
 	Sparge::stop();
 
@@ -27,6 +28,7 @@ void Sparge::loop() {
 	}
 
 	status.tempActual = tempActual;
+	status.boilLevelHi = boilSensLevel->isHigh();
 
 	switch(status.status) {
 	     case OFF :
@@ -35,9 +37,9 @@ void Sparge::loop() {
 	    		 status.status = READY;
 	    	 }
 	    	 break;
-	     case READY :
+	     case READY:
 			status.trend = trendOff;
-			if (jbbsStatus->spargeTarget > 0 ) {
+			if (jbbsStatus->spargeWarming) {
 				status.tempStart   	= status.tempActual;
 				status.timeStart = time(0);
 				status.status = WARMING;
@@ -45,15 +47,15 @@ void Sparge::loop() {
 			break;
 	     case WARMING  :
 			// Controllo della temperatura
-	    	 if ( status.tempActual >= jbbsStatus->spargeTarget){
+	    	 if ( status.tempActual >= SPARGETARGET){
 	    		 status.status = HOT;
 	    	 } else {
 
 	    		 status.percent = 100 * ((status.tempActual - status.tempStart) /
-												(jbbsStatus->spargeTarget - status.tempStart));
+												(SPARGETARGET - status.tempStart));
 
 				 status.timeFinish = status.timeStart +
-								((time(0) - status.timeStart) * ((jbbsStatus->spargeTarget - status.tempStart) /
+								((time(0) - status.timeStart) * ((SPARGETARGET - status.tempStart) /
 																(status.tempActual -status.tempStart)));
 	    	 }
 	    	 /* no break */
@@ -62,8 +64,9 @@ void Sparge::loop() {
 				Sparge::driveFire(SPENTO);
 				Sparge::driveBoilValve(SCARICO);
 	    	    status.status = SPARGING;
+	    	    std::cout << "[SPARGE] Inizio Sparging"  << std::endl;
 	    	 } else {
-	    		 Sparge::driveFire( status.tempActual < jbbsStatus->spargeTarget);
+	    		 Sparge::driveFire( status.tempActual < SPARGETARGET);
 	    	 }
 	    	 break;
 	     case SPARGING  :
@@ -73,6 +76,13 @@ void Sparge::loop() {
 			if (mashSensLevel->isHigh()) {
 				Sparge::driveMashValve(SPENTO);
 			}
+			if (status.boilLevelHi) {								// => Sensore livello BOIL
+				Sparge::driveMashValve(SPENTO);							// => Sensore livello BOIL
+				Sparge::driveBoilValve(RICIRCOLO);						// => Sensore livello BOIL
+	    	    status.status = OFF;									// => Sensore livello BOIL
+	    	    std::cout << "[SPARGE] Fine Sparging"  << std::endl; 	// => Sensore livello BOIL
+			}															// => Sensore livello BOIL
+
 	    	 break;
 	}
 }
@@ -85,7 +95,7 @@ bool Sparge::execute (const char *command, const char *parameters) {
   bool success = true;
 
   if (COMMAND_START.compare (command) == 0) {
-	  jbbsStatus->spargeTarget = atoi(parameters);
+	  jbbsStatus->spargeWarming = true;
   } else if (COMMAND_STOP.compare (command) == 0) {
     Sparge::stop();
   } else if (COMMAND_READY.compare (command) == 0) {
@@ -95,6 +105,8 @@ bool Sparge::execute (const char *command, const char *parameters) {
     }
   } else if (COMMAND_SPARGE.compare (command) == 0) {
 	  status.sparge = ( (parameters[0] == '1'));
+  } else if (COMMAND_SETSTATUS.compare (command) == 0) {
+    Sparge::setStatus(atoi(parameters));
   }
 
   return (success);
@@ -159,8 +171,9 @@ void Sparge::stop() {
 	status.fire   				= SPENTO;
 	status.mashValve   			= SPENTO;
 	status.boilValve  	 		= RICIRCOLO;
+	status.boilLevelHi			= false;
 	status.trend				= trendOff;
-	jbbsStatus->spargeTarget	= 0;
+	jbbsStatus->spargeWarming	= false;
 	status.sparge				= false;
 	status.tempStart  		= 0;
 	status.timeStart   		= 0;
@@ -177,15 +190,36 @@ const std::string Sparge::getStatus() {
 
 	json jStatus;
 	jStatus["status"]	 	= status.status;
-	jStatus["tempTarget"]	= jbbsStatus->spargeTarget;
+	jStatus["tempTarget"]	= SPARGETARGET;
 	jStatus["tempActual"] 	= status.tempActual;
+	jStatus["timeStart"] 	= status.timeStart;
+	jStatus["timeFinish"] 	= status.timeFinish;
 	jStatus["fire"]       	= status.fire;
 	jStatus["mashValve"]	= status.mashValve;
 	jStatus["boilValve"]	= status.boilValve;
+	jStatus["boilLevelHi"]	= status.boilLevelHi;
 	jStatus["trend"]		= status.trend;
 
 	return (jStatus.dump(4));
 }
+
+void Sparge::setStatus(int stato){
+	switch(stato) {
+	     case WARMING  :
+	    	 jbbsStatus->spargeWarming = true;
+	    	 status.status = READY;
+	    	 break;
+	     case HOT  :
+			 status.status = HOT;
+	    	 break;
+	     case SPARGING  :
+	    	 status.sparge = true;
+			 status.status = HOT;
+	    	 break;
+	}
+
+}
+
 
 double Sparge::getTempActual() {
 	return (status.tempActual);

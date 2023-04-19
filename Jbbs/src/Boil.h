@@ -8,7 +8,7 @@
 
 #include <wiringPi.h> 	// Wiring PI Includes
 //#include <PID_v1.h>     // PID Brett
-#include "json.hpp" 	// Json for modern c++
+#include "nlohmann/json.hpp" 	// Json for modern c++
 using json = nlohmann::json; // for convenience
 
 // Include locali
@@ -22,13 +22,14 @@ class Boil {
 	class DS18B20* myDS18B20;
 	GlobalStatus *jbbsStatus;
 
-	const double boilTemp = 99.5; // Temperatura di ebollizione, // modificabile al volo con messaggio MQTT COMMAND_SETBOIL
+	double boilTemp = 99.5; // Temperatura di ebollizione, modificabile al volo con messaggio MQTT COMMAND_SETBOIL
 
 	int 	startStep = -1;
 
 	struct {
 	  std::string 	desc;
 	  unsigned char time = 0;
+	  bool alarm;
 	} recipe[MAXSTEP];
 
 	enum stato {
@@ -54,7 +55,7 @@ class Boil {
 		bool         	smallFire	= false;
 //		bool         	warming		= false; // Segnala se stiamo portando a bollitura (true) o se sta già bollendo (false)
 		int 			trend		= 0;
-//		bool			alarm		= false;
+		bool			alarm		= false;
 		bool 			gotRecipe 	= false; // Flag caricamento ricetta
 		unsigned char 	lastStep	= 0; 	 // Indice ultimo step
 	 } status;
@@ -65,6 +66,7 @@ class Boil {
 	bool loadSteps(const char* );
 	bool start(int);
 	void stop();
+    void setStatus(int);
 
   public:
     Boil (GlobalStatus *js);
@@ -81,4 +83,3 @@ class Boil {
 };
 
 #endif
-

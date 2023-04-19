@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<script src="/myjs/myGauge-min.js"></script>
+<script>
+var radialBoil;
+    (function(scope){
+        scope.$watch('msg', function(msg) {
+           if (typeof(msg.payload.desc) != "undefined") radialBoil.setUnitString(msg.payload.desc);
+           if (typeof(msg.payload.tempActual) != "undefined") radialBoil.setValue(msg.payload.tempActual);
+           if (typeof(msg.payload.tempTarget) != "undefined") radialBoil.setThreshold(msg.payload.tempTarget);
+           if (typeof(msg.payload.bigFire) != "undefined") {
+				radialBoil.blinkUserLed(msg.payload.bigFire); 
+				radialBoil.setUserLedOnOff(msg.payload.bigFire); 
+			}
+           if (typeof(msg.payload.smallFire) != "undefined") {
+				radialBoil.blinkLed(msg.payload.smallFire); 
+				radialBoil.setLedOnOff(msg.payload.smallFire); 
+			}
+           if (typeof(msg.payload.trend) != "undefined")
+            {
+                if (msg.payload.trend==1)     radialBoil.setTrend(steelseries.TrendState.UP);
+                if (msg.payload.trend==0)     radialBoil.setTrend(steelseries.TrendState.STEADY);
+                if (msg.payload.trend==-1)    radialBoil.setTrend(steelseries.TrendState.DOWN);
+                if (msg.payload.trend==-2)    radialBoil.setTrend(steelseries.TrendState.OFF);
+            }
+        });
+    })(scope);
+
+    var sections = [steelseries.Section(90, 99, 'rgba(0, 0, 220, 0.3)'),
+	                        steelseries.Section(99, 101, 'rgba(0, 220, 0, 0.3)'),
+	                        steelseries.Section(101, 104, 'rgba(220, 0, 0, 0.3)') ],
+
+            // Define one area
+    areas = [steelseries.Section(99, 101, 'rgba(0, 220, 0, 0.3)')],
+
+    radialBoil = new steelseries.Radial('canvasRadialBoil', {
+            gaugeType: steelseries.GaugeType.TYPE4,
+            size: 292,
+            section: sections,
+            area: areas,
+            titleString: "Boil",
+            unitString: "",
+            threshold: 99.5,
+//            thresholdVisible: false,
+            thresholdRising: false,
+            userLedVisible: true,
+            useOdometer: false,
+            lcdVisible: false,
+            trendVisible: true,
+			userLedColor: steelseries.LedColor.RED_LED,
+			PointerType: steelseries.PointerType.TYPE11,
+			FrameDesign: steelseries.FrameDesign.BLACK_METAL,
+			frameVisible: false,
+			minValue : 90,
+			maxValue : 104
+        });
+                       
+//    radial4.setFrameDesign(steelseries.FrameDesign.BLACK_METAL);
+    radialBoil.setValue(0);
+//    radialBoil.setThreshold(0);
+    radialBoil.blinkUserLed(0);
+//	radial4.setPointerType(steelseries.PointerType.TYPE11)
+
+
+</script>
+
+<canvas id="canvasRadialBoil" width="401" height="401"></canvas>
