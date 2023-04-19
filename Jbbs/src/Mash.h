@@ -9,7 +9,7 @@
 #include <wiringPi.h> 	// Wiring PI Includes
 //#include <PID_v1.h>     // PID Brett
 #include "SimplePID.h"
-#include "json.hpp" 	// Json for modern c++
+#include "nlohmann/json.hpp" 	// Json for modern c++
 using json = nlohmann::json; // for convenience
 
 // Include locali

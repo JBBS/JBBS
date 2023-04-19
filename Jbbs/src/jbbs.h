@@ -23,7 +23,7 @@
 #include <pcf8574.h>
 
 // Json for modern c++
-#include "json.hpp"
+#include "nlohmann/json.hpp"
 
 // Include locali
 #include "JbbsCommons.h"

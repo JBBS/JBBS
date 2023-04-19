@@ -9,7 +9,7 @@
 #include <wiringPi.h> 		// Wiring PI Includes
 //#include <PID_v1.h>     	// PID Brett
 
-#include "json.hpp" 			// Json for modern c++
+#include "nlohmann/json.hpp" 			// Json for modern c++
 using json = nlohmann::json; 		// for convenience
 
 // Include locali
@@ -49,6 +49,7 @@ class Sparge {
 		bool        fire 			= false;
 		bool        mashValve 		= false;
 		bool        boilValve 		= false;
+		bool		boilLevelHi		= false; // flag di riempimento tino di boil. Pieno = true
 		int 		trend			= 0;
 		bool 		sparge			= false; 	// Flag di inizio sparge da Mash a Sparge
 		double      tempStart		= 0;    // timestamp

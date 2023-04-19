@@ -28,6 +28,7 @@ void Sparge::loop() {
 	}
 
 	status.tempActual = tempActual;
+	status.boilLevelHi = boilSensLevel->isHigh();
 
 	switch(status.status) {
 	     case OFF :
@@ -75,7 +76,7 @@ void Sparge::loop() {
 			if (mashSensLevel->isHigh()) {
 				Sparge::driveMashValve(SPENTO);
 			}
-			if (boilSensLevel->isHigh()) {								// => Sensore livello BOIL
+			if (status.boilLevelHi) {								// => Sensore livello BOIL
 				Sparge::driveMashValve(SPENTO);							// => Sensore livello BOIL
 				Sparge::driveBoilValve(RICIRCOLO);						// => Sensore livello BOIL
 	    	    status.status = OFF;									// => Sensore livello BOIL
@@ -170,6 +171,7 @@ void Sparge::stop() {
 	status.fire   				= SPENTO;
 	status.mashValve   			= SPENTO;
 	status.boilValve  	 		= RICIRCOLO;
+	status.boilLevelHi			= false;
 	status.trend				= trendOff;
 	jbbsStatus->spargeWarming	= false;
 	status.sparge				= false;
@@ -195,6 +197,7 @@ const std::string Sparge::getStatus() {
 	jStatus["fire"]       	= status.fire;
 	jStatus["mashValve"]	= status.mashValve;
 	jStatus["boilValve"]	= status.boilValve;
+	jStatus["boilLevelHi"]	= status.boilLevelHi;
 	jStatus["trend"]		= status.trend;
 
 	return (jStatus.dump(4));
