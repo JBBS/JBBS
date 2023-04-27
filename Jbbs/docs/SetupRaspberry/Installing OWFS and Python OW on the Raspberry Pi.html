@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<!-- saved from url=(0082)https://www.abelectronics.co.uk/kb/article/3/owfs-with-i2c-support-on-raspberry-pi -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Installing OWFS and Python OW on the Raspberry Pi</title>
+<!-- Search Engine -->
+<meta name="image" content="https://www.abelectronics.co.uk/docs/share/share-kb.jpg">
+<meta name="description" content="">
+<link rel="canonical" href="https://www.abelectronics.co.uk/kb/article/3/owfs-with-i2c-support-on-raspberry-pi">
+<!-- Schema.org for Google -->
+<meta itemprop="name" content="Installing OWFS and Python OW on the Raspberry Pi">
+<meta itemprop="description" content="">
+<meta itemprop="image" content="https://www.abelectronics.co.uk/docs/share/share-kb.jpg">
+<!-- Twitter -->
+<meta name="twitter:card" content="">
+<meta name="twitter:title" content="Installing OWFS and Python OW on the Raspberry Pi">
+<meta name="twitter:description" content="">
+<meta name="twitter:site" content="@abelectronicsuk">
+<meta name="twitter:creator" content="@abelectronicsuk">
+<meta name="twitter:image:src" content="https://www.abelectronics.co.uk/docs/share/share-kb.jpg">
+<!-- Open Graph general (Facebook, Pinterest & Google+) -->
+<meta property="og:title" content="Installing OWFS and Python OW on the Raspberry Pi">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://www.abelectronics.co.uk/docs/share/share-kb.jpg">
+<meta property="og:url" content="https://www.abelectronics.co.uk/kb/article/3/owfs-with-i2c-support-on-raspberry-pi">
+<meta property="og:site_name" content="AB Electronics UK">
+<meta property="og:locale" content="en_GB">
+<meta property="og:type" content="website">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://www.abelectronics.co.uk/kb/article/3/owfs-with-i2c-support-on-raspberry-pi"
+  },
+  "headline": "Installing OWFS and Python OW on the Raspberry Pi",
+  "image": [
+    "https://www.abelectronics.co.uk/docs/share/share-kb.jpg" 
+   ],
+  "datePublished": "18/12/2022 14:49:52",
+  "dateModified": "18/12/2022 14:49:52",
+  "author": {
+    "@type": "Person",
+    "name": "Andrew Dorey"
+  },
+   "publisher": {
+    "@type": "Organization",
+    "name": "AB Electronics UK",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.abelectronics.co.uk/images/header/logo-pdf.png"
+    }
+  },
+  "description": ""
+}
+    </script>
+<meta name="theme-color" content="#639C00"><link rel="manifest" href="https://www.abelectronics.co.uk/manifest.json">
+   
+    <link rel="stylesheet" media="screen" href="./Installing OWFS and Python OW on the Raspberry Pi_files/lightgallery.min.css">
+    <script src="./Installing OWFS and Python OW on the Raspberry Pi_files/lightgallery.min.js"></script>
+    <link rel="stylesheet" media="screen" href="./Installing OWFS and Python OW on the Raspberry Pi_files/bundle.min.css"></head>
+<body id="mybody" class="handheld-toolbar-enabled" style="padding-top: 149px;">
+    <form method="post" action="https://www.abelectronics.co.uk/kb/article/3/owfs-with-i2c-support-on-raspberry-pi#" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="t0W4YP15tgdEquFM1P74l1eZfIe96MhXRqRmS+CX6Uaxp47qj2vGmn1ibSDUdzjko37c4U0F6Mbw2f396u9JS9PoZQaUdXfqbuTKWRB5sog=">
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="57A105ED">
+</div>
+       <div class="alert alert-success rounded-0 text-center" role="alert">
+  Free <strong><a href="https://www.abelectronics.co.uk/shipping-and-delivery-options/info" style="color: #1c593f">standard delivery</a></strong> on orders over £35 <small>(excluding VAT)</small>
+</div>
+        <main class="page-wrapper" id="top">
+            <header class="shadow-sm">
+                <div class="navbar-sticky bg-light navbar-stuck">
+                    <div class="navbar navbar-expand-lg navbar-light">
+                        <div class="container">
+                            <a class="navbar-brand d-none d-sm-block flex-shrink-0" href="https://www.abelectronics.co.uk/"><img src="./Installing OWFS and Python OW on the Raspberry Pi_files/ab_electronics_uk.svg" width="305" height="50" alt="AB Electronics UK"></a>
+                            <a class="navbar-brand d-sm-none flex-shrink-0 me-2" href="https://www.abelectronics.co.uk/"><img src="./Installing OWFS and Python OW on the Raspberry Pi_files/ab_electronics_uk_m.svg" width="72" height="50" alt="AB Electronics UK"></a>
+                            <div class="input-group d-none d-lg-flex mx-4">
+                                <label for="searchboxdesktop" class="sr-only">Search</label>
+                                <input class="form-control rounded-end pe-5" type="text" name="searchboxdesktop" id="searchboxdesktop" placeholder="Search for products"><i class="ci-search position-absolute top-50 end-0 translate-middle-y text-muted fs-base me-3" id="searchdesktopbutton"></i><div id="inlinesearch" style="display: none;"></div>
+                            </div>
+                            <div class="navbar-toolbar d-flex flex-shrink-0 align-items-center">
+                                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" title="Toggle Menu"><span class="navbar-toggler-icon"></span></button>
+                                <a class="navbar-tool navbar-stuck-toggler" href="https://www.abelectronics.co.uk/kb/article/3/owfs-with-i2c-support-on-raspberry-pi#"><span class="navbar-tool-tooltip">Expand menu</span>
+
+                                    <div class="navbar-tool-icon-box"><i class="navbar-tool-icon ci-heart"></i></div>
+                                </a>
+                                <a class="navbar-tool ms-1 ms-lg-0 me-n1 me-lg-2" title="My Account" href="https://www.abelectronics.co.uk/customer/">
+                                    <div class="navbar-tool-icon-box"><i class="navbar-tool-icon ci-user"></i></div>
+                                    <div class="navbar-tool-text ms-n3"><small>Hello, Sign in</small>My Account</div>
+                                </a>
+                                <div class="navbar-tool dropdown ms-3">
+                                    <a class="navbar-tool " href="https://www.abelectronics.co.uk/cart">
+                                        <div class="navbar-tool-icon-box bg-secondary">
+                                            <span class="navbar-tool-label">0</span>
+                                            <i class="navbar-tool-icon ci-cart"></i>
+                                        </div>
+                                        <div class="navbar-tool-text">
+                                            <small>My Cart</small>£0.00
+                                        </div>
+                                    </a>
+                                    <!-- Cart dropdown-->
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <div class="widget widget-cart px-3 pt-2 pb-3" style="width: 20rem;">
+                                            
+                                            <div style="height: 15rem;" data-simplebar="init" data-simplebar-auto-hide="false"><div class="simplebar-wrapper" style="margin: 0px -16px 0px 0px;"><div class="simplebar-height-auto-observer-wrapper"><div class="simplebar-height-auto-observer"></div></div><div class="simplebar-mask"><div class="simplebar-offset" style="right: 0px; bottom: 0px;"><div class="simplebar-content-wrapper" tabindex="0" role="region" aria-label="scrollable content" style="height: auto; overflow: hidden;"><div class="simplebar-content" style="padding: 0px 16px 0px 0px;">
+                                                
+                                                
+                                                <h3 class="mt-3 fs-4">Your cart is empty</h3><p>Please browse our <a href="https://www.abelectronics.co.uk/catalogue">shop</a> to order from the wide range of Raspbery Pi boards and accessories.</p>
+                                            </div></div></div></div><div class="simplebar-placeholder" style="width: 0px; height: 0px;"></div></div><div class="simplebar-track simplebar-horizontal" style="visibility: hidden;"><div class="simplebar-scrollbar simplebar-visible" style="width: 0px; display: none;"></div></div><div class="simplebar-track simplebar-vertical" style="visibility: hidden;"><div class="simplebar-scrollbar simplebar-visible" style="height: 0px; display: none;"></div></div></div>
+                                            <div class="d-flex flex-wrap justify-content-between align-items-center py-3">
+                                                <div class="fs-sm me-2 py-2"><span class="text-muted">Subtotal:</span><span class="text-accent fs-base ms-1">£0.00</span></div>
+                                                <a class="btn btn-outline-secondary btn-sm  d-block w-100" href="https://www.abelectronics.co.uk/cart">View your Shopping cart<i class="ci-arrow-right ms-1 me-n1"></i></a>
+                                            </div>
+                                            <a class="btn btn-primary btn-sm d-block w-100" href="https://www.abelectronics.co.uk/checkout/checkout"><i class="ci-card me-2 fs-base align-middle"></i>Checkout</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="navbar navbar-expand-lg navbar-light navbar-stuck-menu mt-n2 pt-0 pb-2">
+                        <div class="container">
+                            <div class="collapse navbar-collapse" id="navbarCollapse">
+                                <!-- Search--><label for="searchboxmobile" class="sr-only">Search Mobile Input</label>
+                                <div class="input-group d-lg-none my-3">
+                                    <i class="ci-search position-absolute top-50 start-0 translate-middle-y ms-3" id="searchmobilebutton"></i>
+                                    <input class="form-control rounded-start" type="text" name="searchboxmobile" id="searchboxmobile" placeholder="Search for products">
+                                </div>
+                                <!-- Departments menu-->
+                                <ul class="navbar-nav navbar-mega-nav pe-lg-2 me-lg-2">
+                                    <li class="nav-item dropdown"><a class="nav-link dropdown-toggle  ps-lg-0" href="https://www.abelectronics.co.uk/catalogue" data-bs-toggle="dropdown" data-bs-auto-close="outside"><i class="ci-menu align-middle mt-n1 me-2"></i>Raspberry Pi Shop</a>
+                                        <ul class="dropdown-menu">
+                                            <li class="dropdown dropdownlink mega-dropdown"><a class="dropdown-item dropdown-toggle " href="https://www.abelectronics.co.uk/products/18/raspberry-pi-expansion-boards" data-bs-toggle="dropdown"><i class="ci-laptop opacity-60 fs-lg mt-n1 me-2"></i>Raspberry Pi</a>
+                                                <div class="dropdown-menu p-0">
+                                                    <div class="d-flex flex-wrap flex-sm-nowrap px-2">
+                                                        <div class="mega-dropdown-column pt-4 pb-0 py-sm-4 px-3">
+                                                            <div class="widget widget-links mb-3">
+                                                                <p class="fs-base mb-3 h6">Expansion Boards by Pi Version</p>
+                                                                <ul class="widget-list">
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/products/17/raspberry-pi-a---b---2---3-and-4">Raspberry Pi A+, B+, 2 , 3 and 4</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/products/23/raspberry-pi-zero">Raspberry Pi Zero</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/products/3/raspberry-pi-model-a-and-b">Raspberry Pi Model A and B</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/products/31/raspberry-pi-pico">Raspberry Pi Pico</a></li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="widget widget-links mb-3">
+                                                                <p class="fs-base mb-3 h6">Expansion Boards by Type</p>
+                                                                <ul class="widget-list">
+                                                                     <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/products/26/analogue-input---output">Analogue Input / Output</a></li>
+                                                                     <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/products/27/digital-input---output">Digital Input &amp; Output</a></li>
+                                                                     <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/products/28/serial-and-rs485">Serial and RS485</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/products/29/1-wire-communication">1-Wire Communication</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/products/30/other-expansion-boards">Other Expansion Boards</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mega-dropdown-column py-4 px-3">
+                                                            <div class="widget widget-links">
+                                                                <p class="fs-base mb-3 h6">Accessories</p>
+                                                                <ul class="widget-list">
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/49/gpio-40-way-ribbon-cable">Ribbon Cables</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/55/mounting-kit-four-pack">Mounting Kits</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/products/11/connectors">Connectors</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mega-dropdown-column d-none d-lg-block py-4 text-center">
+                                                                <img src="./Installing OWFS and Python OW on the Raspberry Pi_files/menubg-1.webp" alt="Raspberry Pi Accessories" width="210" height="231" class="img-fluid">
+                                                            <div class="fs-sm mb-3">Raspberry Pi Expansion</div>
+                                                            
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="dropdown dropdownlink mega-dropdown"><a class="dropdown-item dropdown-toggle" href="https://www.abelectronics.co.uk/products/4/arduino" data-bs-toggle="dropdown"><i class="ci-laptop opacity-60 fs-lg mt-n1 me-2"></i>Arduino and Other Platforms</a>
+                                                <div class="dropdown-menu p-0">
+                                                    <div class="d-flex flex-wrap flex-md-nowrap px-2">
+                                                        <div class="mega-dropdown-column pt-4 pb-0 py-sm-4 px-3">
+                                                            <div class="widget widget-links mb-3">
+                                                                <p class="fs-base mb-3 h6">Arduino</p>
+                                                                <ul class="widget-list">
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/products/4/arduino">Connectors and Headers</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/66/arduino-uno-to-raspberry-pi-adapter">Arduino Uno to Raspberry Pi Adapter</a></li>
+                                                                </ul>
+                                                            </div>
+                                                            </div>
+                                                        <div class="mega-dropdown-column pt-4 pb-0 py-sm-4 px-3">
+                                                           <div class="widget widget-links mb-3">
+                                                                <p class="fs-base mb-3 h6">Asus Tinker Board</p>
+                                                                <ul class="widget-list">
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/products/24/asus-tinker-board-expansion">Asus Tinker Board Expansion Boards</a></li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="widget widget-links mb-3">
+                                                                <p class="fs-base mb-3 h6">Orange Pi Expansion</p>
+                                                                <ul class="widget-list">
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/products/25/orange-pi-expansion-boards">Orange Pi Expansion Boards</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mega-dropdown-column d-none d-lg-block py-4 text-center">
+                                                        
+                                                                <img src="./Installing OWFS and Python OW on the Raspberry Pi_files/menubg-2.webp" width="210" height="174" alt="Arduino boards" class="img-fluid d-block mb-2">
+                                                            <div class="fs-sm mb-3">Arduino and other platforms</div>
+                                                         
+                                                        </div>
+                                                
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="dropdown dropdownlink mega-dropdown"><a class="dropdown-item dropdown-toggle" href="https://www.abelectronics.co.uk/products/19/cables-and-accessories" data-bs-toggle="dropdown"><i class="ci-package opacity-60 fs-lg mt-n1 me-2"></i>Cables and Accessories</a>
+                                                <div class="dropdown-menu p-0">
+                                                    <div class="d-flex flex-wrap flex-md-nowrap px-2">
+                                                        <div class="mega-dropdown-column pt-4 pb-0 py-sm-4 px-3">
+                                                            <div class="widget widget-links mb-3">
+                                                               <p class="fs-base mb-3 h6">Cables</p>
+                                                                <ul class="widget-list">
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/products/19/cables-and-accessories">All Cables and Accessories</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/49/gpio-40-way-ribbon-cable">GPIO 40 Way Ribbon Cable</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/31/rj12-to-rj12-6p6c-cable-3m">RJ12 Cables</a></li>
+                                                                </ul>
+                                                            </div>
+                                                           
+                                                            </div>
+                                                        <div class="mega-dropdown-column pt-4 pb-0 py-sm-4 px-3">
+                                                            <div class="widget widget-links mb-3">
+                                                                <p class="fs-base mb-3 h6">Breadboards</p>
+                                                                <ul class="widget-list">
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/63/solderless-breadboard">Solderless Breadboards</a></li>
+                                                                </ul>
+                                                            </div>
+                                                             <div class="widget widget-links mb-3">
+                                                                <p class="fs-base mb-3 h6">Mounting Kits</p>
+                                                                <ul class="widget-list">
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/25/mounting-kit">Single Mounting Kit</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/55/mounting-kit-four-pack">Four Pack Mounting Kit</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mega-dropdown-column d-none d-lg-block py-4 text-center">
+                                                                <img src="./Installing OWFS and Python OW on the Raspberry Pi_files/menubg-3.webp" alt="Cables and accessories" width="250" height="176" class="img-fluid">
+                                                            <div class="fs-sm mb-3">Cables for your project</div>
+                                                           
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="dropdown dropdownlink mega-dropdown"><a class="dropdown-item dropdown-toggle" href="https://www.abelectronics.co.uk/products/11/connectors" data-bs-toggle="dropdown"><i class="ci-package opacity-60 fs-lg mt-n1 me-2"></i>Connectors and Screw Terminals</a>
+                                                <div class="dropdown-menu p-0">
+                                                    <div class="d-flex flex-wrap flex-md-nowrap px-2">
+                                                        <div class="mega-dropdown-column pt-4 pb-0 py-sm-4 px-3">
+                                                            <div class="widget widget-links mb-3">
+                                                                <p class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/products/11/connectors">View all Connectors</a></p>
+                                                                <p class="fs-base mb-3 h6">Stacking Headers</p>
+                                                                <ul class="widget-list">
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/11/arduino-header-set-1">Arduino Header Set</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/2/6-pin-stackable-header-for-arduino">6 Pin Stackable Header for Arduino</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/8/8-pin-stackable-header-for-arduino">8 Pin Stackable Header for Arduino</a></li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="widget widget-links mb-3">
+                                                                <p class="fs-base mb-3 h6">Screw Terminals</p>
+                                                                <ul class="widget-list">
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/61/screw-terminals-2-pin-2-54mm">2 pin - 2.54mm</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/79/screw-terminals-8-pin">8 pin - 2.54mm</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/80/screw-terminals-2-pin-5mm">2 pin - 5mm</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/81/screw-terminals-3-pin-5mm">3 pin - 5mm</a></li>
+                                                                </ul>
+                                                            </div>
+                                                            </div>
+                                                        <div class="mega-dropdown-column pt-4 pb-0 py-sm-4 px-3">
+                                                            <div class="widget widget-links mb-3">
+                                                                <p class="fs-base mb-3 h6">Pin Headers</p>
+                                                                <ul class="widget-list">
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/47/40-pin-single-row-header">40 Pin Single Row Header</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/73/24-pin-8-x-3-right-angle-header">24 Pin 8 x 3 Right Angle Header</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/40/2x13-pin-header">2x13 Female  Pin Header</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/41/2x13-pin-male-header">2x13 Pin Male Header</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/85/2x20-pin-male-header">2x20 Pin Male Header</a></li>
+                                                                </ul>
+                                                            </div>
+                                                             
+                                                            <div class="widget widget-links mb-3">
+                                                                <p class="fs-base mb-3 h6">Crimp Connectors</p>
+                                                                <ul class="widget-list">
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/33/rj12-plug-for-flat-cable">RJ12 Plug for flat cable</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/32/rj12-plug-for-round-cable">RJ12 Plug for round cable</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    <div class="mega-dropdown-column d-none d-lg-block py-4 text-center">
+                                                                <img src="./Installing OWFS and Python OW on the Raspberry Pi_files/menubg-4.webp" alt="Connectors" width="250" height="188" class="img-fluid">
+                                                            <div class="fs-sm mb-3">Connectors for your project</div>
+                                                           
+                                                        </div>
+                                                
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="dropdown dropdownlink mega-dropdown"><a class="dropdown-item dropdown-toggle" href="https://www.abelectronics.co.uk/products/15/breakout-boards" data-bs-toggle="dropdown"><i class="ci-package opacity-60 fs-lg mt-n1 me-2"></i>Breakout boards</a>
+                                                <div class="dropdown-menu p-0">
+                                                    <div class="d-flex flex-wrap flex-md-nowrap px-2">
+                                                        <div class="mega-dropdown-column pt-4 pb-0 py-sm-4 px-3">
+                                                            <div class="widget widget-links mb-3">
+                                                                <p class="fs-base mb-3 h6">Raspberry Pi Breakouts</p>
+                                                                <ul class="widget-list">
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/59/breakout-pi-plus">Breakout Pi Plus</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/68/breakout-pi-zero">Breakout Pi Zero</a></li>
+                                                                </ul>
+                                                            </div>
+                                                            </div>
+                                                        <div class="mega-dropdown-column pt-4 pb-0 py-sm-4 px-3">
+                                                            <div class="widget widget-links mb-3">
+                                                                <p class="fs-base mb-3 h6">Other Breakouts and Prototyping Boards</p>
+                                                                <ul class="widget-list">
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/35/soic-8-sot23-6-to-dip-adapter-8-pin">SOIC 8 SOT23-6 to DIP Adapter 8 Pin</a></li>
+                                                                   <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/34/soic-to-dip-adapter-20-pin">SOIC to DIP Adapter 20 Pin</a></li>
+                                                                    <li class="widget-list-item pb-1"><a class="widget-list-link" href="https://www.abelectronics.co.uk/p/63/solderless-breadboard">Solderless Breadboard</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                <div class="mega-dropdown-column d-none d-lg-block py-4 text-center">
+                                                            
+                                                                <img src="./Installing OWFS and Python OW on the Raspberry Pi_files/menubg-5.webp" alt="Breakout boards" width="250" height="173" class="img-fluid">
+                                                            <div class="fs-sm mb-3">Breakout boards for your next project</div>
+                                                          
+                                                        </div>
+                                                
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <!-- Primary menu-->
+                                <ul class="navbar-nav">
+                                    
+                                    <li class="nav-item dropdown dropdownlink"><a class="nav-link dropdown-toggle" href="https://www.abelectronics.co.uk/kb/knowledgebase" data-bs-toggle="dropdown">Learn</a>
+                                        <div class="dropdown-menu p-0">
+                                            <div class="d-flex flex-wrap flex-sm-nowrap px-2">
+                                                <div class="mega-dropdown-column pt-1 pt-lg-4 pb-4 px-2 px-lg-3">
+                                                    <div class="widget widget-links mb-4">
+                                                        <p class="fs-base mb-3 h6">General Support</p>
+                                                        <ul class="widget-list">
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/">Help and Support</a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/section/1/getting-started">Getting Started <small>- 9 Articles</small></a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/section/2/general">General <small>- 7 Articles</small></a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/section/3/code---languages">Code &amp; Languages <small>- 8 Articles</small></a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/section/12/legacy-products">Legacy Products <small>- 14 Articles</small></a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/section/13/asus-tinker-board">Asus Tinker Board <small>- 4 Articles</small></a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/section/18/arduino">Arduino <small>- 3 Articles</small></a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/section/14/orange-pi">Orange Pi <small>- 3 Articles</small></a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/section/11/odroid">ODroid <small>- 3 Articles</small></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="mega-dropdown-column pt-1 pt-lg-4 pb-4 px-2 px-lg-3">
+
+                                                    <div class="widget widget-links mb-4">
+                                                        <p class="fs-base mb-3 h6">Product Support</p>
+                                                        <ul class="widget-list">
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/section/9/1-wire-pi">1 Wire Pi <small>- 3 Articles</small></a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/section/4/adc-pi">ADC Pi <small>- 8 Articles</small></a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/section/5/adcdac-pi">ADCDAC Pi <small>- 1 Article</small></a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/section/10/adc-differential-pi">ADC Differential Pi <small>- 2 Articles</small></a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/section/8/io-pi">IO Pi <small>- 9 Articles</small></a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/section/7/rtc-pi">RTC Pi <small>- 5 Articles</small></a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/section/6/serial-pi">Serial Pi <small>- 1 Article</small></a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/section/15/expander-pi">Expander Pi <small>- 5 Articles</small></a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/section/16/servo-pi">Servo Pi <small>- 1 Article</small></a></li>
+                                                        </ul>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                     <li class="nav-item dropdown dropdownlink"><a class="nav-link dropdown-toggle" href="https://www.abelectronics.co.uk/tools/default" data-bs-toggle="dropdown">Electronics Toolbox</a>
+                                        <div class="dropdown-menu p-0">
+                                            <div class="d-flex flex-wrap flex-sm-nowrap px-2">
+                                                <div class="mega-dropdown-column pt-1 pt-lg-4 pb-4 px-2 px-lg-3">
+                                                    <div class="widget widget-links mb-4">
+                                                       <p class="fs-base mb-3 h6">Resistance</p>
+                                                        <ul class="widget-list">
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/tools/default">All Tools</a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/tools/resistor-colour-code-calculator">Resistor Colour Codes</a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/tools/surface-mount-resistor-code-calculator">SMT Resistor Codes</a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/tools/ohmslaw">Ohm's Law Calculator</a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/tools/adc-pi-input-calc">ADC Pi Input Voltage Calculator</a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/tools/resistor-series">Series Resistor Calculator</a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/tools/resistor-parallel">Parallel Resistor Calculator</a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/tools/resistor-voltage-divider">Voltage Divider Calculator</a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/tools/resistor-led-calc">LED Series Resistor Calculator</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="mega-dropdown-column pt-1 pt-lg-4 pb-4 px-2 px-lg-3">
+                                                    <div class="widget widget-links mb-4">
+                                                       <p class="fs-base mb-3 h6">Capacitance</p>
+                                                        <ul class="widget-list">
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/tools/capacitor-code-calculator">Capacitor Code Calculator</a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/tools/capacitor-series">Series Capacitance Calculator</a></li>
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/tools/capacitor-parallel">Parallel Capacitance Calculator</a></li>
+                                                        
+                                                        </ul>
+                                                        <p class="fs-base mb-3 mt-3 h6">Other Tools</p>
+                                                        <ul class="widget-list">
+                                                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/tools/valueconverter">Binary / Decimal / Hexadecimal Converter</a></li>
+                                                           
+                                                        
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+
+
+
+                                    <li class="nav-item dropdown dropdownlink"><a class="nav-link dropdown-toggle" href="https://www.abelectronics.co.uk/forums/" data-bs-toggle="dropdown">Support Forum</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="https://www.abelectronics.co.uk/forums/">
+                                                <div class="d-flex">
+                                                    <div class="lead text-muted pt-1"><i class="ci-book"></i></div>
+                                                    <div class="ms-2"><span class="d-block text-heading">Latest Posts</span><small class="d-block text-muted">Whats new on the forum</small></div>
+                                                </div>
+                                            </a></li>
+                                            <li class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item" href="https://www.abelectronics.co.uk/forums/register">
+                                                <div class="d-flex">
+                                                    <div class="lead text-muted pt-1"><i class="ci-add-user"></i></div>
+                                                    <div class="ms-2"><span class="d-block text-heading">Register</span><small class="d-block text-muted">Post your question</small></div>
+                                                </div>
+                                            </a></li>
+                                            <li class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item" href="https://www.abelectronics.co.uk/forums/signin">
+                                                <div class="d-flex">
+                                                    <div class="lead text-muted pt-1"><i class="ci-sign-in"></i></div>
+                                                    <div class="ms-2"><span class="d-block text-heading">Sign In</span><small class="d-block text-muted">Sign into your forum account</small></div>
+                                                </div>
+                                            </a></li>
+                                            <li class="dropdown-divider"></li>
+
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item"><a class="nav-link" href="https://www.abelectronics.co.uk/shipping-and-delivery-options/info">Shipping</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="https://www.abelectronics.co.uk/frequently-asked-questions">FAQ</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+            </header>
+            
+<div class="p-5 mb-4 knowledgebaseheader">
+      <div class="container">
+          <div class="row">
+                        <div class="container col-12 col-md-8">
+                <h1 class="display-3">Knowledge Base</h1>
+                <p class="lead d-none d-md-block">The AB Electronics UK Knowledge Base provides support solutions, tutorials and troubleshooting guides.</p>
+                            <label for="spkb" class="sr-only">Search Knowledge Base</label>
+                            <div class="input-group input-group-lg mb-3"><i class="ci-search position-absolute top-50 translate-middle-y text-muted fs-base ms-3" id="sbkbtlink"></i>
+                <input class="form-control rounded-start" name="spkb" id="spkb" type="search" placeholder="Search the knowledge base...">
+              </div>
+               
+                            </div>
+                      <div class=" col-12 col-md-4 text-right">
+                          <img height="250" width="310" class=" float-right d-none d-md-block" src="./Installing OWFS and Python OW on the Raspberry Pi_files/knowledgebase-title.svg" alt="Knowledge Base">
+                      </div>
+                <div class="clear"></div>
+            </div>
+          </div>
+    </div>
+    <div class="container">
+        <div class="row my-4">
+            <div class="col-12 ">
+                <ol class="breadcrumb bg-transparent pl-0 col-12">
+                    <li class="breadcrumb-item"><a href="https://www.abelectronics.co.uk/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="https://www.abelectronics.co.uk/kb/">Help and Support</a></li>
+                    <li class="breadcrumb-item"><a href="https://www.abelectronics.co.uk/kb/knowledgebase">Knowledge Base</a></li>
+                    <li class="breadcrumb-item"><a href="https://www.abelectronics.co.uk/kb/section/9/1-wire-pi">1 Wire Pi Articles</a></li>
+                    <li class="breadcrumb-item ">
+                        OWFS with I2C support on Raspberry Pi</li>
+
+                </ol>
+               
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            
+
+            
+            
+            
+             <div class="col-12 pe-5">
+                <h2>OWFS with I2C support on Raspberry Pi</h2>
+                <h3 class="pb-3 h5 text-dark">
+                    Using the 1 Wire File System with the 1 Wire Pi Plus and 1 Wire Pi Zero
+                </h3>
+                 </div>
+            
+        <div class="col-12 col-md-8 pe-5">
+                <p>This page details how to set up the 1 Wire File System with the 1 Wire Pi Plus and 1 Wire Pi Zero on Raspberry Pi OS from <a href="https://www.raspberrypi.org/software/operating-systems/">https://www.raspberrypi.org/software/operating-systems/</a>.</p>
+
+<p><strong>Step 1:</strong> Download the latest Raspbian Linux image and burn it to your SD Card following the instructions on <a href="http://elinux.org/RPi_Easy_SD_Card_Setup">http://elinux.org/RPi_Easy_SD_Card_Setup</a>.</p>
+
+<p><strong>Step 2:</strong> Follow our <a href="https://www.abelectronics.co.uk/kb/article/1/i2c-part-2---enabling-i-c-on-the-raspberry-pi">Enabling I²C on the Raspberry Pi</a> tutorial to set up I2C on the Raspberry Pi.</p>
+
+<p><strong>Step 3:</strong> &nbsp;Install OWFS and Python-OW</p>
+
+<pre class="cmd">sudo apt-get update</pre>
+
+<pre class="cmd">sudo apt-get install owfs python-ow ow-shell</pre>
+
+<p><strong>Step 4:</strong> Edit&nbsp;owfs.conf to enable the I2C 1 Wire interface</p>
+
+<pre class="cmd">sudo nano /etc/owfs.conf</pre>
+
+<p>Comment out the following line</p>
+
+<pre class="code"># server: FAKE = DS18S20,DS2405</pre>
+
+<p>Find the following section</p>
+
+<pre class="code"># USB device: DS9490
+#server: usb = all
+</pre>
+
+<p>Insert the line below to enable i2c support.&nbsp;</p>
+
+<pre class="code">server: device = /dev/i2c-1</pre>
+
+<p>Find the section titled</p>
+
+<pre class="code">######################### OWFS ##########################</pre>
+
+<p>Remove the hashes from the lines</p>
+
+<pre class="code">mountpoint = /mnt/1wire
+allow_other
+</pre>
+
+<p>Save your changes and exit the nano editor.</p>
+
+<p><strong>Step 5:</strong> Create a folder where the 1 Wire devices will be mounted.</p>
+
+<pre class="cmd">sudo mkdir /mnt/1wire</pre>
+
+<p><strong>Step 6:</strong>&nbsp;Reboot your Raspberry Pi</p>
+
+<pre class="cmd">sudo reboot</pre>
+
+<p><strong>Step 7:</strong> Enable the owserver service</p>
+
+<pre class="cmd">sudo systemctl enable owserver.service</pre>
+
+<p><strong>Step 8:&nbsp;</strong>Your Raspberry Pi should now work with OWFS. &nbsp;To test this, we will create a python script which lists all 1 Wire devices connected to the 1 Wire Pi.</p>
+
+<p>Create a new python script called 1wiretest.py</p>
+
+<pre class="cmd">nano 1wiretest.py</pre>
+
+<p>Insert the following python code:</p>
+
+<pre class="code">import ow
+ow.init('localhost:4304')
+sensorlist = ow.Sensor('/').sensorList()
+for sensor in sensorlist:
+    print('Device Found')
+    print('Address: ' + sensor.address)
+    print('Family: ' + sensor.family)
+    print('ID: ' + sensor.id)
+    print('Type: ' + sensor.type)
+    print(' ')
+</pre>
+
+<p><strong>Step 9:</strong>&nbsp;Save and run the file.</p>
+
+<pre class="cmd">python 1wiretest.py</pre>
+
+<p>If everything works correctly, the script should list every 1 Wire device connected to the Raspberry&nbsp;Pi.</p>
+
+<p>Using OWFS, you can mount your 1 Wire devices to appear within the Linux file system.&nbsp; To mount the available devices, run the following command.</p>
+
+<pre class="cmd">sudo owfs -C -uall -m /mnt/1wire --allow_other</pre>
+
+<p>Your 1 Wire devices can be found in the directory <strong>/mnt/1wire</strong></p>
+
+<h3>Note:</h3>
+
+<p>On specific versions of owfs available on Raspberry Pi OS and Raspbian Linux, a bug causes devices in the <strong>/mnt/1wire</strong> directory to be duplicated, showing two folders for each device.</p>
+
+<p>If you encounter this problem, it can be resolved by editing the configuration file for the owfs service.</p>
+
+<p><strong>Step 1:</strong> Open /lib/systemd/system/owfs.service in an editor.</p>
+
+<pre class="cmd">sudo nano /lib/systemd/system/owfs.service</pre>
+
+<p><strong>Step 2:</strong> Find the following line.</p>
+
+<pre class="code">ExecStart=/usr/bin/owfs -c /etc/owfs.conf --allow_other %t/owfs</pre>
+
+<p>Remove "-c /etc/owfs.conf" so the line looks like this.</p>
+
+<pre class="code">ExecStart=/usr/bin/owfs --allow_other %t/owfs</pre>
+
+<p><strong>Step 3:</strong> Save the file and reboot your Raspberry Pi.</p>
+
+<p>You should only see one device instance in the <strong>/mnt/1wire</strong> directory.</p>
+
+
+                
+           
+          <hr>
+            <div class="row bg-light border-info p-3 mb-5 small">
+                <div class="col-12 col-md-6">
+<div id="feedbackheader">Was this article helpful?   <a href="javascript:;" id="feedbackyes" class="ml-2">Yes</a> / <a href="javascript:;" id="feedbackno">No</a>
+                </div>
+                <div id="feedbackform" class="d-none">
+                    <p>Please tell us how we can improve this article:</p>
+                    <div class="form-check mb-3">
+                      <input class="form-check-input" type="checkbox" value="" id="CheckIncorrectInformation">
+                      <label class="form-check-label" for="CheckIncorrectInformation">
+                        Incorrect Information
+                      </label>
+                    </div>
+                    <div class="form-check mb-3">
+                      <input class="form-check-input" type="checkbox" value="" id="CheckNotEnoughInformation">
+                      <label class="form-check-label" for="CheckNotEnoughInformation">
+                        Not Enough Information
+                      </label>
+                    </div>
+                    <div class="form-check mb-3">
+                      <input class="form-check-input" type="checkbox" value="" id="CheckNotrelatedtomyissue">
+                      <label class="form-check-label" for="CheckNotrelatedtomyissue">
+                        Not related to my issue
+                      </label>
+                    </div>
+                   
+                     <div class="form-group">
+                    <label for="comments">Do you have any other feedback or comments for this article?</label>
+                    <textarea class="form-control mb-2" id="comments" rows="3"></textarea>
+                  </div>
+                    <button type="button" id="feedbacksubmit" class="btn btn-secondary">Submit</button>
+                </div>
+                </div>
+                <div class="col-12 col-md-6 text-end">
+                    Created 02/10/2015 | Last Updated: 18/12/2022
+                </div>
+                
+            </div>
+          
+        </div> 
+
+             <div class="col-12 col-md-4">
+                 <div class="row">
+                      <h3 class="h5">Releated Products</h3>
+                                 <div class="col-6 mb-3">
+                                     <div class="card product-card">
+                                         <a class="card-img-top d-block overflow-hidden" href="https://www.abelectronics.co.uk/p/60/1-wire-pi-plus">
+                                             <img src="./Installing OWFS and Python OW on the Raspberry Pi_files/1_wire_pi_plus-1.webp" alt="Order a 1 Wire Pi Plus 1-Wire expansion board for the Raspberry Pi" width="400" height="400">
+                                         <div class="card-body py-2">
+                                             <div class="product-meta d-block fs-lg  pb-1">1 Wire Pi Plus</div>
+                                             <h3 class="product-title fs-sm">1 Wire interface for the Raspberry Pi</h3>
+                                             <p></p>
+                                             <div class="d-flex justify-content-between">
+                                                 <div class="product-price m-0 p-0">
+                                                     £11.99<br><span class="m-0 p-0 lh-sm">Inc VAT: £14.39</span>
+
+
+                                                     
+                                                 </div>
+                                             </div>
+                                         </div>
+                                         </a>
+                                     </div>
+                                     <hr class="d-sm-none">
+                                 </div>
+                             
+                                 <div class="col-6 mb-3">
+                                     <div class="card product-card">
+                                         <a class="card-img-top d-block overflow-hidden" href="https://www.abelectronics.co.uk/p/76/1-wire-pi-zero">
+                                             <img src="./Installing OWFS and Python OW on the Raspberry Pi_files/1-wire-pi-zero-1.webp" alt="Order a 1 Wire Pi Zero 1-Wire expansion board for the Raspberry Pi Zero" width="400" height="400">
+                                         <div class="card-body py-2">
+                                             <div class="product-meta d-block fs-lg  pb-1">1 Wire Pi Zero</div>
+                                             <h3 class="product-title fs-sm">1 Wire interface for the Raspberry Pi Zero</h3>
+                                             <p></p>
+                                             <div class="d-flex justify-content-between">
+                                                 <div class="product-price m-0 p-0">
+                                                     £10.49<br><span class="m-0 p-0 lh-sm">Inc VAT: £12.59</span>
+
+
+                                                     
+                                                 </div>
+                                             </div>
+                                         </div>
+                                         </a>
+                                     </div>
+                                     <hr class="d-sm-none">
+                                 </div>
+                             
+                     </div>
+                 <div class="border-top mt-3 mb-3"></div>
+                 <h3 class="h5">Related Articles</h3>
+                  
+             
+                    <div class="col mb-2  fs-sm"><a href="https://www.abelectronics.co.uk/kb/article/1096/using-the-1-wire-w1-subsystem-with-the-1-wire-pi" title="Enabling w1 and finding 1-Wire devices">Using the 1-Wire w1 Subsystem with the 1 Wire Pi</a></div>
+                    
+                    <div class="col mb-2  fs-sm"><a href="https://www.abelectronics.co.uk/kb/article/3/owfs-with-i2c-support-on-raspberry-pi" title="Using the 1 Wire File System with the 1 Wire Pi Plus and 1 Wire Pi Zero">OWFS with I2C support on Raspberry Pi</a></div>
+                    
+                    <div class="col mb-2  fs-sm"><a href="https://www.abelectronics.co.uk/kb/article/9/1-wire-with-ds18s20-digital-thermometer" title="Using 1 Wire with DS18S20 digital thermometer">1 Wire with DS18S20 digital thermometer</a></div>
+                    
+             </div>
+            </div> 
+     </div> 
+   
+
+            
+        </main>
+        <!-- Footer-->
+        <footer class="footer bg-light  pt-5 border-top">
+            <div class="container">
+                <div class="row pb-3">
+                        <div class="col-md-4 col-sm-6 mb-4">
+                            <div class="d-flex">
+                                <i class="ci-rocket text-green" style="font-size: 2.25rem;"></i>
+                                <div class="ps-3">
+                                    <p class="fs-base text-dark mb-1 h6">Fast and free delivery</p>
+                                    <p class="mb-0 fs-ms text-dark">Free delivery for all orders over £35 <small>(excluding VAT)</small>,<br><a href="https://www.abelectronics.co.uk/shipping-and-delivery-options/info">See all Shipping and Delivery options.</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="col-md-4 col-sm-6 mb-4">
+                            <div class="d-flex">
+                                <i class="ci-card text-green" style="font-size: 2.25rem;"></i>
+                                <div class="ps-3">
+                                    <p class="fs-base text-dark mb-1 h6">Secure online payment</p>
+                                    <p class="mb-0 fs-ms text-dark">We possess SSL / Secure сertificate,<br><a href="https://www.abelectronics.co.uk/security/info" class="">Read more about our security.</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="col-md-4 col-sm-6 mb-4">
+                            <div class="d-flex">
+                                <i class="ci-package text-green" style="font-size: 2.25rem;"></i>
+                                <div class="ps-3">
+                                    <p class="fs-base text-dark mb-1 h6">International Resellers</p>
+                                    <p class="mb-0 fs-ms text-dark">You can also order from one of our<br><a href="https://www.abelectronics.co.uk/international-resellers/info" title="International Resellers, ordering from the EU and USA">International Resellers</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="hr-light mb-5">
+                <div class="row pb-2">
+                    <div class="col-md-3 col-sm-6">
+                        <div class="widget widget-links widget-dark pb-2 mb-4">
+                            <p class="widget-title text-dark mb-3 fs-lg ">Customer Service</p>
+                            <ul class="widget-list">
+
+                                <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/contact">Contact us</a></li>
+                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/shipping-and-delivery-options/info" title="Shipping and Delivery costs and times">Shipping &amp; Delivery</a></li>
+                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/customer/default" title="View your orders and details">My Account</a></li>
+                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/shipping-and-delivery-options/info#returns" title="How to return an item to us">Returns policy</a></li>
+                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/security/info" title="Website Security and SSL information">Security</a></li>
+                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/international-resellers/info" title="International Resellers, ordering from the EU and USA">International Resellers</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="widget widget-links widget-dark pb-2 mb-4">
+                            <p class="widget-title text-dark mb-3 fs-lg ">Support</p>
+                            <ul class="widget-list">
+                                <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/article/3/owfs-with-i2c-support-on-raspberry-pi#">Your account</a></li>
+                                <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/" title="Support section">Support</a></li>
+                        <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/knowledgebase" title="Learn in the Knowledge Base">Learn</a></li>
+                          <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/forums/">Support Forum</a></li>
+                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/kb/section/3/code-languages" title="Code Samples and demos">Code Samples</a></li>
+                            <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/frequently-asked-questions" title="Frequently asked questions">FAQ</a></li>
+                         
+                            </ul>
+                        </div>
+                       
+                    </div>
+                    <div class="col-md-3">
+                        <div class="widget widget-links widget-dark pb-2 mb-4">
+                            <p class="widget-title text-dark mb-3 fs-lg ">About us</p>
+                            <ul class="widget-list">
+                                <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/about/info">About Us</a></li>
+                                <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/catalogue">Shop</a></li>
+                                <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/blog">Latest News &amp; Blog</a></li>
+                                <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/privacy/info">Privacy and cookie policy</a></li>
+                                <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/terms/info">Terms and conditions</a></li>
+                                <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/sitemap">Site Map</a></li>
+                                <li class="widget-list-item"><a class="widget-list-link" href="https://www.abelectronics.co.uk/socialhub">Social Hub</a></li>
+                            </ul>
+                        </div>
+                       
+                    </div>
+               <div class="col-md-3">
+                   <p class="widget-title text-dark mb-3 fs-lg ">Follow Us</p>
+
+                
+                   <div class="mb-5"><a href="https://twitter.com/abelectronicsuk" title="Follow us on Twitter" class="me-2 mb-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" baseProfile="tiny"><title>Twitter</title>
+                                    <circle cx="21" cy="21" r="19" fill="#00AEEF"></circle>
+                                    <path fill="#FFF" fill-rule="evenodd" d="M7.9 30.2c3 .1 5.5-.6 7.9-2.4-2.5-.3-4.1-1.4-5-3.6l2-.2c-2.4-1-3.9-2.6-4-5.3l2.1.5.1-.2c-1-.9-1.8-1.9-2-3.2-.3-1.3-.2-2.6.5-3.9 3 3.4 6.7 5.4 11.2 5.7 0-.9 0-1.7.2-2.5a5.4 5.4 0 0 1 8.5-3c.7.4 1.2.5 1.9.2l2.1-.9c-.3 1.2-1 2-2 2.7l.1.2 2.5-.6h.1l-1.8 1.9c-.5.4-.7.9-.8 1.6a15 15 0 0 1-8 13.5c-5 2.6-10 2.4-15-.2l-.6-.3z"></path>
+                                </svg></a>
+                            <a href="https://www.youtube.com/c/abElectronicsUK" title="Follow us on Youtube" class="me-2 mb-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42"><title>Youtube</title>
+                                    <path fill="#CD201F" d="M20.94 39.87a18.94 18.94 0 1 0 0-37.87 18.94 18.94 0 0 0 0 37.87"></path>
+                                    <path fill="#FFF" d="M24.61 20.95l-6.2 3.64V17.3l6.2 3.64zm5.8 3.37v-6.77s0-3.26-3.27-3.26h-12.4s-3.27 0-3.27 3.26v6.77s0 3.26 3.26 3.26h12.41s3.26 0 3.26-3.26"></path>
+                                </svg>
+                            </a>
+                            <a href="https://github.com/abelectronicsuk" title="Use our software libraries at GitHub" class="me-2 mb-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42"><title>Github</title>
+                                    <g fill="#181616">
+                                        <path fill-rule="evenodd" d="M20.86 2.2a18.87 18.87 0 0 0-5.96 36.76c.94.17 1.29-.4 1.29-.9l-.03-3.52c-5.24 1.14-6.35-2.23-6.35-2.23-.86-2.18-2.1-2.76-2.1-2.76-1.7-1.17.13-1.14.13-1.14 1.9.13 2.9 1.94 2.9 1.94 1.68 2.88 4.4 2.05 5.48 1.57a4 4 0 0 1 1.2-2.52c-4.19-.48-8.6-2.1-8.6-9.33a7.3 7.3 0 0 1 1.95-5.06c-.2-.48-.84-2.4.19-5 0 0 1.58-.5 5.18 1.94a18.08 18.08 0 0 1 9.45 0c3.6-2.44 5.19-1.93 5.19-1.93 1.02 2.6.38 4.52.18 4.99 1.21 1.32 1.94 3 1.94 5.06 0 7.25-4.41 8.84-8.61 9.31.68.59 1.28 1.73 1.28 3.5l-.02 5.17c0 .5.34 1.1 1.3.9A18.87 18.87 0 0 0 20.85 2.2z" clip-rule="evenodd"></path>
+                                        <path d="M9.14 29.28c-.04.1-.18.12-.32.06s-.21-.2-.17-.29c.04-.1.2-.12.33-.05.13.06.21.19.16.28zm.77.85c-.1.09-.27.05-.39-.08-.12-.14-.14-.31-.05-.4.1-.08.26-.04.39.09s.14.3.05.4zm.74 1.09c-.11.08-.3 0-.42-.16-.12-.17-.12-.37 0-.45.12-.08.3-.01.42.15.12.18.12.38 0 .46zm1.02 1.05c-.1.11-.32.08-.48-.07-.17-.16-.21-.37-.11-.48.1-.12.33-.09.49.07.16.15.21.37.1.48zm1.4.6c-.04.16-.25.22-.46.16-.22-.07-.36-.24-.31-.39.04-.15.25-.22.47-.15.21.07.35.24.3.39zm1.55.12c0 .16-.17.28-.4.29-.22 0-.4-.12-.4-.28 0-.15.17-.28.4-.28.22 0 .4.12.4.27zm1.44-.24c.03.15-.13.3-.35.34-.22.04-.43-.05-.45-.2-.03-.15.13-.31.35-.35.22-.04.42.05.45.2zm0 0"></path>
+                                    </g>
+                                </svg>
+                            </a></div>
+                   <p class="widget-title text-dark mb-3 fs-lg ">Payments</p>
+                            <img src="./Installing OWFS and Python OW on the Raspberry Pi_files/paymentoptions.svg" width="281" height="118" alt="Payment Options" class="d-inline-block img-fluid lazy">
+               </div>
+            </div>
+                    
+                    <div class="row pb-2">
+             
+                    <p class="pb-4 fs-xs text-dark text-center text-md-start">Copyright © <span itemprop="name">AB Electronics UK 2012 - 2023</span> | AB Electronics UK is a trading name of <a href="http://www.apexweb.co.uk/" title="website by apexweb ltd">Apexweb Ltd</a></p>
+                </div>
+            </div>
+        </footer>
+        <!-- Toolbar for handheld devices (Default)-->
+        <div class="handheld-toolbar">
+            <div class="d-table table-layout-fixed w-100"><div style="cursor:pointer;" class="d-table-cell handheld-toolbar-item" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" onclick="window.scrollTo(0, 0)"><span class="handheld-toolbar-icon"><i class="ci-menu"></i></span><span class="handheld-toolbar-label">Menu</span></div><a class="d-table-cell handheld-toolbar-item" href="https://www.abelectronics.co.uk/cart"><span class="handheld-toolbar-icon"><i class="ci-cart"></i><span class="badge bg-primary rounded-pill ms-1">0</span></span><span class="handheld-toolbar-label">£0.00</span></a></div>
+        </div>
+        <!-- Back To Top Button-->
+        <a class="btn-scroll-top show" href="https://www.abelectronics.co.uk/kb/article/3/owfs-with-i2c-support-on-raspberry-pi#top" title="Scroll to top" data-scroll=""><span class="btn-scroll-top-tooltip text-muted fs-sm me-2">Top</span><i class="btn-scroll-top-icon ci-arrow-up">   </i></a>
+        <script src="./Installing OWFS and Python OW on the Raspberry Pi_files/bundle.min.js"></script>
+       
+    </form>
+    
+    <script id="mainscript" src="./Installing OWFS and Python OW on the Raspberry Pi_files/article.js" idval="0"></script>
+
+
+
+</body></html>

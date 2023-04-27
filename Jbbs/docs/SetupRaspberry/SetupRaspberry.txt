@@ -11,4 +11,10 @@ istallare wiringPi dal deb. Non è più supportato, Può essere che lo continuin
 istallare mosquitto-clients mosquitto-dev libmosquitto*
 	- stoppare il servizio mosquitto "sudo service mosquitto stop"
 	- disabilitare il servizio mosquitto "sudo systemctl disable mosquitto.service"
+attivare I2C da raspi-config | interfacce
 istallare owfs
+Attivare il modulo 1wire seguendo le istruzioni qui: 
+
+	https://www.abelectronics.co.uk/kb/article/3/owfs-with-i2c-support-on-raspberry-pi.
+
+Ho anche salvato la pagina web qui in locale. Io mi sono fermato a Step 6 compresa e sembra che funzioni tutto correttamente. NON ho istallato tutto quanto quello che riguarda Python.

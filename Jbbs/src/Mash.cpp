@@ -64,21 +64,6 @@ void Mash::loop() {
 
 			PID_loop();
 
-			// se manca meno di un'ora, faccio partire il riscaldamento del
-			// tino di sparge
-
-			if ((time2Finish() <= 60) && (jbbsStatus->spargeWarming == false)) {
-
-				if ((ret=jbbsStatus->mqttClient->publish(NULL, spargeStartCommand.c_str(), 1, "1", 2))) {
-
-					std::cout << "[MASH] Problema nell'invio del messaggio di inizio riscaldamento Sparge. Return code: " << ret << std::endl;
-					std::cout << "\t Topic: |" << spargeStartCommand << "|" << std::endl;
-					std::cout << "\t Length=" << 2 << std::endl;
-					std::cout << "\t Payload=|" << "70" << "|" << std::endl;
-				}
-
-			}
-
 			// Se sto riscaldando ...
 			if (status.warming) {
 
@@ -144,7 +129,25 @@ void Mash::loop() {
 					}
 
 				}
+				
 			}
+
+			// se manca meno di 90 minuti, faccio partire il riscaldamento del
+			// tino di sparge
+
+			if ((time2Finish() <= 90) && (jbbsStatus->spargeWarming == false)) {
+
+				if ((ret=jbbsStatus->mqttClient->publish(NULL, spargeStartCommand.c_str(), 1, "1", 2))) {
+
+					std::cout << "[MASH] Problema nell'invio del messaggio di inizio riscaldamento Sparge. Return code: " << ret << std::endl;
+					std::cout << "\t Topic: |" << spargeStartCommand << "|" << std::endl;
+					std::cout << "\t Length=" << 2 << std::endl;
+					std::cout << "\t Payload=|" << "70" << "|" << std::endl;
+				}
+
+			}
+
+
 	}
 
 }
@@ -405,19 +408,29 @@ int Mash::time2Finish() {
 	// di temperatura tra quella attuale e quella dell'ultima step.
 
 	int t2f = 0;
+	int maxTemp = 0;
 
-	// sommo la durata in minuti di tutte le rimanenti step
+	// sommo la durata in minuti di tutte le rimanenti step e calcolo
+	// la temperatura massima a cui devo riscaldare il mosto
 	for (int i = status.currentStep+1; i <= status.lastStep; i++) {
 		t2f += recipe[i].time;
+		if (recipe[i].temp > maxTemp) {
+			maxTemp = recipe[i].temp;
+		}
 	}
 
-	// aggiugo la differenza di temperatura quella attuale e quella dell'ultima step
+	// aggiugo la differenza di temperatura quella attuale e quella più alta
 	// considero che ci voglia un minuto per elevare la T° di un grado
-	t2f += (recipe[status.lastStep].temp - status.tempActual);
+	t2f += maxTemp;
 
 	// Aggiungo il tempo che ci vuole alla fine della step attuale
+	// Se timeFinish ancora non è valorizzato, sommo 999.
 
-	t2f += ((status.timeFinish - time(0)) / 60);
+	if (status.timeFinish > 0) {
+		t2f += ((status.timeFinish - time(0)) / 60);
+	} else {
+		t2f += 999;
+	}
 
 	return (t2f);
 

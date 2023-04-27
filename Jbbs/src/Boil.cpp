@@ -102,6 +102,7 @@ void Boil::loop() {
 				} else {
 				// ... altrimenti ho finito
 					Boil::stop();
+					std::cout << "[BOIL] Fine Boil"  << std::endl;
 				}
 			} else {
 

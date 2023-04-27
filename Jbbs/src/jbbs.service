@@ -1,0 +1,9 @@
+[Unit]
+Description=Joe Beer Brewing System
+After = network-online.target
+
+[Service]
+ExecStart=/bin/sh -c '/home/mizio/jbbs | mosquitto_pub -h homeserver.lan -t telegram/jbbs -l '
+#ExecStart=/bin/sh -c '/home/mizio/jbbsScript.sh'
+[Install]
+WantedBy=multi-user.target

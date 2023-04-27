@@ -76,11 +76,9 @@ void Sparge::loop() {
 			if (mashSensLevel->isHigh()) {
 				Sparge::driveMashValve(SPENTO);
 			}
-			if (status.boilLevelHi) {								// => Sensore livello BOIL
-				Sparge::driveMashValve(SPENTO);							// => Sensore livello BOIL
-				Sparge::driveBoilValve(RICIRCOLO);						// => Sensore livello BOIL
-	    	    status.status = OFF;									// => Sensore livello BOIL
-	    	    std::cout << "[SPARGE] Fine Sparging"  << std::endl; 	// => Sensore livello BOIL
+			if (status.boilLevelHi) {									// => Sensore livello BOIL
+				Sparge::stop();											// => Sensore livello BOIL
+	    	    std::cout << "[SPARGE] Pentola Boil piena, fine Sparging"  << std::endl; 	// => Sensore livello BOIL
 			}															// => Sensore livello BOIL
 
 	    	 break;

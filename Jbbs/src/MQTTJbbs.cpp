@@ -34,7 +34,8 @@ MQTTJbbs::MQTTJbbs(const char* id, const char* host, int port,
 	fun_on_message = on_message;
 
 	mosqpp::lib_init();        // Mandatory initialization for mosquitto library
-    connect_async(host, port, keepalive);
+    // connect_async(host, port, keepalive);
+    connect(host, port, keepalive);
 
     loop_start();
 
