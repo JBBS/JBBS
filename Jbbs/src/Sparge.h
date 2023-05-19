@@ -26,8 +26,10 @@ class Sparge {
 	class SensorLevel* mashSensLevel;
 	class SensorLevel* boilSensLevel;  // => Sensore livello BOIL
 	GlobalStatus *jbbsStatus;
-	double tempActual	= 0;
-	int tempTarget		= 0;
+	double tempTarget = 0;
+	double tempActual = 0;
+
+
 	bool ready 			= false;
 
 	// Status stuff

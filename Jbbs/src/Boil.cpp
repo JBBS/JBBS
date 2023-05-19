@@ -21,7 +21,7 @@ Boil::Boil (GlobalStatus *js) {
 void Boil::loop() {
 
 	double appo	= 0;    // timestamp inizio step
-	double tempActual;
+	double appoTemp = 0;
 
 	const int STARTSMALLFIRE = 150; // secondi prima della partenza del fornello piccolo
 	const int STARTBIGFIRE = 300; 	// secondi prima della partenza del fornello grande
@@ -29,7 +29,15 @@ void Boil::loop() {
 
   // Leggo la temperatura del mosto
 
-	tempActual = myDS18B20->getTemp();
+	appoTemp = myDS18B20->getTemp();
+
+	if (appoTemp == TEMPREADERROR) {
+		if (status.status != OFF) {
+			std::cout << "ERROR! BOIL Sens Temp read failed." << std::endl;
+		}
+	} else{
+		tempActual = appoTemp;
+	}
 
 	if (tempActual > status.tempActual) {
 		status.trend = trendUp;

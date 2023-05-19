@@ -51,6 +51,7 @@ const int PREALLARME = 5; // Minuti di anticipo per invio notifica fine step
 const bool 	RICIRCOLO 		= false;
 const bool 	SCARICO 		= true;
 const int	SPARGETARGET	= 78;
+const double TEMPREADERROR  = -999.0;
 
 const unsigned char MAXSTEP = 10;
 //const int 			BOILTEMP = 99; // gradi ebollizione

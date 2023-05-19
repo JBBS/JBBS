@@ -3,6 +3,9 @@
  *
  *  Created on: 26 apr 2017
  *      Author: 401993
+ * 
+ * Ritorna -999 in caso di errore
+ * 
  */
 
 #include "DS18B20.h"
@@ -29,9 +32,10 @@ float const DS18B20::getTemp() {
 
 	char * buf;
 	char* end;
-	static bool firstError = true;
 
-	if ((OWNET_read(owNet, myTempAddress.c_str(), &buf)) < 0 ) {
+//	static bool firstError = true;
+
+	/* if ((OWNET_read(owNet, myTempAddress.c_str(), &buf)) < 0 ) {
 		if (firstError) {
 			firstError = false;
 			std::cout << "ERROR! MASH Sens Temp read failed." << std::endl;
@@ -40,6 +44,13 @@ float const DS18B20::getTemp() {
 	} else {
 		firstError = true;
 		return (strtof(buf, &end));
+	} */
+
+	 if ((OWNET_read(owNet, myTempAddress.c_str(), &buf)) < 0 ) {
+		return (TEMPREADERROR);
+	} else {
+		return (strtof(buf, &end));
 	}
+
 }
 

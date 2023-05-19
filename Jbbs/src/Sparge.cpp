@@ -1,5 +1,6 @@
 #include "Sparge.h" //include the declaration for this class
 
+
 Sparge::Sparge (GlobalStatus *js) {
 
 	myDS18B20 = new DS18B20(TEMP_SPARGE);
@@ -15,9 +16,21 @@ Sparge::Sparge (GlobalStatus *js) {
 // --------------------------------------------------------------
 void Sparge::loop() {
 
+	double appoTemp;
+
   // Leggo la temperatura dell'acqua
 
-	tempActual = myDS18B20->getTemp();
+ //	tempActual = myDS18B20->getTemp();
+	appoTemp = myDS18B20->getTemp();
+
+	if (appoTemp == TEMPREADERROR) {
+		if (status.status != OFF) {
+			std::cout << "ERROR! SPARGE Sens Temp read failed." << std::endl;
+		}
+	} else{
+		tempActual = appoTemp;
+	}
+
 
 	if (tempActual > status.tempActual) {
 		status.trend = trendUp;

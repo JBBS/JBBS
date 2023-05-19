@@ -20,7 +20,7 @@ using json = nlohmann::json; // for convenience
 class Mash {
 
 	const std::string TEMP_MASH = "28.FF9285711503";
-	class DS18B20* myDS18B20;
+	class DS18B20 *myDS18B20;
 	GlobalStatus *jbbsStatus;
 
 	int startStep = -1;

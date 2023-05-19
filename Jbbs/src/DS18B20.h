@@ -12,6 +12,7 @@
 #include <cstring>
 #include <iostream>
 #include <stdlib.h>     /* strtof */
+#include "JbbsCommons.h"
 #include "ownetapi.h"
 
 class DS18B20 {

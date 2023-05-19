@@ -1,8 +1,5 @@
 #include "Mash.h" //include the declaration for this class
 
-double tempTarget;
-double tempActual;
-
 // Step stuff
 // PID Stuff
 const time_t WindowSize = 30; // 30 secondi
@@ -12,6 +9,9 @@ double Output = 0;
 double kp = 2;  // Coefficiente proporzionale
 double ki = 5;  // Coefficiente Integrale
 double kd = 1;  // Coefficiente derivative;
+
+double tempTarget = 0;
+double tempActual = 0;
 
 // PID myPID(&tunTemp, &Output, &setpoint, kp, ki, kd, DIRECT);
 SimplePID myPID( &(tempActual), &Output, &(tempTarget), kp, ki, kd, DIRECT);
@@ -30,11 +30,24 @@ Mash::Mash (GlobalStatus *js) {
 void Mash::loop() {
 
 	double appo	= 0;    // timestamp inizio step
+	double appoTemp;
+
 	int ret = 0;
 
   // Leggo la temperatura del mosto
 
-	tempActual = myDS18B20->getTemp();
+	// tempActual = myDS18B20->getTemp();
+
+	appoTemp = myDS18B20->getTemp();
+
+	if (appoTemp == TEMPREADERROR) {
+		if (status.status != OFF) {
+			std::cout << "ERROR! MASH Sens Temp read failed." << std::endl;
+		}
+	} else{
+		tempActual = appoTemp;
+	}
+
 
 	if (tempActual > status.tempActual) {
 		status.trend = trendUp;
@@ -404,6 +417,7 @@ const char* Mash::getStateDesc(){
 }
 
 int Mash::time2Finish() {
+	
 	// devo sommare tempo a fine step + durata step successive + differenza
 	// di temperatura tra quella attuale e quella dell'ultima step.
 
@@ -421,7 +435,7 @@ int Mash::time2Finish() {
 
 	// aggiugo la differenza di temperatura quella attuale e quella più alta
 	// considero che ci voglia un minuto per elevare la T° di un grado
-	t2f += maxTemp;
+	t2f += maxTemp - status.tempActual;
 
 	// Aggiungo il tempo che ci vuole alla fine della step attuale
 	// Se timeFinish ancora non è valorizzato, sommo 999.
@@ -432,7 +446,8 @@ int Mash::time2Finish() {
 		t2f += 999;
 	}
 
-	return (t2f);
+	// return (t2f);
+	return (0); // Forzo lo start dello sparge fin da subito
 
 }
 
